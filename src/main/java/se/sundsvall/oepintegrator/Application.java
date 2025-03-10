@@ -1,4 +1,4 @@
-package se.sundsvall.template;
+package se.sundsvall.oepintegrator;
 
 import static org.springframework.boot.SpringApplication.run;
 
