@@ -3,7 +3,6 @@ package se.sundsvall.oepintegrator.integration.opene;
 import static java.util.Optional.ofNullable;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType.SOAP;
 
 import feign.Request;
 import feign.auth.BasicAuthRequestInterceptor;
@@ -60,10 +59,7 @@ public class OpeneClientFactory {
 		this.encryptionUtility = encryptionUtility;
 		this.applicationContext = applicationContext;
 
-		instanceRepository.findByIntegrationType(SOAP).forEach(instanceEntity -> {
-			createSoapClient(instanceEntity);
-			createSoapClient(instanceEntity);
-		});
+		instanceRepository.findAll().forEach(this::createClient);
 	}
 
 	/**
