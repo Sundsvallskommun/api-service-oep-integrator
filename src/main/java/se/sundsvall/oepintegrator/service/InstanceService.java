@@ -33,7 +33,9 @@ public class InstanceService {
 	}
 
 	public Instance getInstance(final String municipalityId, final String instanceId) {
-		return InstanceMapper.toInstance(instanceRepository.findByMunicipalityIdAndId(municipalityId, instanceId).orElseThrow());
+		return InstanceMapper.toInstance(instanceRepository.findByMunicipalityIdAndId(municipalityId, instanceId).orElseThrow(
+			() -> Problem.valueOf(NOT_FOUND, String.format(ENTITY_NOT_FOUND, instanceId, municipalityId))));
+
 	}
 
 	public String createInstance(final String municipalityId, final Instance instance) {

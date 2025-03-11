@@ -19,6 +19,7 @@ import org.springframework.cloud.openfeign.FeignClientBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
+import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestClient;
@@ -133,7 +134,7 @@ public class OpeneClientFactory {
 		final var client = new FeignClientBuilder(applicationContext)
 			.forType(OpeneRestClient.class, clientName)
 			.customize(builder -> builder
-				.errorDecoder(new SOAPErrorDecoder())
+				.errorDecoder(new ProblemErrorDecoder(clientName))
 				.requestInterceptor(new BasicAuthRequestInterceptor(instanceEntity.getUsername(), encryptionUtility.decrypt(instanceEntity.getPassword())))
 				.options(new Request.Options(instanceEntity.getConnectTimeout(), SECONDS, instanceEntity.getReadTimeout(), SECONDS, true)))
 			.url(instanceEntity.getBaseUrl())

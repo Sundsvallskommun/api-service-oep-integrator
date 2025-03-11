@@ -8,7 +8,7 @@ import java.util.Objects;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType;
 
-@Schema(description = "InstanceType model")
+@Schema(description = "Instance model")
 public class Instance {
 
 	@Schema(description = "InstanceType ID", example = "123e4567-e89b-12d3-a456-426614174000")
@@ -17,7 +17,7 @@ public class Instance {
 	@Schema(description = "Type of integration. SOAP/REST", example = "SOAP")
 	private IntegrationType integrationType;
 
-	@Schema(description = "InstanceType type", example = "INSTANCE_A")
+	@Schema(description = "InstanceType type. INTERNAL/EXTERNAL", example = "INTERNAL")
 	private InstanceType instanceType;
 
 	@Schema(description = "Base URL of the instanceType", example = "https://example.com")

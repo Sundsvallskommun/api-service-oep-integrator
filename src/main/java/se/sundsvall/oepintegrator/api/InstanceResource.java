@@ -6,6 +6,8 @@ import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.created;
+import static org.springframework.http.ResponseEntity.noContent;
+import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.web.util.UriComponentsBuilder.fromPath;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,7 +45,7 @@ import se.sundsvall.oepintegrator.service.InstanceService;
 	Problem.class, ConstraintViolationProblem.class
 })))
 @Tag(name = "Configuration for instances", description = "Settings for instances per municipalityId")
-public class InstanceResource {
+class InstanceResource {
 
 	private final InstanceService service;
 
@@ -55,19 +57,20 @@ public class InstanceResource {
 	@Operation(summary = "Get instances", description = "Get all instances for a municipalityId ", responses = {
 		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true)
 	})
-	public List<Instance> getInstances(
+	public ResponseEntity<List<Instance>> getInstances(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId) {
-		return service.getInstances(municipalityId);
+		return ok(service.getInstances(municipalityId));
 	}
 
 	@GetMapping("/{instanceId}")
 	@Operation(summary = "Get instance", description = "Get an instance", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true)
+		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Instance not found"),
 	})
 	public ResponseEntity<Instance> getInstance(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceId", description = "instance id", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId) {
-		return ResponseEntity.ok(service.getInstance(municipalityId, instanceId));
+		return ok(service.getInstance(municipalityId, instanceId));
 	}
 
 	@PostMapping(consumes = APPLICATION_JSON_VALUE, produces = ALL_VALUE)
@@ -93,7 +96,7 @@ public class InstanceResource {
 		@Parameter(name = "instanceId", description = "instance id", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId,
 		@Valid @NotNull @RequestBody final Instance instance) {
 		service.updateInstance(municipalityId, instanceId, instance);
-		return ResponseEntity.noContent()
+		return noContent()
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}
@@ -106,7 +109,7 @@ public class InstanceResource {
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceId", description = "instance id", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId) {
 		service.deleteInstance(municipalityId, instanceId);
-		return ResponseEntity.noContent()
+		return noContent()
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}
