@@ -1,30 +1,18 @@
 package se.sundsvall.oepintegrator.integration.opene;
 
 import static java.util.Optional.ofNullable;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 
-import feign.Request;
-import feign.auth.BasicAuthRequestInterceptor;
-import feign.jaxb.JAXBContextFactory;
-import feign.soap.SOAPEncoder;
-import feign.soap.SOAPErrorDecoder;
-import jakarta.xml.soap.SOAPConstants;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cloud.openfeign.FeignClientBuilder;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
-import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestClient;
+import se.sundsvall.oepintegrator.integration.opene.rest.configuration.OpeneRestClientFactory;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapClient;
-import se.sundsvall.oepintegrator.utility.EncryptionUtility;
+import se.sundsvall.oepintegrator.integration.opene.soap.configuration.SoapClientFactory;
 
 /**
  * Factory class for creating OpenE clients. This class is responsible for creating and managing OpenE clients.
@@ -39,26 +27,13 @@ import se.sundsvall.oepintegrator.utility.EncryptionUtility;
 @Component
 public class OpeneClientFactory {
 
-	private static final Logger LOG = LoggerFactory.getLogger(OpeneClientFactory.class);
-
-	private static final JAXBContextFactory JAXB_FACTORY = new JAXBContextFactory.Builder()
-		.withMarshallerJAXBEncoding(StandardCharsets.UTF_8.toString())
-		.build();
-
-	private static final SOAPEncoder.Builder ENCODER_BUILDER = new SOAPEncoder.Builder()
-		.withCharsetEncoding(StandardCharsets.UTF_8)
-		.withFormattedOutput(false)
-		.withJAXBContextFactory(JAXB_FACTORY)
-		.withSOAPProtocol(SOAPConstants.SOAP_1_1_PROTOCOL)
-		.withWriteXmlDeclaration(true);
-
 	private final Map<ClientKey, OpeneClient> clients = new HashMap<>();
-	private final EncryptionUtility encryptionUtility;
-	private final ApplicationContext applicationContext;
+	private final OpeneRestClientFactory restClientFactory;
+	private final SoapClientFactory soapClientFactory;
 
-	OpeneClientFactory(final InstanceRepository instanceRepository, final EncryptionUtility encryptionUtility, final ApplicationContext applicationContext) {
-		this.encryptionUtility = encryptionUtility;
-		this.applicationContext = applicationContext;
+	OpeneClientFactory(final InstanceRepository instanceRepository, final OpeneRestClientFactory restClientFactory, final SoapClientFactory soapClientFactory) {
+		this.restClientFactory = restClientFactory;
+		this.soapClientFactory = soapClientFactory;
 
 		instanceRepository.findAll().forEach(this::createClient);
 	}
@@ -121,48 +96,16 @@ public class OpeneClientFactory {
 	 */
 	public void createClient(final InstanceEntity instanceEntity) {
 		switch (instanceEntity.getIntegrationType()) {
-			case REST -> createRestClient(instanceEntity);
-			case SOAP -> createSoapClient(instanceEntity);
+			case REST -> clients.put(new ClientKey(instanceEntity), restClientFactory.createRestClient(instanceEntity));
+			case SOAP -> clients.put(new ClientKey(instanceEntity), soapClientFactory.createSoapClient(instanceEntity));
 			default -> throw new IllegalStateException("Unexpected IntegrationType: " + instanceEntity.getIntegrationType());
 		}
 	}
 
-	private void createRestClient(final InstanceEntity instanceEntity) {
-
-		final var clientName = "oep-%s-%s".formatted(instanceEntity.getInstanceType().name().toLowerCase(), instanceEntity.getMunicipalityId());
-
-		final var client = new FeignClientBuilder(applicationContext)
-			.forType(OpeneRestClient.class, clientName)
-			.customize(builder -> builder
-				.errorDecoder(new ProblemErrorDecoder(clientName))
-				.requestInterceptor(new BasicAuthRequestInterceptor(instanceEntity.getUsername(), encryptionUtility.decrypt(instanceEntity.getPassword())))
-				.options(new Request.Options(instanceEntity.getConnectTimeout(), SECONDS, instanceEntity.getReadTimeout(), SECONDS, true)))
-			.url(instanceEntity.getBaseUrl())
-			.build();
-		clients.put(new ClientKey(instanceEntity.getMunicipalityId(), instanceEntity.getId()), client);
-
-		LOG.info("Created OpenE REST client with id {} for municipalityId {} ({})", instanceEntity.getInstanceType(), instanceEntity.getMunicipalityId(), clientName);
-	}
-
-	private void createSoapClient(final InstanceEntity environment) {
-
-		final var clientName = "oep-%s-%s".formatted(environment.getInstanceType().name().toLowerCase(), environment.getMunicipalityId());
-
-		final var client = new FeignClientBuilder(applicationContext)
-			.forType(OpeneSoapClient.class, clientName)
-			.customize(builder -> builder
-				.encoder(ENCODER_BUILDER.build())
-				.errorDecoder(new SOAPErrorDecoder())
-				.requestInterceptor(new BasicAuthRequestInterceptor(environment.getUsername(), encryptionUtility.decrypt(environment.getPassword())))
-				.options(new Request.Options(environment.getConnectTimeout(), SECONDS, environment.getReadTimeout(), SECONDS, true)))
-			.url(environment.getBaseUrl())
-			.build();
-		clients.put(new ClientKey(environment.getMunicipalityId(), environment.getId()), client);
-
-		LOG.info("Created OpenE SOAP client with id {} for municipalityId {} ({})", environment.getInstanceType(), environment.getMunicipalityId(), clientName);
-	}
-
 	private record ClientKey(String municipalityId, String instanceId) {
+		ClientKey(final InstanceEntity instanceEntity) {
+			this(instanceEntity.getMunicipalityId(), instanceEntity.getId());
+		}
 	}
 
 }

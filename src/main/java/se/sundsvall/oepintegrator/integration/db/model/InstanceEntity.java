@@ -4,8 +4,6 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
@@ -36,11 +34,9 @@ public class InstanceEntity {
 	private String municipalityId;
 
 	@Column(name = "integration_type")
-	@Enumerated(EnumType.STRING)
 	private IntegrationType integrationType;
 
 	@Column(name = "instance_type")
-	@Enumerated(EnumType.STRING)
 	private InstanceType instanceType;
 
 	@Column(name = "base_url")

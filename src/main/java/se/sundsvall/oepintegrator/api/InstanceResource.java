@@ -49,7 +49,7 @@ class InstanceResource {
 
 	private final InstanceService service;
 
-	public InstanceResource(final InstanceService service) {
+	InstanceResource(final InstanceService service) {
 		this.service = service;
 	}
 
@@ -57,7 +57,7 @@ class InstanceResource {
 	@Operation(summary = "Get instances", description = "Get all instances for a municipalityId ", responses = {
 		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true)
 	})
-	public ResponseEntity<List<Instance>> getInstances(
+	ResponseEntity<List<Instance>> getInstances(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId) {
 		return ok(service.getInstances(municipalityId));
 	}
@@ -67,7 +67,7 @@ class InstanceResource {
 		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Instance not found"),
 	})
-	public ResponseEntity<Instance> getInstance(
+	ResponseEntity<Instance> getInstance(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceId", description = "instance id", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId) {
 		return ok(service.getInstance(municipalityId, instanceId));
@@ -77,7 +77,7 @@ class InstanceResource {
 	@Operation(summary = "Create instance", description = "Creates a new instance", responses = {
 		@ApiResponse(responseCode = "201", headers = @Header(name = LOCATION, schema = @Schema(type = "string")), description = "Successful operation", useReturnTypeSchema = true),
 	})
-	public ResponseEntity<Void> createInstance(
+	ResponseEntity<Void> createInstance(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Valid @NotNull @RequestBody final Instance instance) {
 
@@ -91,7 +91,7 @@ class InstanceResource {
 	@Operation(summary = "Update instance", description = "Updates an instance", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation"),
 	})
-	public ResponseEntity<Void> updateInstance(
+	ResponseEntity<Void> updateInstance(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceId", description = "instance id", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId,
 		@Valid @NotNull @RequestBody final Instance instance) {
@@ -105,7 +105,7 @@ class InstanceResource {
 	@Operation(summary = "Delete instance", description = "Deletes an instance", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation"),
 	})
-	public ResponseEntity<Void> deleteInstance(
+	ResponseEntity<Void> deleteInstance(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceId", description = "instance id", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId) {
 		service.deleteInstance(municipalityId, instanceId);

@@ -9,11 +9,11 @@
         read_timeout integer,
         base_url varchar(255),
         id varchar(255) not null,
+        instance_type varchar(255),
+        integration_type varchar(255),
         municipality_id varchar(255),
         password varchar(255),
         username varchar(255),
-        instance_type enum ('EXTERNAL','INTERNAL'),
-        integration_type enum ('REST','SOAP'),
         primary key (id)
     ) engine=InnoDB;
 
