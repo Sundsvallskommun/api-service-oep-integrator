@@ -7,4 +7,4 @@ openapi:
   version: '@project.version@'
 spring:
   application:
-    name: ${spring.application.name}
+    name: api-oep-integrator
