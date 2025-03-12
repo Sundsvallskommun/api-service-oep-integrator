@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.INTERNAL;
 
 import java.util.List;
 import java.util.Optional;
@@ -116,8 +117,8 @@ class InstanceServiceTest {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceId = "1234";
-		final var instanceEntity = InstanceEntity.create();
-		final var instance = Instance.create().withPassword("someNewPassword");
+		final var instanceEntity = InstanceEntity.create().withInstanceType(INTERNAL);
+		final var instance = Instance.create().withPassword("someNewPassword").withInstanceType(INTERNAL);
 
 		when(instanceRepositoryMock.findById(instanceId)).thenReturn(Optional.of(instanceEntity));
 
@@ -129,7 +130,7 @@ class InstanceServiceTest {
 		verify(instanceRepositoryMock).save(instanceEntity);
 		verify(encryptionUtilityMock).encrypt(instance.getPassword().getBytes());
 		verify(clientFactoryMock).createClient(instanceEntity);
-		verify(clientFactoryMock).removeClient(municipalityId, instanceId);
+		verify(clientFactoryMock).removeClient(municipalityId, INTERNAL);
 		verifyNoMoreInteractions(instanceRepositoryMock, clientFactoryMock);
 	}
 
@@ -139,16 +140,17 @@ class InstanceServiceTest {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceId = "1234";
+		final var instanceEntity = InstanceEntity.create().withInstanceType(INTERNAL);
 
-		when(instanceRepositoryMock.existsByIdAndMunicipalityId(instanceId, municipalityId)).thenReturn(true);
+		when(instanceRepositoryMock.findById(instanceId)).thenReturn(Optional.of(instanceEntity));
 
 		// Act
 		instanceService.deleteInstance(municipalityId, instanceId);
 
 		// Assert
-		verify(instanceRepositoryMock).existsByIdAndMunicipalityId(instanceId, municipalityId);
+		verify(instanceRepositoryMock).findById(instanceId);
 		verify(instanceRepositoryMock).deleteById(instanceId);
-		verify(clientFactoryMock).removeClient(municipalityId, instanceId);
+		verify(clientFactoryMock).removeClient(municipalityId, INTERNAL);
 		verifyNoMoreInteractions(instanceRepositoryMock, clientFactoryMock);
 		verifyNoInteractions(encryptionUtilityMock);
 	}

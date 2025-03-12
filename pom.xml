@@ -12,7 +12,11 @@
 	<artifactId>api-service-oep-integrator</artifactId>
 	<version>1.0</version>
 	<name>api-service-oep-integrator</name>
-	<properties />
+	<properties>
+		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
+		<generated-sources-java-path>src/main/java</generated-sources-java-path>
+		<jaxb-plugins.version>4.0.8</jaxb-plugins.version>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>
@@ -57,4 +61,52 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<!-- Generate java from wsdl -->
+			<plugin>
+				<groupId>org.jvnet.jaxb</groupId>
+				<artifactId>jaxb-maven-plugin</artifactId>
+				<version>${jaxb-plugins.version}</version>
+				<configuration>
+					<bindingDirectory>${project.basedir}/src/main/resources/integrations/opene/soap/xjb</bindingDirectory>
+					<extension>true</extension>
+					<args>
+						<arg>-wsdl</arg>
+						<arg>-Xfluent-api</arg>
+					</args>
+					<plugins>
+						<plugin>
+							<groupId>org.jvnet.jaxb</groupId>
+							<artifactId>jaxb-plugins</artifactId>
+							<version>${jaxb-plugins.version}</version>
+						</plugin>
+					</plugins>
+					<generatePackage>callback</generatePackage>
+					<schemaIncludes>
+						<include>**/*.wsdl</include>
+					</schemaIncludes>
+					<generateDirectory>${generated-sources-path}/${generated-sources-java-path}</generateDirectory>
+					<schemaDirectory>${project.basedir}/src/main/resources/integrations/opene/soap</schemaDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generate-sources</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/callback/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

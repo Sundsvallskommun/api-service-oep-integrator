@@ -54,22 +54,14 @@ public class InstanceService {
 		}
 
 		instanceRepository.save(InstanceMapper.updateInstance(entity, instance, encryptedPassword));
-		clientFactory.removeClient(municipalityId, id);
+		clientFactory.removeClient(municipalityId, instance.getInstanceType());
 		clientFactory.createClient(entity);
 	}
 
 	public void deleteInstance(final String municipalityId, final String instanceId) {
-		instanceExist(municipalityId, instanceId);
+		final var entity = instanceRepository.findById(instanceId).orElseThrow();
 		instanceRepository.deleteById(instanceId);
-		clientFactory.removeClient(municipalityId, instanceId);
-	}
-
-	public void instanceExist(final String municipalityId, final String instanceId) {
-		final var exists = instanceRepository.existsByIdAndMunicipalityId(instanceId, municipalityId);
-
-		if (!exists) {
-			throw Problem.valueOf(NOT_FOUND, String.format(ENTITY_NOT_FOUND, instanceId, municipalityId));
-		}
+		clientFactory.removeClient(municipalityId, entity.getInstanceType());
 	}
 
 }

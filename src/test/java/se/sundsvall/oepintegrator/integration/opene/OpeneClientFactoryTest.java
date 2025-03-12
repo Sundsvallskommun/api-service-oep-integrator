@@ -51,7 +51,7 @@ class OpeneClientFactoryTest {
 
 		openEClientFactory.createClient(instanceEntity);
 
-		final var client = openEClientFactory.getClient("municipalityId", "instanceId");
+		final var client = openEClientFactory.getClient("municipalityId", EXTERNAL);
 		assertThat(client).isNotNull();
 		verify(encryptionUtilityMock).decrypt("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==");
 
@@ -74,7 +74,7 @@ class OpeneClientFactoryTest {
 
 		openEClientFactory.createClient(instanceEntity);
 
-		final var client = openEClientFactory.getRestClient("municipalityId", "instanceId");
+		final var client = openEClientFactory.getRestClient("municipalityId", EXTERNAL);
 		assertThat(client).isNotNull();
 		verify(encryptionUtilityMock).decrypt("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==");
 
@@ -82,22 +82,22 @@ class OpeneClientFactoryTest {
 
 	@Test
 	void testCreateAndGetClientNotFound() {
-		assertThatThrownBy(() -> openEClientFactory.getClient("municipalityId", "invalid"))
-			.hasMessage("Internal Server Error: No OpenE client with id: invalid exists for municipalityId municipalityId")
+		assertThatThrownBy(() -> openEClientFactory.getClient("municipalityId", EXTERNAL))
+			.hasMessage("Internal Server Error: No EXTERNAL OpenE client exists for municipalityId municipalityId")
 			.isInstanceOf(Problem.class);
 	}
 
 	@Test
 	void testCreateAndGetRestClientNotFound() {
-		assertThatThrownBy(() -> openEClientFactory.getRestClient("municipalityId", "invalid"))
-			.hasMessage("Internal Server Error: No OpenE REST client with id: invalid exists for municipalityId municipalityId")
+		assertThatThrownBy(() -> openEClientFactory.getRestClient("municipalityId", EXTERNAL))
+			.hasMessage("Internal Server Error: No EXTERNAL OpenE REST client exists for municipalityId municipalityId")
 			.isInstanceOf(Problem.class);
 	}
 
 	@Test
 	void testCreateAndGetSoapClientNotFound() {
-		assertThatThrownBy(() -> openEClientFactory.getSoapClient("municipalityId", "invalid"))
-			.hasMessage("Internal Server Error: No OpenE SOAP client with id: invalid exists for municipalityId municipalityId")
+		assertThatThrownBy(() -> openEClientFactory.getSoapClient("municipalityId", INTERNAL))
+			.hasMessage("Internal Server Error: No INTERNAL OpenE SOAP client exists for municipalityId municipalityId")
 			.isInstanceOf(Problem.class);
 	}
 
@@ -118,7 +118,7 @@ class OpeneClientFactoryTest {
 
 		openEClientFactory.createClient(instanceEntity);
 
-		final var client = openEClientFactory.getSoapClient("municipalityId", "instanceId");
+		final var client = openEClientFactory.getSoapClient("municipalityId", EXTERNAL);
 		assertThat(client).isNotNull();
 		verify(encryptionUtilityMock).decrypt("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==");
 
@@ -140,7 +140,7 @@ class OpeneClientFactoryTest {
 		when(encryptionUtilityMock.decrypt("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==")).thenReturn("decryptedPassword");
 
 		openEClientFactory.createClient(instanceEntity);
-		openEClientFactory.removeClient("municipalityId", "instanceId");
+		openEClientFactory.removeClient("municipalityId", INTERNAL);
 
 		verify(encryptionUtilityMock).decrypt("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==");
 	}

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
+import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestClient;
 import se.sundsvall.oepintegrator.integration.opene.rest.configuration.OpeneRestClientFactory;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapClient;
@@ -42,50 +43,50 @@ public class OpeneClientFactory {
 	 * Get the OpenE REST client for the given municipalityId and instanceId.
 	 *
 	 * @param  municipalityId the municipalityId
-	 * @param  instanceId     the instanceId
+	 * @param  instanceType   the instanceType
 	 * @return                the OpenE REST client
 	 */
-	public OpeneRestClient getRestClient(final String municipalityId, final String instanceId) {
-		return ofNullable(clients.get(new ClientKey(municipalityId, instanceId)))
+	public OpeneRestClient getRestClient(final String municipalityId, final InstanceType instanceType) {
+		return ofNullable(clients.get(new ClientKey(municipalityId, instanceType)))
 			.filter(OpeneRestClient.class::isInstance)
 			.map(OpeneRestClient.class::cast)
-			.orElseThrow(() -> Problem.valueOf(INTERNAL_SERVER_ERROR, String.format("No OpenE REST client with id: %s exists for municipalityId %s", instanceId, municipalityId)));
+			.orElseThrow(() -> Problem.valueOf(INTERNAL_SERVER_ERROR, String.format("No %s OpenE REST client exists for municipalityId %s", instanceType, municipalityId)));
 	}
 
 	/**
-	 * Get the OpenE SOAP client for the given municipalityId and instanceId.
+	 * Get the OpenE SOAP client for the given municipalityId and instance.
 	 *
 	 * @param  municipalityId the municipalityId
-	 * @param  instanceId     the instanceId
+	 * @param  instanceType   the instanceType
 	 * @return                the OpenE SOAP client
 	 */
-	public OpeneSoapClient getSoapClient(final String municipalityId, final String instanceId) {
-		return ofNullable(clients.get(new ClientKey(municipalityId, instanceId)))
+	public OpeneSoapClient getSoapClient(final String municipalityId, final InstanceType instanceType) {
+		return ofNullable(clients.get(new ClientKey(municipalityId, instanceType)))
 			.filter(OpeneSoapClient.class::isInstance)
 			.map(OpeneSoapClient.class::cast)
-			.orElseThrow(() -> Problem.valueOf(INTERNAL_SERVER_ERROR, String.format("No OpenE SOAP client with id: %s exists for municipalityId %s", instanceId, municipalityId)));
+			.orElseThrow(() -> Problem.valueOf(INTERNAL_SERVER_ERROR, String.format("No %s OpenE SOAP client exists for municipalityId %s", instanceType, municipalityId)));
 	}
 
 	/**
 	 * Get the OpenE client for the given municipalityId and instanceId.
 	 *
 	 * @param  municipalityId the municipalityId
-	 * @param  instanceId     the instanceId
+	 * @param  instanceType   the instanceType
 	 * @return                the OpenE client
 	 */
-	public OpeneClient getClient(final String municipalityId, final String instanceId) {
-		return ofNullable(clients.get(new ClientKey(municipalityId, instanceId)))
-			.orElseThrow(() -> Problem.valueOf(INTERNAL_SERVER_ERROR, String.format("No OpenE client with id: %s exists for municipalityId %s", instanceId, municipalityId)));
+	public OpeneClient getClient(final String municipalityId, final InstanceType instanceType) {
+		return ofNullable(clients.get(new ClientKey(municipalityId, instanceType)))
+			.orElseThrow(() -> Problem.valueOf(INTERNAL_SERVER_ERROR, String.format("No %s OpenE client exists for municipalityId %s", instanceType, municipalityId)));
 	}
 
 	/**
 	 * Remove the OpenE client for the given municipalityId and instanceId.
 	 *
 	 * @param municipalityId the municipalityId
-	 * @param instanceId     the instanceId
+	 * @param instanceType   the instanceType
 	 */
-	public void removeClient(final String municipalityId, final String instanceId) {
-		clients.remove(new ClientKey(municipalityId, instanceId));
+	public void removeClient(final String municipalityId, final InstanceType instanceType) {
+		clients.remove(new ClientKey(municipalityId, instanceType));
 	}
 
 	/**
@@ -102,9 +103,9 @@ public class OpeneClientFactory {
 		}
 	}
 
-	private record ClientKey(String municipalityId, String instanceId) {
+	private record ClientKey(String municipalityId, InstanceType instanceType) {
 		ClientKey(final InstanceEntity instanceEntity) {
-			this(instanceEntity.getMunicipalityId(), instanceEntity.getId());
+			this(instanceEntity.getMunicipalityId(), instanceEntity.getInstanceType());
 		}
 	}
 
