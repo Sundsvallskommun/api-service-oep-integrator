@@ -1,6 +1,10 @@
 package se.sundsvall.oepintegrator.integration.opene.soap;
 
+import callback.AddMessage;
+import callback.AddMessageResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClient;
 
 /**
@@ -11,4 +15,6 @@ public interface OpeneSoapClient extends OpeneClient {
 
 	String TEXT_XML_CHARSET_ISO_8859_1 = "text/xml; charset=ISO-8859-1";
 
+	@PostMapping(consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
+	AddMessageResponse addMessage(@RequestBody AddMessage addMessage);
 }

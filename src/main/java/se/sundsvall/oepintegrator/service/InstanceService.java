@@ -4,9 +4,11 @@ import static org.zalando.problem.Status.NOT_FOUND;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.Instance;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
+import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 import se.sundsvall.oepintegrator.service.mapper.InstanceMapper;
 import se.sundsvall.oepintegrator.utility.EncryptionUtility;
@@ -33,11 +35,11 @@ public class InstanceService {
 	}
 
 	public Instance getInstance(final String municipalityId, final String instanceId) {
-		return InstanceMapper.toInstance(instanceRepository.findByMunicipalityIdAndId(municipalityId, instanceId).orElseThrow(
-			() -> Problem.valueOf(NOT_FOUND, String.format(ENTITY_NOT_FOUND, instanceId, municipalityId))));
+		return InstanceMapper.toInstance(getInstanceEntity(municipalityId, instanceId));
 
 	}
 
+	@Transactional
 	public String createInstance(final String municipalityId, final Instance instance) {
 		final var encryptedPassword = encryptionUtility.encrypt(instance.getPassword().getBytes());
 		final var result = instanceRepository.save(InstanceMapper.fromInstance(municipalityId, instance, encryptedPassword));
@@ -45,8 +47,9 @@ public class InstanceService {
 		return result.getId();
 	}
 
+	@Transactional
 	public void updateInstance(final String municipalityId, final String id, final Instance instance) {
-		final var entity = instanceRepository.findById(id).orElseThrow();
+		final var entity = getInstanceEntity(municipalityId, id);
 
 		String encryptedPassword = null;
 		if (instance.getPassword() != null) {
@@ -54,22 +57,20 @@ public class InstanceService {
 		}
 
 		instanceRepository.save(InstanceMapper.updateInstance(entity, instance, encryptedPassword));
-		clientFactory.removeClient(municipalityId, id);
+		clientFactory.removeClient(municipalityId, instance.getInstanceType());
 		clientFactory.createClient(entity);
 	}
 
+	@Transactional
 	public void deleteInstance(final String municipalityId, final String instanceId) {
-		instanceExist(municipalityId, instanceId);
+		final var entity = getInstanceEntity(municipalityId, instanceId);
 		instanceRepository.deleteById(instanceId);
-		clientFactory.removeClient(municipalityId, instanceId);
+		clientFactory.removeClient(municipalityId, entity.getInstanceType());
 	}
 
-	public void instanceExist(final String municipalityId, final String instanceId) {
-		final var exists = instanceRepository.existsByIdAndMunicipalityId(instanceId, municipalityId);
-
-		if (!exists) {
-			throw Problem.valueOf(NOT_FOUND, String.format(ENTITY_NOT_FOUND, instanceId, municipalityId));
-		}
+	private InstanceEntity getInstanceEntity(final String municipalityId, final String instanceId) {
+		return instanceRepository.findByMunicipalityIdAndId(municipalityId, instanceId).orElseThrow(
+			() -> Problem.valueOf(NOT_FOUND, ENTITY_NOT_FOUND.formatted(instanceId, municipalityId)));
 	}
 
 }

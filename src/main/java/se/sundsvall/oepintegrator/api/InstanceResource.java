@@ -65,7 +65,7 @@ class InstanceResource {
 	@GetMapping("/{instanceId}")
 	@Operation(summary = "Get instance", description = "Get an instance", responses = {
 		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true),
-		@ApiResponse(responseCode = "404", description = "Instance not found"),
+		@ApiResponse(responseCode = "404", description = "Instance not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	ResponseEntity<Instance> getInstance(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -89,7 +89,9 @@ class InstanceResource {
 
 	@PatchMapping("/{instanceId}")
 	@Operation(summary = "Update instance", description = "Updates an instance", responses = {
-		@ApiResponse(responseCode = "204", description = "Successful operation"),
+		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Instance not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+
 	})
 	ResponseEntity<Void> updateInstance(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -103,7 +105,8 @@ class InstanceResource {
 
 	@DeleteMapping("/{instanceId}")
 	@Operation(summary = "Delete instance", description = "Deletes an instance", responses = {
-		@ApiResponse(responseCode = "204", description = "Successful operation"),
+		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Instance not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	ResponseEntity<Void> deleteInstance(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
