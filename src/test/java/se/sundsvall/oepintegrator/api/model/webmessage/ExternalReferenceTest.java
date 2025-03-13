@@ -30,14 +30,14 @@ class ExternalReferenceTest {
 		final var value = "value";
 
 		// Act
-		final var result = ExternalReference.create()
+		final var bean = ExternalReference.create()
 			.withKey(key)
 			.withValue(value);
 
 		// Assert
-		assertThat(result).isNotNull().hasNoNullFieldsOrProperties();
-		assertThat(result.getKey()).isEqualTo(key);
-		assertThat(result.getValue()).isEqualTo(value);
+		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
+		assertThat(bean.getKey()).isEqualTo(key);
+		assertThat(bean.getValue()).isEqualTo(value);
 
 	}
 

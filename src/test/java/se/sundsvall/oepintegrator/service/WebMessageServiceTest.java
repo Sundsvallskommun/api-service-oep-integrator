@@ -52,7 +52,7 @@ class WebMessageServiceTest {
 		final var result = webMessageService.createWebMessage(municipalityId, instanceType, request, files);
 
 		// Assert
-		assertThat(result).isEqualTo(response);
+		assertThat(result).isEqualTo(1234);
 		verify(openeSoapIntegrationMock).addMessage(eq(municipalityId), eq(instanceType), any());
 		verifyNoMoreInteractions(openeSoapIntegrationMock);
 	}

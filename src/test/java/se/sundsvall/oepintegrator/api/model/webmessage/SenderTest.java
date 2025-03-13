@@ -29,12 +29,12 @@ class SenderTest {
 		final var userId = "joe01doe";
 
 		// Act
-		final var result = Sender.create()
+		final var bean = Sender.create()
 			.withUserId(userId);
 
 		// Assert
-		assertThat(result).isNotNull().hasNoNullFieldsOrProperties();
-		assertThat(result.getUserId()).isEqualTo(userId);
+		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
+		assertThat(bean.getUserId()).isEqualTo(userId);
 
 	}
 

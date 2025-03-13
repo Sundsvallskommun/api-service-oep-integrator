@@ -31,16 +31,16 @@ class WebMessageRequestTest {
 		final var externalReferences = List.of(ExternalReference.create());
 		final var message = "message";
 		// Act
-		final var result = WebMessageRequest.create()
+		final var bean = WebMessageRequest.create()
 			.withSender(sender)
 			.withMessage(message)
 			.withExternalReferences(externalReferences);
 
 		// Assert
-		assertThat(result).isNotNull().hasNoNullFieldsOrProperties();
-		assertThat(result.getSender()).isEqualTo(sender);
-		assertThat(result.getMessage()).isEqualTo(message);
-		assertThat(result.getExternalReferences()).isEqualTo(externalReferences);
+		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
+		assertThat(bean.getSender()).isEqualTo(sender);
+		assertThat(bean.getMessage()).isEqualTo(message);
+		assertThat(bean.getExternalReferences()).isEqualTo(externalReferences);
 
 	}
 

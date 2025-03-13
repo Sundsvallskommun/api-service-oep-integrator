@@ -12,7 +12,6 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
 
-import callback.AddMessageResponse;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -61,10 +60,8 @@ class WebMessageResourceTest {
 		final var body = multipartBodyBuilder.build();
 
 		final var messageId = 1234;
-		final var response = new AddMessageResponse()
-			.withMessageID(messageId);
 
-		when(webMessageService.createWebMessage(eq(municipalityId), eq(instanceType), eq(request), any())).thenReturn(response);
+		when(webMessageService.createWebMessage(eq(municipalityId), eq(instanceType), eq(request), any())).thenReturn(messageId);
 
 		// Act
 		webTestClient.post()

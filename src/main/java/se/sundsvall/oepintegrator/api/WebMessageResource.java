@@ -40,11 +40,11 @@ import se.sundsvall.oepintegrator.service.WebMessageService;
 	Problem.class, ConstraintViolationProblem.class
 })))
 @Tag(name = "WebMessages", description = "Resource for sending web messages to OpenE")
-public class WebMessageResource {
+class WebMessageResource {
 
 	private final WebMessageService webMessageService;
 
-	public WebMessageResource(final WebMessageService webMessageService) {
+	WebMessageResource(final WebMessageService webMessageService) {
 		this.webMessageService = webMessageService;
 	}
 
@@ -58,7 +58,7 @@ public class WebMessageResource {
 		@Valid @RequestPart final WebMessageRequest request,
 		@RequestPart(value = "files", required = false) final List<MultipartFile> files) {
 
-		return created(fromPath("/{municipalityId}/webmessages/{id}").buildAndExpand(municipalityId, webMessageService.createWebMessage(municipalityId, instanceType, request, files).getMessageID()).toUri())
+		return created(fromPath("/{municipalityId}/webmessages/{id}").buildAndExpand(municipalityId, webMessageService.createWebMessage(municipalityId, instanceType, request, files)).toUri())
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}

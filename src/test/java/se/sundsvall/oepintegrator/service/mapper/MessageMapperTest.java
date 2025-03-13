@@ -83,7 +83,7 @@ class MessageMapperTest {
 	}
 
 	@Test
-	void toAttachmentsNllAttachments() {
+	void toAttachmentsNullAttachments() {
 		// Act
 		final var result = MessageMapper.toAttachments(null);
 

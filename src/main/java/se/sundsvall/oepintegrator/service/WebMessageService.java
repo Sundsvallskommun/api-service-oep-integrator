@@ -3,7 +3,6 @@ package se.sundsvall.oepintegrator.service;
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
 
-import callback.AddMessageResponse;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,9 @@ public class WebMessageService {
 		this.openeSoapIntegration = openeSoapIntegration;
 	}
 
-	public AddMessageResponse createWebMessage(final String municipalityId, final InstanceType instanceType, final WebMessageRequest request, final List<MultipartFile> files) {
+	public Integer createWebMessage(final String municipalityId, final InstanceType instanceType, final WebMessageRequest request, final List<MultipartFile> files) {
 
-		return openeSoapIntegration.addMessage(municipalityId, instanceType, MessageMapper.toAddMessage(request, retrieveFlowInstanceId(request), files));
+		return openeSoapIntegration.addMessage(municipalityId, instanceType, MessageMapper.toAddMessage(request, retrieveFlowInstanceId(request), files)).getMessageID();
 	}
 
 	private Integer retrieveFlowInstanceId(final WebMessageRequest webMessageRequest) {
