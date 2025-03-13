@@ -1,6 +1,7 @@
 package se.sundsvall.oepintegrator.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -17,6 +18,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.Instance;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
@@ -82,6 +84,26 @@ class InstanceServiceTest {
 	}
 
 	@Test
+	void getInstanceThrowsException() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceId = "1234";
+
+		when(instanceRepositoryMock.findByMunicipalityIdAndId(municipalityId, instanceId)).thenReturn(Optional.empty());
+
+		// Act
+		assertThatThrownBy(() -> instanceService.getInstance(municipalityId, instanceId))
+			.isInstanceOf(Problem.class)
+			.hasFieldOrPropertyWithValue("title", "Not Found")
+			.hasMessage(String.format("Not Found: An instance with id '%s' could not be found in municipality with id '%s'", instanceId, municipalityId));
+
+		verify(instanceRepositoryMock).findByMunicipalityIdAndId(municipalityId, instanceId);
+		verifyNoMoreInteractions(instanceRepositoryMock);
+		verifyNoInteractions(encryptionUtilityMock, clientFactoryMock);
+	}
+
+	@Test
 	void createInstance() {
 
 		// Arrange
@@ -120,18 +142,40 @@ class InstanceServiceTest {
 		final var instanceEntity = InstanceEntity.create().withInstanceType(INTERNAL);
 		final var instance = Instance.create().withPassword("someNewPassword").withInstanceType(INTERNAL);
 
-		when(instanceRepositoryMock.findById(instanceId)).thenReturn(Optional.of(instanceEntity));
+		when(instanceRepositoryMock.findByMunicipalityIdAndId(municipalityId, instanceId)).thenReturn(Optional.of(instanceEntity));
 
 		// Act
 		instanceService.updateInstance(municipalityId, instanceId, instance);
 
 		// Assert
-		verify(instanceRepositoryMock).findById(instanceId);
+		verify(instanceRepositoryMock).findByMunicipalityIdAndId(municipalityId, instanceId);
 		verify(instanceRepositoryMock).save(instanceEntity);
 		verify(encryptionUtilityMock).encrypt(instance.getPassword().getBytes());
 		verify(clientFactoryMock).createClient(instanceEntity);
 		verify(clientFactoryMock).removeClient(municipalityId, INTERNAL);
 		verifyNoMoreInteractions(instanceRepositoryMock, clientFactoryMock);
+	}
+
+	@Test
+	void updateInstanceThrowsException() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceId = "1234";
+		final var instance = Instance.create().withPassword("someNewPassword").withInstanceType(INTERNAL);
+
+		when(instanceRepositoryMock.findByMunicipalityIdAndId(municipalityId, instanceId)).thenReturn(Optional.empty());
+
+		// Act
+		assertThatThrownBy(() -> instanceService.updateInstance(municipalityId, instanceId, instance))
+			.isInstanceOf(Problem.class)
+			.hasFieldOrPropertyWithValue("title", "Not Found")
+			.hasMessage(String.format("Not Found: An instance with id '%s' could not be found in municipality with id '%s'", instanceId, municipalityId));
+
+		verify(instanceRepositoryMock).findByMunicipalityIdAndId(municipalityId, instanceId);
+		verifyNoMoreInteractions(instanceRepositoryMock);
+		verifyNoInteractions(encryptionUtilityMock, clientFactoryMock);
+
 	}
 
 	@Test
@@ -142,16 +186,37 @@ class InstanceServiceTest {
 		final var instanceId = "1234";
 		final var instanceEntity = InstanceEntity.create().withInstanceType(INTERNAL);
 
-		when(instanceRepositoryMock.findById(instanceId)).thenReturn(Optional.of(instanceEntity));
+		when(instanceRepositoryMock.findByMunicipalityIdAndId(municipalityId, instanceId)).thenReturn(Optional.of(instanceEntity));
 
 		// Act
 		instanceService.deleteInstance(municipalityId, instanceId);
 
 		// Assert
-		verify(instanceRepositoryMock).findById(instanceId);
+		verify(instanceRepositoryMock).findByMunicipalityIdAndId(municipalityId, instanceId);
 		verify(instanceRepositoryMock).deleteById(instanceId);
 		verify(clientFactoryMock).removeClient(municipalityId, INTERNAL);
 		verifyNoMoreInteractions(instanceRepositoryMock, clientFactoryMock);
 		verifyNoInteractions(encryptionUtilityMock);
+	}
+
+	@Test
+	void deleteInstanceThrowsException() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceId = "1234";
+
+		when(instanceRepositoryMock.findByMunicipalityIdAndId(municipalityId, instanceId)).thenReturn(Optional.empty());
+
+		// Act
+		assertThatThrownBy(() -> instanceService.deleteInstance(municipalityId, instanceId))
+			.isInstanceOf(Problem.class)
+			.hasFieldOrPropertyWithValue("title", "Not Found")
+			.hasMessage(String.format("Not Found: An instance with id '%s' could not be found in municipality with id '%s'", instanceId, municipalityId));
+
+		verify(instanceRepositoryMock).findByMunicipalityIdAndId(municipalityId, instanceId);
+		verifyNoMoreInteractions(instanceRepositoryMock);
+		verifyNoInteractions(encryptionUtilityMock, clientFactoryMock);
+
 	}
 }
