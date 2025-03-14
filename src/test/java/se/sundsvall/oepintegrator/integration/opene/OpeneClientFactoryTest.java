@@ -35,29 +35,6 @@ class OpeneClientFactoryTest {
 	private OpeneClientFactory openEClientFactory;
 
 	@Test
-	void testCreateAndGetClient() {
-		final var instanceEntity = InstanceEntity.create()
-			.withInstanceType(EXTERNAL)
-			.withIntegrationType(SOAP)
-			.withMunicipalityId("municipalityId")
-			.withId("instanceId")
-			.withUsername("username")
-			.withPassword("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==")
-			.withBaseUrl("http://localhost")
-			.withConnectTimeout(10)
-			.withReadTimeout(10);
-
-		when(encryptionUtilityMock.decrypt("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==")).thenReturn("decryptedPassword");
-
-		openEClientFactory.createClient(instanceEntity);
-
-		final var client = openEClientFactory.getClient("municipalityId", EXTERNAL);
-		assertThat(client).isNotNull();
-		verify(encryptionUtilityMock).decrypt("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==");
-
-	}
-
-	@Test
 	void testCreateAndGetRestClient() {
 		final var instanceEntity = InstanceEntity.create()
 			.withInstanceType(EXTERNAL)
@@ -78,13 +55,6 @@ class OpeneClientFactoryTest {
 		assertThat(client).isNotNull();
 		verify(encryptionUtilityMock).decrypt("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==");
 
-	}
-
-	@Test
-	void testCreateAndGetClientNotFound() {
-		assertThatThrownBy(() -> openEClientFactory.getClient("municipalityId", EXTERNAL))
-			.hasMessage("Internal Server Error: No EXTERNAL OpenE client exists for municipalityId municipalityId")
-			.isInstanceOf(Problem.class);
 	}
 
 	@Test
@@ -140,7 +110,7 @@ class OpeneClientFactoryTest {
 		when(encryptionUtilityMock.decrypt("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==")).thenReturn("decryptedPassword");
 
 		openEClientFactory.createClient(instanceEntity);
-		openEClientFactory.removeClient("municipalityId", INTERNAL);
+		openEClientFactory.removeClient("municipalityId", INTERNAL, REST);
 
 		verify(encryptionUtilityMock).decrypt("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==");
 	}

@@ -23,9 +23,8 @@ public class WebMessageService {
 		this.openeSoapIntegration = openeSoapIntegration;
 	}
 
-	public Integer createWebMessage(final String municipalityId, final InstanceType instanceType, final WebMessageRequest request, final List<MultipartFile> files) {
-
-		return openeSoapIntegration.addMessage(municipalityId, instanceType, MessageMapper.toAddMessage(request, retrieveFlowInstanceId(request), files)).getMessageID();
+	public Integer createWebMessage(final String municipalityId, final InstanceType instanceType, final WebMessageRequest request, final List<MultipartFile> attachments) {
+		return openeSoapIntegration.addMessage(municipalityId, instanceType, MessageMapper.toAddMessage(request, retrieveFlowInstanceId(request), attachments)).getMessageID();
 	}
 
 	private Integer retrieveFlowInstanceId(final WebMessageRequest webMessageRequest) {

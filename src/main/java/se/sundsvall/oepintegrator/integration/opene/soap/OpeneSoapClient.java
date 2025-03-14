@@ -15,6 +15,6 @@ public interface OpeneSoapClient extends OpeneClient {
 
 	String TEXT_XML_CHARSET_ISO_8859_1 = "text/xml; charset=ISO-8859-1";
 
-	@PostMapping(consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
+	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
 	AddMessageResponse addMessage(@RequestBody AddMessage addMessage);
 }

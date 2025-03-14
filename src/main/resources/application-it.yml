@@ -3,4 +3,18 @@
 #========================================
 logging:
   level:
-    root: DEBUG
+    root: INFO
+
+spring:
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mariadb:10.6.4:///
+  flyway:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+properties:
+  credentials:
+    secret-key: "WbVG8XC%m&9Z!7a$xyKGWzB^#kUSoUUs"

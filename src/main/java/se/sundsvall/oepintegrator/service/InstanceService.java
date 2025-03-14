@@ -57,7 +57,7 @@ public class InstanceService {
 		}
 
 		instanceRepository.save(InstanceMapper.updateInstance(entity, instance, encryptedPassword));
-		clientFactory.removeClient(municipalityId, instance.getInstanceType());
+		clientFactory.removeClient(municipalityId, instance.getInstanceType(), entity.getIntegrationType());
 		clientFactory.createClient(entity);
 	}
 
@@ -65,7 +65,7 @@ public class InstanceService {
 	public void deleteInstance(final String municipalityId, final String instanceId) {
 		final var entity = getInstanceEntity(municipalityId, instanceId);
 		instanceRepository.deleteById(instanceId);
-		clientFactory.removeClient(municipalityId, entity.getInstanceType());
+		clientFactory.removeClient(municipalityId, entity.getInstanceType(), entity.getIntegrationType());
 	}
 
 	private InstanceEntity getInstanceEntity(final String municipalityId, final String instanceId) {

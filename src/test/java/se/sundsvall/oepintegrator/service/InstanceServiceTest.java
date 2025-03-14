@@ -8,6 +8,8 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.INTERNAL;
+import static se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType.REST;
+import static se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType.SOAP;
 
 import java.util.List;
 import java.util.Optional;
@@ -139,8 +141,8 @@ class InstanceServiceTest {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceId = "1234";
-		final var instanceEntity = InstanceEntity.create().withInstanceType(INTERNAL);
-		final var instance = Instance.create().withPassword("someNewPassword").withInstanceType(INTERNAL);
+		final var instanceEntity = InstanceEntity.create().withInstanceType(INTERNAL).withIntegrationType(REST);
+		final var instance = Instance.create().withPassword("someNewPassword").withInstanceType(INTERNAL).withIntegrationType(REST);
 
 		when(instanceRepositoryMock.findByMunicipalityIdAndId(municipalityId, instanceId)).thenReturn(Optional.of(instanceEntity));
 
@@ -152,7 +154,7 @@ class InstanceServiceTest {
 		verify(instanceRepositoryMock).save(instanceEntity);
 		verify(encryptionUtilityMock).encrypt(instance.getPassword().getBytes());
 		verify(clientFactoryMock).createClient(instanceEntity);
-		verify(clientFactoryMock).removeClient(municipalityId, INTERNAL);
+		verify(clientFactoryMock).removeClient(municipalityId, INTERNAL, REST);
 		verifyNoMoreInteractions(instanceRepositoryMock, clientFactoryMock);
 	}
 
@@ -184,7 +186,7 @@ class InstanceServiceTest {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceId = "1234";
-		final var instanceEntity = InstanceEntity.create().withInstanceType(INTERNAL);
+		final var instanceEntity = InstanceEntity.create().withInstanceType(INTERNAL).withIntegrationType(SOAP);
 
 		when(instanceRepositoryMock.findByMunicipalityIdAndId(municipalityId, instanceId)).thenReturn(Optional.of(instanceEntity));
 
@@ -194,7 +196,7 @@ class InstanceServiceTest {
 		// Assert
 		verify(instanceRepositoryMock).findByMunicipalityIdAndId(municipalityId, instanceId);
 		verify(instanceRepositoryMock).deleteById(instanceId);
-		verify(clientFactoryMock).removeClient(municipalityId, INTERNAL);
+		verify(clientFactoryMock).removeClient(municipalityId, INTERNAL, SOAP);
 		verifyNoMoreInteractions(instanceRepositoryMock, clientFactoryMock);
 		verifyNoInteractions(encryptionUtilityMock);
 	}

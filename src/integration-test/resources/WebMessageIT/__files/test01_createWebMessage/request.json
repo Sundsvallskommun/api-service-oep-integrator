@@ -1,0 +1,12 @@
+{
+	"sender": {
+		"userId": "joe01doe"
+	},
+	"message": "This is a message",
+	"externalReferences": [
+		{
+			"key": "flowInstanceId",
+			"value": "356746349"
+		}
+	]
+}
