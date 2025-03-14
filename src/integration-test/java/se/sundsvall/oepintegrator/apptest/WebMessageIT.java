@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.util.ReflectionTestUtils;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
@@ -35,7 +36,7 @@ class WebMessageIT extends AbstractAppTest {
 
 	@Test
 	void test01_createWebMessage() throws FileNotFoundException {
-		openeClientFactory.init();
+		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
 		setupCall()
 			.withHttpMethod(POST)
 			.withServicePath(format(PATH, MUNICIPALITY_ID, InstanceType.EXTERNAL))

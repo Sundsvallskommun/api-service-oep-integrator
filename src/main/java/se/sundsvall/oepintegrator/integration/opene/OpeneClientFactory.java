@@ -43,11 +43,9 @@ public class OpeneClientFactory {
 
 	/**
 	 * Initialize the OpenE clients by creating clients for all instances in the database. This method is called when the
-	 * application starts. <b>Should not be called manually.</b>
-	 * <p>
-	 * Needs to be public for testing purposes.
+	 * application starts.
 	 */
-	public void init() {
+	private void init() {
 		instanceRepository.findAll().forEach(this::createClient);
 
 	}
