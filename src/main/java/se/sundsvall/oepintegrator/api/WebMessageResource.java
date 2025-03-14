@@ -56,9 +56,9 @@ class WebMessageResource {
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "1") @PathVariable final InstanceType instanceType,
 		@Valid @RequestPart final WebMessageRequest request,
-		@RequestPart(value = "files", required = false) final List<MultipartFile> files) {
+		@RequestPart(value = "attachments", required = false) final List<MultipartFile> attachments) {
 
-		return created(fromPath("/{municipalityId}/webmessages/{id}").buildAndExpand(municipalityId, webMessageService.createWebMessage(municipalityId, instanceType, request, files)).toUri())
+		return created(fromPath("/{municipalityId}/webmessages/{id}").buildAndExpand(municipalityId, webMessageService.createWebMessage(municipalityId, instanceType, request, attachments)).toUri())
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}

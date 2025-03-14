@@ -23,13 +23,13 @@ public final class MessageMapper {
 		// Tp prevent instantiation
 	}
 
-	public static AddMessage toAddMessage(final WebMessageRequest request, final Integer flowInstanceId, final List<MultipartFile> files) {
+	public static AddMessage toAddMessage(final WebMessageRequest request, final Integer flowInstanceId, final List<MultipartFile> attachments) {
 
 		final IntegrationMessage integrationMessage;
 		try {
 			integrationMessage = new IntegrationMessage()
 				.withAdded(newInstance().newXMLGregorianCalendar(new GregorianCalendar()))
-				.withAttachments(toAttachments(files))
+				.withAttachments(toAttachments(attachments))
 				.withMessage(request.getMessage());
 		} catch (final DatatypeConfigurationException e) {
 			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "Failed to create message");
