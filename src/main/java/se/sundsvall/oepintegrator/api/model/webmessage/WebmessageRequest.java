@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import se.sundsvall.oepintegrator.api.validation.ValidExternalReferences;
 
-public class WebMessageRequest {
+public class WebmessageRequest {
 
 	@Valid
 	@NotNull
@@ -26,8 +26,8 @@ public class WebMessageRequest {
 	@ArraySchema(schema = @Schema(implementation = ExternalReference.class))
 	private List<ExternalReference> externalReferences;
 
-	public static WebMessageRequest create() {
-		return new WebMessageRequest();
+	public static WebmessageRequest create() {
+		return new WebmessageRequest();
 	}
 
 	public Sender getSender() {
@@ -38,7 +38,7 @@ public class WebMessageRequest {
 		this.sender = sender;
 	}
 
-	public WebMessageRequest withSender(final Sender sender) {
+	public WebmessageRequest withSender(final Sender sender) {
 		this.sender = sender;
 		return this;
 	}
@@ -51,7 +51,7 @@ public class WebMessageRequest {
 		this.message = message;
 	}
 
-	public WebMessageRequest withMessage(final String message) {
+	public WebmessageRequest withMessage(final String message) {
 		this.message = message;
 		return this;
 	}
@@ -64,7 +64,7 @@ public class WebMessageRequest {
 		this.externalReferences = externalReferences;
 	}
 
-	public WebMessageRequest withExternalReferences(final List<ExternalReference> externalReferences) {
+	public WebmessageRequest withExternalReferences(final List<ExternalReference> externalReferences) {
 		this.externalReferences = externalReferences;
 		return this;
 	}
@@ -73,7 +73,7 @@ public class WebMessageRequest {
 	public boolean equals(final Object o) {
 		if (o == null || getClass() != o.getClass())
 			return false;
-		final WebMessageRequest that = (WebMessageRequest) o;
+		final WebmessageRequest that = (WebmessageRequest) o;
 		return Objects.equals(sender, that.sender) && Objects.equals(message, that.message) && Objects.equals(externalReferences, that.externalReferences);
 	}
 
@@ -84,7 +84,7 @@ public class WebMessageRequest {
 
 	@Override
 	public String toString() {
-		return "WebMessageRequest{" +
+		return "WebmessageRequest{" +
 			", sender=" + sender +
 			", message='" + message + '\'' +
 			", externalReferences=" + externalReferences +

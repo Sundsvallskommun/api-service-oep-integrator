@@ -15,7 +15,7 @@ import java.util.Optional;
 import javax.xml.datatype.DatatypeConfigurationException;
 import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
-import se.sundsvall.oepintegrator.api.model.webmessage.WebMessageRequest;
+import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 
 public final class MessageMapper {
 
@@ -23,7 +23,7 @@ public final class MessageMapper {
 		// Tp prevent instantiation
 	}
 
-	public static AddMessage toAddMessage(final WebMessageRequest request, final Integer flowInstanceId, final List<MultipartFile> attachments) {
+	public static AddMessage toAddMessage(final WebmessageRequest request, final Integer flowInstanceId, final List<MultipartFile> attachments) {
 
 		final IntegrationMessage integrationMessage;
 		try {

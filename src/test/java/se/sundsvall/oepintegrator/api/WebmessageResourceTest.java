@@ -1,5 +1,6 @@
 package se.sundsvall.oepintegrator.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -25,13 +26,14 @@ import org.springframework.web.reactive.function.BodyInserters;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
-import se.sundsvall.oepintegrator.api.model.webmessage.WebMessageRequest;
+import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
+import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
-import se.sundsvall.oepintegrator.service.WebMessageService;
+import se.sundsvall.oepintegrator.service.WebmessageService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
-class WebMessageResourceTest {
+class WebmessageResourceTest {
 
 	private static final String PATH = "/{municipalityId}/{instanceType}/webmessages";
 
@@ -39,16 +41,16 @@ class WebMessageResourceTest {
 	private WebTestClient webTestClient;
 
 	@MockitoBean
-	private WebMessageService webMessageService;
+	private WebmessageService webmessageService;
 
 	@Test
-	void createWebMessage() {
+	void createWebmessage() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = InstanceType.EXTERNAL;
 		final var sender = Sender.create().withUserId("userId");
 		final var message = "message";
-		final var request = WebMessageRequest.create()
+		final var request = WebmessageRequest.create()
 			.withSender(sender)
 			.withExternalReferences(List.of(ExternalReference.create().withKey(REFERENCE_FLOW_INSTANCE_ID).withValue("123")))
 			.withMessage(message);
@@ -61,7 +63,7 @@ class WebMessageResourceTest {
 
 		final var messageId = 1234;
 
-		when(webMessageService.createWebMessage(eq(municipalityId), eq(instanceType), eq(request), any())).thenReturn(messageId);
+		when(webmessageService.createWebmessage(eq(municipalityId), eq(instanceType), eq(request), any())).thenReturn(messageId);
 
 		// Act
 		webTestClient.post()
@@ -75,7 +77,64 @@ class WebMessageResourceTest {
 			.expectBody().isEmpty();
 
 		// Assert
-		verify(webMessageService).createWebMessage(eq(municipalityId), eq(instanceType), eq(request), any());
-		verifyNoMoreInteractions(webMessageService);
+		verify(webmessageService).createWebmessage(eq(municipalityId), eq(instanceType), eq(request), any());
+		verifyNoMoreInteractions(webmessageService);
+	}
+
+	@Test
+	void getWebmessages() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var familyId = "123";
+		final var fromDate = "2023-02-23 17:26:23";
+		final var toDate = "2023-02-23 17:26:23";
+		final var webmessage = Webmessage.create().withId(123).withMessage("message");
+
+		when(webmessageService.getWebmessages(municipalityId, instanceType, familyId, fromDate, toDate)).thenReturn(List.of(webmessage));
+		// Act
+		final var result = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/{familyId}")
+				.queryParam("fromDate", fromDate)
+				.queryParam("toDate", toDate)
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "familyId", familyId)))
+			.accept(APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk()
+			.expectBodyList(Webmessage.class)
+			.returnResult()
+			.getResponseBody();
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst()).isEqualTo(webmessage);
+		verify(webmessageService).getWebmessages(municipalityId, instanceType, familyId, fromDate, toDate);
+		verifyNoMoreInteractions(webmessageService);
+	}
+
+	@Test
+	void getWebmessagesWithoutDateFilter() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var familyId = "123";
+		final var webmessage = Webmessage.create().withId(123).withMessage("message");
+
+		when(webmessageService.getWebmessages(municipalityId, instanceType, familyId, null, null)).thenReturn(List.of(webmessage));
+		// Act
+		final var result = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/{familyId}")
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "familyId", familyId)))
+			.accept(APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk()
+			.expectBodyList(Webmessage.class)
+			.returnResult()
+			.getResponseBody();
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst()).isEqualTo(webmessage);
+		verify(webmessageService).getWebmessages(municipalityId, instanceType, familyId, null, null);
+		verifyNoMoreInteractions(webmessageService);
 	}
 }

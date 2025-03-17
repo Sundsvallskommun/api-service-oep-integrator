@@ -20,12 +20,12 @@ import org.zalando.problem.violations.Violation;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
-import se.sundsvall.oepintegrator.api.model.webmessage.WebMessageRequest;
+import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
-class WebMessageResourceFailureTest {
+class WebmessageResourceFailureTest {
 
 	private static final String PATH = "/{municipalityId}/{instanceType}/webmessages";
 
@@ -33,8 +33,8 @@ class WebMessageResourceFailureTest {
 	private WebTestClient webTestClient;
 
 	@Test
-	void testCreateWebMessageWithNullSender() {
-		final WebMessageRequest request = WebMessageRequest.create()
+	void createWebmessageWithNullSender() {
+		final WebmessageRequest request = WebmessageRequest.create()
 			.withMessage("This is a message")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("123")));
 
@@ -60,8 +60,8 @@ class WebMessageResourceFailureTest {
 	}
 
 	@Test
-	void testCreateWebMessageWithBlankMessage() {
-		final WebMessageRequest request = WebMessageRequest.create()
+	void createWebmessageWithBlankMessage() {
+		final WebmessageRequest request = WebmessageRequest.create()
 			.withSender(Sender.create().withUserId("joe01doe"))
 			.withMessage("")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("123")));
@@ -88,8 +88,8 @@ class WebMessageResourceFailureTest {
 	}
 
 	@Test
-	void testCreateWebMessageWithNullMessage() {
-		final WebMessageRequest request = WebMessageRequest.create()
+	void createWebmessageWithNullMessage() {
+		final WebmessageRequest request = WebmessageRequest.create()
 			.withSender(Sender.create().withUserId("joe01doe"))
 			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("123")));
 
@@ -115,8 +115,8 @@ class WebMessageResourceFailureTest {
 	}
 
 	@Test
-	void testCreateWebMessageWithInvalidMunicipalityId() {
-		final WebMessageRequest request = WebMessageRequest.create()
+	void createWebmessageWithInvalidMunicipalityId() {
+		final WebmessageRequest request = WebmessageRequest.create()
 			.withSender(Sender.create().withUserId("joe01doe"))
 			.withMessage("This is a message")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("123")));
@@ -139,12 +139,12 @@ class WebMessageResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
-			.containsExactly(tuple("createWebMessage.municipalityId", "not a valid municipality ID"));
+			.containsExactly(tuple("createWebmessage.municipalityId", "not a valid municipality ID"));
 	}
 
 	@Test
-	void testCreateWebMessageWithInvalidInstanceType() {
-		final WebMessageRequest request = WebMessageRequest.create()
+	void createWebmessageWithInvalidInstanceType() {
+		final WebmessageRequest request = WebmessageRequest.create()
 			.withSender(Sender.create().withUserId("joe01doe"))
 			.withMessage("This is a message")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("123")));
@@ -168,8 +168,8 @@ class WebMessageResourceFailureTest {
 	}
 
 	@Test
-	void testCreateWebMessageWithInvalidExternalReference() {
-		final WebMessageRequest request = WebMessageRequest.create()
+	void createWebmessageWithInvalidExternalReference() {
+		final WebmessageRequest request = WebmessageRequest.create()
 			.withSender(Sender.create().withUserId("joe01doe"))
 			.withMessage("This is a message")
 			.withExternalReferences(List.of(ExternalReference.create().withKey("invalid").withValue("123")));
@@ -193,8 +193,8 @@ class WebMessageResourceFailureTest {
 	}
 
 	@Test
-	void testCreateWebMessageWithNullExternalReference() {
-		final WebMessageRequest request = WebMessageRequest.create()
+	void createWebmessageWithNullExternalReference() {
+		final WebmessageRequest request = WebmessageRequest.create()
 			.withSender(Sender.create().withUserId("joe01doe"))
 			.withMessage("This is a message");
 		final var multipartBodyBuilder = new MultipartBodyBuilder();
@@ -216,6 +216,25 @@ class WebMessageResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("externalReferences", "can not be empty or contain elements with empty keys or values"));
+	}
+
+	@Test
+	void getWebmessagesWithInvalidMunicipalityId() {
+
+		final var response = webTestClient.get()
+			.uri(PATH + ("/{familyId}}"), "invalidId", InstanceType.INTERNAL, 123)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getWebmessages.municipalityId", "not a valid municipality ID"));
+
 	}
 
 }
