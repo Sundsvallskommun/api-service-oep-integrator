@@ -8,3 +8,7 @@ openapi:
 spring:
   application:
     name: api-oep-integrator
+turkraft:
+  springfilter:
+    offsetdatetimeformatter:
+      pattern: yyyy-MM-dd'T'HH:mm:ss.SSSXXX

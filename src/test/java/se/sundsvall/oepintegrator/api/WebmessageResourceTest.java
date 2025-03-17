@@ -1,5 +1,6 @@
 package se.sundsvall.oepintegrator.api;
 
+import static java.time.OffsetDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -13,6 +14,8 @@ import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -87,16 +90,16 @@ class WebmessageResourceTest {
 		final var municipalityId = "2281";
 		final var instanceType = InstanceType.EXTERNAL;
 		final var familyId = "123";
-		final var fromDate = "2023-02-23 17:26:23";
-		final var toDate = "2023-02-23 17:26:23";
+		final var fromDateTime = now(ZoneId.systemDefault()).minusDays(4);
+		final var toDateTime = now(ZoneId.systemDefault());
 		final var webmessage = Webmessage.create().withId(123).withMessage("message");
 
-		when(webmessageService.getWebmessages(municipalityId, instanceType, familyId, fromDate, toDate)).thenReturn(List.of(webmessage));
+		when(webmessageService.getWebmessages(eq(municipalityId), eq(instanceType), eq(familyId), any(OffsetDateTime.class), any(OffsetDateTime.class))).thenReturn(List.of(webmessage));
 		// Act
 		final var result = webTestClient.get()
 			.uri(builder -> builder.path(PATH + "/{familyId}")
-				.queryParam("fromDate", fromDate)
-				.queryParam("toDate", toDate)
+				.queryParam("fromDateTime", fromDateTime.toString().replace("+", "-")) // WebTestClient has big issues with + in query parameters
+				.queryParam("toDateTime", toDateTime.toString().replace("+", "-")) // Feel free to fix this if you want. Swagger UI does not have this issue.
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "familyId", familyId)))
 			.accept(APPLICATION_JSON)
 			.exchange()
@@ -107,7 +110,7 @@ class WebmessageResourceTest {
 		// Assert
 		assertThat(result).isNotNull().hasSize(1);
 		assertThat(result.getFirst()).isEqualTo(webmessage);
-		verify(webmessageService).getWebmessages(municipalityId, instanceType, familyId, fromDate, toDate);
+		verify(webmessageService).getWebmessages(eq(municipalityId), eq(instanceType), eq(familyId), any(OffsetDateTime.class), any(OffsetDateTime.class));
 		verifyNoMoreInteractions(webmessageService);
 	}
 

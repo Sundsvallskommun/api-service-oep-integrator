@@ -2,8 +2,6 @@ package se.sundsvall.oepintegrator.api.model.webmessage;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,7 +10,6 @@ public class Webmessage {
 	@Schema(description = "The webMessageCollector Id for the message", example = "1")
 	private Integer id;
 
-	@Enumerated(EnumType.STRING)
 	@Schema(description = "If the message is inbound or outbound. Inbound means coming from open-E. Outbound means sent to open-E", example = "INBOUND")
 	private Direction direction;
 

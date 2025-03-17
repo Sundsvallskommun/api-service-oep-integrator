@@ -4,6 +4,7 @@ import static java.util.Collections.emptyList;
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class WebmessageService {
 
 	}
 
-	public List<Webmessage> getWebmessages(@ValidMunicipalityId final String municipalityId, final InstanceType instanceType, final String familyId, final String fromDate, final String toDate) {
+	public List<Webmessage> getWebmessages(@ValidMunicipalityId final String municipalityId, final InstanceType instanceType, final String familyId, final OffsetDateTime fromDateTime, final OffsetDateTime toDateTime) {
 		return emptyList(); // TODO: UF-14938 - Implement integration
 	}
 }

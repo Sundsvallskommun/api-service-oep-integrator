@@ -48,5 +48,4 @@ class WebmessageIT extends AbstractAppTest {
 			.withExpectedResponseStatus(CREATED)
 			.sendRequestAndVerifyResponse();
 	}
-
 }
