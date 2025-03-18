@@ -81,7 +81,6 @@ class WebmessageResource {
 			iso = DateTimeFormat.ISO.DATE_TIME) final LocalDateTime fromDateTime,
 		@Parameter(name = "toDateTime", description = "The end date and time for filtering web messages (optional).", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(
 			iso = DateTimeFormat.ISO.DATE_TIME) final LocalDateTime toDateTime) {
-
 		return ResponseEntity.ok(webmessageService.getWebmessages(municipalityId, instanceType, familyId, fromDateTime, toDateTime));
 	}
 }

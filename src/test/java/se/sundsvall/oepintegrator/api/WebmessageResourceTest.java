@@ -97,8 +97,8 @@ class WebmessageResourceTest {
 		// Act
 		final var result = webTestClient.get()
 			.uri(builder -> builder.path(PATH + "/{familyId}")
-				.queryParam("fromDateTime", fromDateTime.toString())
-				.queryParam("toDateTime", toDateTime.toString())
+				.queryParam("fromDateTime", fromDateTime)
+				.queryParam("toDateTime", toDateTime)
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "familyId", familyId)))
 			.accept(APPLICATION_JSON)
 			.exchange()

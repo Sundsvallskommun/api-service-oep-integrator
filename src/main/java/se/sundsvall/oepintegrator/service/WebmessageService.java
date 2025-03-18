@@ -1,6 +1,5 @@
 package se.sundsvall.oepintegrator.service;
 
-import static java.util.Collections.emptyList;
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
 
@@ -44,6 +43,6 @@ public class WebmessageService {
 	}
 
 	public List<Webmessage> getWebmessages(@ValidMunicipalityId final String municipalityId, final InstanceType instanceType, final String familyId, final LocalDateTime fromDateTime, final LocalDateTime toDateTime) {
-		return emptyList(); // TODO: UF-14938 - Implement integration
+		return openeSoapIntegration.getMessages(municipalityId, instanceType, familyId, fromDateTime, toDateTime);
 	}
 }
