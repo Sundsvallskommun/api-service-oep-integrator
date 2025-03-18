@@ -29,6 +29,10 @@ public final class WebmessageMapper {
 		// Intentionally Empty
 	}
 
+	public static List<Webmessage> toWebmessages(final String municipalityId, final byte[] messages, final InstanceType instance) {
+		return toWebmessages(municipalityId, messages, null, instance);
+	}
+
 	public static List<Webmessage> toWebmessages(final String municipalityId, final byte[] messages, final String familyId, final InstanceType instance) {
 
 		if (messages == null) {
@@ -43,7 +47,7 @@ public final class WebmessageMapper {
 				.map(externalMessage -> toWebmessage(familyId, externalMessage, instance, municipalityId))
 				.toList();
 		} catch (final Exception e) {
-			throw Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "%s occurred when parsing open-e messages for familyId %s. Message is: %s".formatted(e.getClass().getSimpleName(), familyId, e.getMessage()));
+			throw Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "%s occurred when parsing open-e messages. Message is: %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
 		}
 	}
 

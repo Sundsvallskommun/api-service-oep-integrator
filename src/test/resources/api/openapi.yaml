@@ -7,19 +7,19 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:58813
+  - url: http://localhost:63109
     description: Generated server url
 tags:
+  - name: Webmessages
+    description: Resource for sending webmessages to OpenE
   - name: Configuration for instances
     description: Settings for instances per municipalityId
-  - name: WebMessages
-    description: Resource for sending web messages to OpenE
 paths:
   /{municipalityId}/{instanceType}/webmessages:
     post:
       tags:
-        - WebMessages
-      summary: Create web message
+        - Webmessages
+      summary: Create webmessage
       operationId: createWebmessage
       parameters:
         - name: municipalityId
@@ -293,12 +293,80 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
-  /{municipalityId}/{instanceType}/webmessages/{familyId}:
+  /{municipalityId}/{instanceType}/webmessages/flowInstanceId/{flowInstanceId}:
     get:
       tags:
-        - WebMessages
-      summary: Get all web messages for a familyId
-      operationId: getWebmessages
+        - Webmessages
+      summary: Get all webmessages for a given errand
+      operationId: getWebmessagesByFlowInstanceId
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: Which instanceType a message should be sent to
+          required: true
+          schema:
+            type: string
+            enum:
+              - INTERNAL
+              - EXTERNAL
+          example: 1
+        - name: flowInstanceId
+          in: path
+          description: Flow instance id
+          required: true
+          schema:
+            type: string
+          example: 123
+        - name: fromDateTime
+          in: query
+          description: The start date and time for filtering web messages (optional)
+          required: false
+          schema:
+            type: string
+            format: date-time
+          example: 2024-01-31T12:00:00
+        - name: toDateTime
+          in: query
+          description: The end date and time for filtering web messages (optional).
+          required: false
+          schema:
+            type: string
+            format: date-time
+          example: 2024-01-31T12:00:00
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebmessageRequest"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+  /{municipalityId}/{instanceType}/webmessages/familyId/{familyId}:
+    get:
+      tags:
+        - Webmessages
+      summary: Get all webmessages for a familyId
+      operationId: getWebmessagesByFamilyId
       parameters:
         - name: municipalityId
           in: path
@@ -417,6 +485,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ExternalReference"
+      description: Webmessage request model
     Problem:
       type: object
       properties:
@@ -439,11 +508,11 @@ components:
     StatusType:
       type: object
       properties:
-        reasonPhrase:
-          type: string
         statusCode:
           type: integer
           format: int32
+        reasonPhrase:
+          type: string
     ConstraintViolationProblem:
       type: object
       properties:

@@ -3,6 +3,7 @@ package se.sundsvall.oepintegrator.api.model.webmessage;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
 
+@Schema(description = "Webmessage attachment model")
 public class WebmessageAttachment {
 
 	@Schema(description = "The Id for the attachment", example = "1")

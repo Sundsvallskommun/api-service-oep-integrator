@@ -103,11 +103,9 @@ class WebmessageMapperTest {
 		final String invalidXml = "Invalid XML content";
 
 		// Act & Assert
-
 		assertThatThrownBy(() -> WebmessageMapper.toWebmessages(MUNICIPALITY_ID, invalidXml.getBytes(ISO_8859_1), FAMILY_ID, INSTANCE_TYPE))
 			.isInstanceOf(Problem.class)
-			.hasMessageContaining("Internal Server Error: JsonParseException occurred when parsing open-e messages for familyId 12345. Message is: Unexpected character 'I' (code 73) in prolog; expected '<'\n"
-				+ " at [row,col {unknown-source}]: [1,1]");
+			.hasMessageStartingWith("Internal Server Error: JsonParseException occurred when parsing open-e messages. Message is: Unexpected character 'I' (code 73) in prolog; expected '<'");
 	}
 
 	@Test

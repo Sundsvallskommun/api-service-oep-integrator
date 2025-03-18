@@ -1,0 +1,38 @@
+[
+	{
+		"direction": "INBOUND",
+		"municipalityId": "2281",
+		"externalCaseId": "102251",
+		"message": "Inbound message",
+		"messageId": "10",
+		"sent": "2022-05-25 11:20",
+		"username": "userName_1",
+		"firstName": "firstName_1",
+		"lastName": "lastName_1",
+		"email": "email_1@test.se",
+		"userId": "1",
+		"attachments": [
+			{
+				"attachmentId": 164,
+				"name": "test.pdf",
+				"extension": "pdf",
+				"mimeType": "application/pdf"
+			}
+		],
+		"instance": "EXTERNAL"
+	},
+	{
+		"direction": "OUTBOUND",
+		"municipalityId": "2281",
+		"externalCaseId": "102251",
+		"message": "Outbound message",
+		"messageId": "11",
+		"sent": "2022-05-25 11:20",
+		"username": "userName_2",
+		"firstName": "firstName_2",
+		"lastName": "lastName_2",
+		"email": "email_2@test.se",
+		"userId": "2",
+		"instance": "EXTERNAL"
+	}
+]
