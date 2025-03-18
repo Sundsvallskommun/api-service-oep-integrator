@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:56369
+  - url: http://localhost:58813
     description: Generated server url
 tags:
   - name: Configuration for instances
@@ -331,16 +331,15 @@ paths:
           schema:
             type: string
             format: date-time
-          example: 2023-02-23T17:26:23.000+01:00
+          example: 2024-01-31T12:00:00
         - name: toDateTime
           in: query
-          description: "The end date and time for filtering web messages (optional).\
-          \ Format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
+          description: The end date and time for filtering web messages (optional).
           required: false
           schema:
             type: string
             format: date-time
-          example: 2023-02-23T17:26:23.000+01:00
+          example: 2024-01-31T12:00:00
       responses:
         "200":
           description: Successful operation
@@ -421,12 +420,6 @@ components:
     Problem:
       type: object
       properties:
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
@@ -437,6 +430,12 @@ components:
           type: object
           additionalProperties:
             type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
     StatusType:
       type: object
       properties:
@@ -485,8 +484,6 @@ components:
           type: string
         message:
           type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
@@ -494,6 +491,8 @@ components:
           type: object
           additionalProperties:
             type: object
+        detail:
+          type: string
         suppressed:
           type: array
           items:
@@ -556,12 +555,6 @@ components:
                 type: boolean
         message:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
@@ -572,6 +565,12 @@ components:
           type: object
           additionalProperties:
             type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
         suppressed:
           type: array
           items:

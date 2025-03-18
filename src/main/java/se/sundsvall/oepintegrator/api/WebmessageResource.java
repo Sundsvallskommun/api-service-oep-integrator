@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -77,10 +77,10 @@ class WebmessageResource {
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "1") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "familyId", description = "Family id", example = "123") @PathVariable final String familyId,
-		@Parameter(name = "fromDateTime", description = "The start date and time for filtering web messages (optional)", example = "2023-02-23T17:26:23.000+01:00") @RequestParam(required = false) @DateTimeFormat(
-			iso = DateTimeFormat.ISO.DATE_TIME) final OffsetDateTime fromDateTime,
-		@Parameter(name = "toDateTime", description = "The end date and time for filtering web messages (optional). Format: yyyy-MM-dd'T'HH:mm:ss.SSSXXX", example = "2023-02-23T17:26:23.000+01:00") @RequestParam(required = false) @DateTimeFormat(
-			iso = DateTimeFormat.ISO.DATE_TIME) final OffsetDateTime toDateTime) {
+		@Parameter(name = "fromDateTime", description = "The start date and time for filtering web messages (optional)", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(
+			iso = DateTimeFormat.ISO.DATE_TIME) final LocalDateTime fromDateTime,
+		@Parameter(name = "toDateTime", description = "The end date and time for filtering web messages (optional).", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(
+			iso = DateTimeFormat.ISO.DATE_TIME) final LocalDateTime toDateTime) {
 
 		return ResponseEntity.ok(webmessageService.getWebmessages(municipalityId, instanceType, familyId, fromDateTime, toDateTime));
 	}
