@@ -1,5 +1,6 @@
 package se.sundsvall.oepintegrator.service;
 
+import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
+import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
@@ -74,6 +76,29 @@ class WebmessageServiceTest {
 			.hasFieldOrPropertyWithValue("status", BAD_REQUEST)
 			.hasMessage("Bad Request: Flow instance id is required");
 
+		verifyNoMoreInteractions(openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getWebmessages() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var familyId = "familyId";
+		final var fromDate = now();
+		final var toDate = now();
+
+		final var webmessages = List.of(
+			new Webmessage().withMessageId("2"),
+			new Webmessage().withMessageId("1"));
+		when(openeSoapIntegrationMock.getMessages(municipalityId, instanceType, familyId, fromDate, toDate)).thenReturn(webmessages);
+		// Act
+		final var result = webmessageService.getWebmessages(municipalityId, instanceType, familyId, fromDate, toDate);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(2);
+		assertThat(result.getFirst().getMessageId()).isEqualTo("2");
+		verify(openeSoapIntegrationMock).getMessages(municipalityId, instanceType, familyId, fromDate, toDate);
 		verifyNoMoreInteractions(openeSoapIntegrationMock);
 	}
 }
