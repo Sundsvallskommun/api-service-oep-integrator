@@ -54,24 +54,48 @@ class WebmessageIT extends AbstractAppTest {
 	}
 
 	@Test
-	void test02_getWebmessages() {
+	void test02_getWebmessagesByFamilyId() {
 		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "familyId", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
+			.withServicePath(format(PATH + ("/familyId/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "123", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
 
 	@Test
-	void test03_getWebmessage_emptyResult() {
+	void test03_getWebmessagesByFamilyId_emptyResult() {
 		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "familyId", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
+			.withServicePath(format(PATH + ("/familyId/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "123", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test04_getWebmessagesByFlowInstanceId() {
+		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
+
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(format(PATH + ("/flowInstanceId/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "102251", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test05_getWebmessagesByFlowInstanceId_emptyResult() {
+		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
+
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(format(PATH + ("/flowInstanceId/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "102255", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();

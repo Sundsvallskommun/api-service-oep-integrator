@@ -58,7 +58,7 @@ class OpeneSoapIntegrationTest {
 	}
 
 	@Test
-	void getWebmessages(@Load("/mappings/messages.xml") final String xml) {
+	void getWebmessagesByFamilyId(@Load("/mappings/messages.xml") final String xml) {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = InstanceType.EXTERNAL;
@@ -69,10 +69,10 @@ class OpeneSoapIntegrationTest {
 		final var formattedToDateTime = toDateTime.format(OPEN_E_DATE_TIME_FORMAT);
 
 		when(clientFactory.getSoapClient(municipalityId, instanceType)).thenReturn(openeSoapClient);
-		when(openeSoapClient.getMessages(familyId, formattedFromDateTime, formattedToDateTime)).thenReturn(xml.getBytes());
+		when(openeSoapClient.getWebmessagesByFamilyId(familyId, formattedFromDateTime, formattedToDateTime)).thenReturn(xml.getBytes());
 
 		// Act
-		final var result = openeSoapIntegration.getMessages(municipalityId, instanceType, familyId, fromDateTime, toDateTime);
+		final var result = openeSoapIntegration.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime);
 
 		// Assert
 		assertThat(result).isNotNull().hasSize(1);
@@ -80,12 +80,12 @@ class OpeneSoapIntegrationTest {
 		assertThat(result.getFirst().getDirection()).isEqualTo(Direction.INBOUND);
 
 		verify(clientFactory).getSoapClient(municipalityId, instanceType);
-		verify(openeSoapClient).getMessages(familyId, formattedFromDateTime, formattedToDateTime);
+		verify(openeSoapClient).getWebmessagesByFamilyId(familyId, formattedFromDateTime, formattedToDateTime);
 		verifyNoMoreInteractions(openeSoapClient, clientFactory);
 	}
 
 	@Test
-	void getWebmessagesNullResult() {
+	void getWebmessagesByFamilyIdNullResult() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = InstanceType.EXTERNAL;
@@ -96,21 +96,21 @@ class OpeneSoapIntegrationTest {
 		final var formattedToDateTime = toDateTime.format(OPEN_E_DATE_TIME_FORMAT);
 
 		when(clientFactory.getSoapClient(municipalityId, instanceType)).thenReturn(openeSoapClient);
-		when(openeSoapClient.getMessages(familyId, formattedFromDateTime, formattedToDateTime)).thenReturn(null);
+		when(openeSoapClient.getWebmessagesByFamilyId(familyId, formattedFromDateTime, formattedToDateTime)).thenReturn(null);
 
 		// Act
-		final var result = openeSoapIntegration.getMessages(municipalityId, instanceType, familyId, fromDateTime, toDateTime);
+		final var result = openeSoapIntegration.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime);
 
 		// Assert
 		assertThat(result).isNotNull().isEmpty();
 
 		verify(clientFactory).getSoapClient(municipalityId, instanceType);
-		verify(openeSoapClient).getMessages(familyId, formattedFromDateTime, formattedToDateTime);
+		verify(openeSoapClient).getWebmessagesByFamilyId(familyId, formattedFromDateTime, formattedToDateTime);
 		verifyNoMoreInteractions(openeSoapClient, clientFactory);
 	}
 
 	@Test
-	void getWebmessagesParsingError() {
+	void getWebmessagesByFamilyIdParsingError() {
 		final var municipalityId = "2281";
 		final var instanceType = InstanceType.EXTERNAL;
 		final var familyId = "familyId";
@@ -120,16 +120,90 @@ class OpeneSoapIntegrationTest {
 		final var formattedToDateTime = toDateTime.format(OPEN_E_DATE_TIME_FORMAT);
 
 		when(clientFactory.getSoapClient(municipalityId, instanceType)).thenReturn(openeSoapClient);
-		when(openeSoapClient.getMessages(familyId, formattedFromDateTime, formattedToDateTime)).thenReturn(new byte[0]);
+		when(openeSoapClient.getWebmessagesByFamilyId(familyId, formattedFromDateTime, formattedToDateTime)).thenReturn(new byte[0]);
 
 		// Act & Assert
-		assertThatThrownBy(() -> openeSoapIntegration.getMessages(municipalityId, instanceType, familyId, fromDateTime, toDateTime))
+		assertThatThrownBy(() -> openeSoapIntegration.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime))
 			.isInstanceOf(Problem.class)
-			.hasMessageStartingWith("Internal Server Error: JsonParseException occurred when parsing open-e messages for familyId familyId. Message is: Unexpected EOF in prolog");
+			.hasMessageStartingWith("Internal Server Error: JsonParseException occurred when parsing open-e messages. Message is: Unexpected EOF in prolog");
 
 		verify(clientFactory).getSoapClient(municipalityId, instanceType);
-		verify(openeSoapClient).getMessages(familyId, formattedFromDateTime, formattedToDateTime);
+		verify(openeSoapClient).getWebmessagesByFamilyId(familyId, formattedFromDateTime, formattedToDateTime);
 		verifyNoMoreInteractions(openeSoapClient, clientFactory);
+	}
 
+	@Test
+	void getWebmessagesByFlowInstanceId(@Load("/mappings/messages.xml") final String xml) {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var flowInstanceId = "flowInstanceId";
+		final var fromDateTime = LocalDateTime.now();
+		final var toDateTime = LocalDateTime.now();
+		final var formattedFromDateTime = fromDateTime.format(OPEN_E_DATE_TIME_FORMAT);
+		final var formattedToDateTime = toDateTime.format(OPEN_E_DATE_TIME_FORMAT);
+
+		when(clientFactory.getSoapClient(municipalityId, instanceType)).thenReturn(openeSoapClient);
+		when(openeSoapClient.getWebmessagesByFlowInstanceId(flowInstanceId, formattedFromDateTime, formattedToDateTime)).thenReturn(xml.getBytes());
+
+		// Act
+		final var result = openeSoapIntegration.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst().getMessage()).startsWith("Test message");
+		assertThat(result.getFirst().getDirection()).isEqualTo(Direction.INBOUND);
+
+		verify(clientFactory).getSoapClient(municipalityId, instanceType);
+		verify(openeSoapClient).getWebmessagesByFlowInstanceId(flowInstanceId, formattedFromDateTime, formattedToDateTime);
+		verifyNoMoreInteractions(openeSoapClient, clientFactory);
+	}
+
+	@Test
+	void getWebmessagesByFlowInstanceIdNullResult() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var flowInstanceId = "flowInstanceId";
+		final var fromDateTime = LocalDateTime.now();
+		final var toDateTime = LocalDateTime.now();
+		final var formattedFromDateTime = fromDateTime.format(OPEN_E_DATE_TIME_FORMAT);
+		final var formattedToDateTime = toDateTime.format(OPEN_E_DATE_TIME_FORMAT);
+
+		when(clientFactory.getSoapClient(municipalityId, instanceType)).thenReturn(openeSoapClient);
+		when(openeSoapClient.getWebmessagesByFlowInstanceId(flowInstanceId, formattedFromDateTime, formattedToDateTime)).thenReturn(null);
+
+		// Act
+		final var result = openeSoapIntegration.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime);
+
+		// Assert
+		assertThat(result).isNotNull().isEmpty();
+
+		verify(clientFactory).getSoapClient(municipalityId, instanceType);
+		verify(openeSoapClient).getWebmessagesByFlowInstanceId(flowInstanceId, formattedFromDateTime, formattedToDateTime);
+		verifyNoMoreInteractions(openeSoapClient, clientFactory);
+	}
+
+	@Test
+	void getWebmessagesByFlowInstanceIdParsingError() {
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var flowInstanceId = "flowInstanceId";
+		final var fromDateTime = LocalDateTime.now();
+		final var toDateTime = LocalDateTime.now();
+		final var formattedFromDateTime = fromDateTime.format(OPEN_E_DATE_TIME_FORMAT);
+		final var formattedToDateTime = toDateTime.format(OPEN_E_DATE_TIME_FORMAT);
+
+		when(clientFactory.getSoapClient(municipalityId, instanceType)).thenReturn(openeSoapClient);
+		when(openeSoapClient.getWebmessagesByFlowInstanceId(flowInstanceId, formattedFromDateTime, formattedToDateTime)).thenReturn(new byte[0]);
+
+		// Act & Assert
+		assertThatThrownBy(() -> openeSoapIntegration.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime))
+			.isInstanceOf(Problem.class)
+			.hasMessageStartingWith("Internal Server Error: JsonParseException occurred when parsing open-e messages. Message is: Unexpected EOF in prolog");
+
+		verify(clientFactory).getSoapClient(municipalityId, instanceType);
+		verify(openeSoapClient).getWebmessagesByFlowInstanceId(flowInstanceId, formattedFromDateTime, formattedToDateTime);
+		verifyNoMoreInteractions(openeSoapClient, clientFactory);
 	}
 }

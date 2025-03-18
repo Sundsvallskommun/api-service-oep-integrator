@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import se.sundsvall.oepintegrator.api.validation.ValidExternalReferences;
 
+@Schema(description = "Webmessage request model")
 public class WebmessageRequest {
 
 	@Valid

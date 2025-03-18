@@ -80,7 +80,7 @@ class WebmessageServiceTest {
 	}
 
 	@Test
-	void getWebmessages() {
+	void getWebmessagesByFamilyId() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = InstanceType.EXTERNAL;
@@ -91,14 +91,37 @@ class WebmessageServiceTest {
 		final var webmessages = List.of(
 			new Webmessage().withMessageId("2"),
 			new Webmessage().withMessageId("1"));
-		when(openeSoapIntegrationMock.getMessages(municipalityId, instanceType, familyId, fromDate, toDate)).thenReturn(webmessages);
+		when(openeSoapIntegrationMock.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDate, toDate)).thenReturn(webmessages);
 		// Act
-		final var result = webmessageService.getWebmessages(municipalityId, instanceType, familyId, fromDate, toDate);
+		final var result = webmessageService.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDate, toDate);
 
 		// Assert
 		assertThat(result).isNotNull().hasSize(2);
 		assertThat(result.getFirst().getMessageId()).isEqualTo("2");
-		verify(openeSoapIntegrationMock).getMessages(municipalityId, instanceType, familyId, fromDate, toDate);
+		verify(openeSoapIntegrationMock).getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDate, toDate);
+		verifyNoMoreInteractions(openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getWebmessageByFlowInstanceId() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var flowInstanceId = "flowInstanceId";
+		final var fromDate = now();
+		final var toDate = now();
+
+		final var webmessages = List.of(
+			new Webmessage().withMessageId("2"),
+			new Webmessage().withMessageId("1"));
+		when(openeSoapIntegrationMock.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDate, toDate)).thenReturn(webmessages);
+		// Act
+		final var result = webmessageService.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDate, toDate);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(2);
+		assertThat(result.getFirst().getMessageId()).isEqualTo("2");
+		verify(openeSoapIntegrationMock).getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDate, toDate);
 		verifyNoMoreInteractions(openeSoapIntegrationMock);
 	}
 }

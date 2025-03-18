@@ -84,7 +84,7 @@ class WebmessageResourceTest {
 	}
 
 	@Test
-	void getWebmessages() {
+	void getWebmessagesByFamilyId() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = InstanceType.EXTERNAL;
@@ -93,10 +93,10 @@ class WebmessageResourceTest {
 		final var toDateTime = now(ZoneId.systemDefault());
 		final var webmessage = Webmessage.create().withId(123).withMessage("message");
 
-		when(webmessageService.getWebmessages(municipalityId, instanceType, familyId, fromDateTime, toDateTime)).thenReturn(List.of(webmessage));
+		when(webmessageService.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime)).thenReturn(List.of(webmessage));
 		// Act
 		final var result = webTestClient.get()
-			.uri(builder -> builder.path(PATH + "/{familyId}")
+			.uri(builder -> builder.path(PATH + "/familyId/{familyId}")
 				.queryParam("fromDateTime", fromDateTime)
 				.queryParam("toDateTime", toDateTime)
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "familyId", familyId)))
@@ -109,23 +109,22 @@ class WebmessageResourceTest {
 		// Assert
 		assertThat(result).isNotNull().hasSize(1);
 		assertThat(result.getFirst()).isEqualTo(webmessage);
-		verify(webmessageService).getWebmessages(municipalityId, instanceType, familyId, fromDateTime, toDateTime);
+		verify(webmessageService).getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime);
 		verifyNoMoreInteractions(webmessageService);
 	}
 
 	@Test
-	void getWebmessagesWithoutDateFilter() {
-
+	void getWebmessagesByFamilyIdWithoutDateFilter() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = InstanceType.EXTERNAL;
 		final var familyId = "123";
 		final var webmessage = Webmessage.create().withId(123).withMessage("message");
 
-		when(webmessageService.getWebmessages(municipalityId, instanceType, familyId, null, null)).thenReturn(List.of(webmessage));
+		when(webmessageService.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, null, null)).thenReturn(List.of(webmessage));
 		// Act
 		final var result = webTestClient.get()
-			.uri(builder -> builder.path(PATH + "/{familyId}")
+			.uri(builder -> builder.path(PATH + "/familyId/{familyId}")
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "familyId", familyId)))
 			.accept(APPLICATION_JSON)
 			.exchange()
@@ -136,7 +135,66 @@ class WebmessageResourceTest {
 		// Assert
 		assertThat(result).isNotNull().hasSize(1);
 		assertThat(result.getFirst()).isEqualTo(webmessage);
-		verify(webmessageService).getWebmessages(municipalityId, instanceType, familyId, null, null);
+		verify(webmessageService).getWebmessagesByFamilyId(municipalityId, instanceType, familyId, null, null);
 		verifyNoMoreInteractions(webmessageService);
 	}
+
+	@Test
+	void getWebmessagesByFlowInstanceId() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var flowInstanceId = "123";
+		final var fromDateTime = now(ZoneId.systemDefault()).minusDays(4);
+		final var toDateTime = now(ZoneId.systemDefault());
+		final var webmessage = Webmessage.create().withId(123).withMessage("message");
+
+		when(webmessageService.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime)).thenReturn(List.of(webmessage));
+		// Act
+		final var result = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/flowInstanceId/{flowInstanceId}")
+				.queryParam("fromDateTime", fromDateTime)
+				.queryParam("toDateTime", toDateTime)
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.accept(APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk()
+			.expectBodyList(Webmessage.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst()).isEqualTo(webmessage);
+		verify(webmessageService).getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime);
+		verifyNoMoreInteractions(webmessageService);
+
+	}
+
+	@Test
+	void getWebmessagesByFlowInstanceIdWithoutDateFilter() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var flowInstanceId = "123";
+		final var webmessage = Webmessage.create().withId(123).withMessage("message");
+
+		when(webmessageService.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, null, null)).thenReturn(List.of(webmessage));
+		// Act
+		final var result = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/flowInstanceId/{flowInstanceId}")
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.accept(APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk()
+			.expectBodyList(Webmessage.class)
+			.returnResult()
+			.getResponseBody();
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst()).isEqualTo(webmessage);
+		verify(webmessageService).getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, null, null);
+		verifyNoMoreInteractions(webmessageService);
+	}
+
 }

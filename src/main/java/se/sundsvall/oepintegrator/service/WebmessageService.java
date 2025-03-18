@@ -9,7 +9,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
-import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
@@ -42,7 +41,11 @@ public class WebmessageService {
 
 	}
 
-	public List<Webmessage> getWebmessages(@ValidMunicipalityId final String municipalityId, final InstanceType instanceType, final String familyId, final LocalDateTime fromDateTime, final LocalDateTime toDateTime) {
-		return openeSoapIntegration.getMessages(municipalityId, instanceType, familyId, fromDateTime, toDateTime);
+	public List<Webmessage> getWebmessagesByFamilyId(final String municipalityId, final InstanceType instanceType, final String familyId, final LocalDateTime fromDateTime, final LocalDateTime toDateTime) {
+		return openeSoapIntegration.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime);
+	}
+
+	public List<Webmessage> getWebmessagesByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final LocalDateTime fromDateTime, final LocalDateTime toDateTime) {
+		return openeSoapIntegration.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime);
 	}
 }

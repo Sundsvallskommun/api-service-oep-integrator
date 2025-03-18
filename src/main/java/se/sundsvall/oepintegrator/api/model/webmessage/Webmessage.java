@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.Objects;
 
+@Schema(description = "Webmessage model")
 public class Webmessage {
 
 	@Schema(description = "The webMessageCollector Id for the message", example = "1")
