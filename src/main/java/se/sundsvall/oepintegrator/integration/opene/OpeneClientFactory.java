@@ -47,7 +47,6 @@ public class OpeneClientFactory {
 	 */
 	private void init() {
 		instanceRepository.findAll().forEach(this::createClient);
-
 	}
 
 	/**

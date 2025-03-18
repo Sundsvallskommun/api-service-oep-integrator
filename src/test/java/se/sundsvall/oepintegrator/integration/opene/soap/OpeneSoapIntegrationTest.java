@@ -15,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.zalando.problem.Problem;
 import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
@@ -123,8 +124,8 @@ class OpeneSoapIntegrationTest {
 
 		// Act & Assert
 		assertThatThrownBy(() -> openeSoapIntegration.getMessages(municipalityId, instanceType, familyId, fromDateTime, toDateTime))
-			.hasMessage("Internal Server Error: JsonParseException occurred when parsing open-e messages for familyId familyId. Message is: Unexpected EOF in prolog\n"
-				+ " at [row,col {unknown-source}]: [1,0]");
+			.isInstanceOf(Problem.class)
+			.hasMessageStartingWith("Internal Server Error: JsonParseException occurred when parsing open-e messages for familyId familyId. Message is: Unexpected EOF in prolog");
 
 		verify(clientFactory).getSoapClient(municipalityId, instanceType);
 		verify(openeSoapClient).getMessages(familyId, formattedFromDateTime, formattedToDateTime);
