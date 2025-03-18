@@ -4,7 +4,7 @@
 		"urlPath": "/external-oepMock/api/callback"
 	},
 	"response": {
-		"bodyFileName": "test01_createWebMessage/response/addMessageResponse.xml",
+		"bodyFileName": "test01_createWebmessage/response/addMessageResponse.xml",
 		"status": 200,
 		"headers": {
 			"Content-Type": "text/xml; charset=UTF-8"

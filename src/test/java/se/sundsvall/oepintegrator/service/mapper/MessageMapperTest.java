@@ -12,7 +12,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
-import se.sundsvall.oepintegrator.api.model.webmessage.WebMessageRequest;
+import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 
 class MessageMapperTest {
 
@@ -22,7 +22,7 @@ class MessageMapperTest {
 		final var sender = Sender.create().withUserId("userId");
 		final var message = "message";
 		final List<MultipartFile> attachments = List.of(new MockMultipartFile("attachment", "file.txt", "text/plain", "some content".getBytes()));
-		final var request = WebMessageRequest.create()
+		final var request = WebmessageRequest.create()
 			.withSender(sender)
 			.withMessage(message);
 		final var flowInstanceId = 123;
@@ -56,7 +56,7 @@ class MessageMapperTest {
 		// Arrange
 		final var message = "message";
 		final List<MultipartFile> attachments = List.of(new MockMultipartFile("attachment", "file.txt", "text/plain", "some content".getBytes()));
-		final var request = WebMessageRequest.create()
+		final var request = WebmessageRequest.create()
 			.withSender(null)
 			.withMessage(message);
 		final var flowInstanceId = 123;
@@ -64,7 +64,7 @@ class MessageMapperTest {
 		// Act & Assert
 		assertThatThrownBy(() -> MessageMapper.toAddMessage(request, flowInstanceId, attachments))
 			.isInstanceOf(NullPointerException.class)
-			.hasMessage("Cannot invoke \"se.sundsvall.oepintegrator.api.model.webmessage.Sender.getUserId()\" because the return value of \"se.sundsvall.oepintegrator.api.model.webmessage.WebMessageRequest.getSender()\" is null");
+			.hasMessage("Cannot invoke \"se.sundsvall.oepintegrator.api.model.webmessage.Sender.getUserId()\" because the return value of \"se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest.getSender()\" is null");
 
 	}
 

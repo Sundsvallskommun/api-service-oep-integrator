@@ -20,26 +20,26 @@ import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
-import se.sundsvall.oepintegrator.api.model.webmessage.WebMessageRequest;
+import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 
 @ExtendWith(MockitoExtension.class)
-class WebMessageServiceTest {
+class WebmessageServiceTest {
 
 	@Mock
 	private OpeneSoapIntegration openeSoapIntegrationMock;
 
 	@InjectMocks
-	private WebMessageService webMessageService;
+	private WebmessageService webmessageService;
 
 	@Test
-	void createWebMessage() {
+	void createWebmessage() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = InstanceType.EXTERNAL;
 		final var userId = "userId";
-		final var request = WebMessageRequest.create()
+		final var request = WebmessageRequest.create()
 			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("1234")))
 			.withMessage("message")
 			.withSender(Sender.create().withUserId(userId));
@@ -49,7 +49,7 @@ class WebMessageServiceTest {
 		when(openeSoapIntegrationMock.addMessage(eq(municipalityId), eq(instanceType), any())).thenReturn(response);
 
 		// Act
-		final var result = webMessageService.createWebMessage(municipalityId, instanceType, request, files);
+		final var result = webmessageService.createWebmessage(municipalityId, instanceType, request, files);
 
 		// Assert
 		assertThat(result).isEqualTo(1234);
@@ -58,18 +58,18 @@ class WebMessageServiceTest {
 	}
 
 	@Test
-	void createWebMessageThrowsExceptionWhenFlowInstanceIdIsMissing() {
+	void createWebmessageThrowsExceptionWhenFlowInstanceIdIsMissing() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = InstanceType.EXTERNAL;
 		final var userId = "userId";
-		final var request = WebMessageRequest.create()
+		final var request = WebmessageRequest.create()
 			.withMessage("message")
 			.withSender(Sender.create().withUserId(userId));
 		final var files = List.<MultipartFile>of();
 
 		// Act & Assert
-		assertThatThrownBy(() -> webMessageService.createWebMessage(municipalityId, instanceType, request, files))
+		assertThatThrownBy(() -> webmessageService.createWebmessage(municipalityId, instanceType, request, files))
 			.isInstanceOf(Problem.class)
 			.hasFieldOrPropertyWithValue("status", BAD_REQUEST)
 			.hasMessage("Bad Request: Flow instance id is required");

@@ -18,14 +18,14 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 
-@AutoConfigureWireMock(port = 9090, files = "classpath:/WebMessageIT")
+@AutoConfigureWireMock(port = 9090, files = "classpath:/WebmessageIT")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
 @ActiveProfiles("it")
 @Sql({
 	"/db/scripts/truncate.sql",
 	"/db/scripts/testdata-it.sql"
 })
-class WebMessageIT extends AbstractAppTest {
+class WebmessageIT extends AbstractAppTest {
 
 	private static final String REQUEST_FILE = "request.json";
 	private static final String PATH = "/{0}/{1}/webmessages";
@@ -35,8 +35,9 @@ class WebMessageIT extends AbstractAppTest {
 	private OpeneClientFactory openeClientFactory;
 
 	@Test
-	void test01_createWebMessage() throws FileNotFoundException {
+	void test01_createWebmessage() throws FileNotFoundException {
 		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
+
 		setupCall()
 			.withHttpMethod(POST)
 			.withServicePath(format(PATH, MUNICIPALITY_ID, InstanceType.EXTERNAL))
@@ -47,5 +48,4 @@ class WebMessageIT extends AbstractAppTest {
 			.withExpectedResponseStatus(CREATED)
 			.sendRequestAndVerifyResponse();
 	}
-
 }

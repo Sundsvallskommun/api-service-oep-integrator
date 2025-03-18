@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:53850
+  - url: http://localhost:58813
     description: Generated server url
 tags:
   - name: Configuration for instances
@@ -20,7 +20,7 @@ paths:
       tags:
         - WebMessages
       summary: Create web message
-      operationId: createWebMessage
+      operationId: createWebmessage
       parameters:
         - name: municipalityId
           in: path
@@ -48,7 +48,7 @@ paths:
               type: object
               properties:
                 request:
-                  $ref: "#/components/schemas/WebMessageRequest"
+                  $ref: "#/components/schemas/WebmessageRequest"
                 attachments:
                   type: array
                   items:
@@ -293,6 +293,74 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
+  /{municipalityId}/{instanceType}/webmessages/{familyId}:
+    get:
+      tags:
+        - WebMessages
+      summary: Get all web messages for a familyId
+      operationId: getWebmessages
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: Which instanceType a message should be sent to
+          required: true
+          schema:
+            type: string
+            enum:
+              - INTERNAL
+              - EXTERNAL
+          example: 1
+        - name: familyId
+          in: path
+          description: Family id
+          required: true
+          schema:
+            type: string
+          example: 123
+        - name: fromDateTime
+          in: query
+          description: The start date and time for filtering web messages (optional)
+          required: false
+          schema:
+            type: string
+            format: date-time
+          example: 2024-01-31T12:00:00
+        - name: toDateTime
+          in: query
+          description: The end date and time for filtering web messages (optional).
+          required: false
+          schema:
+            type: string
+            format: date-time
+          example: 2024-01-31T12:00:00
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebmessageRequest"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
   /api-docs:
     get:
       tags:
@@ -333,7 +401,7 @@ components:
           description: The user ID of the sender. I.e. employee ID
           example: joe01doe
       description: Sender model
-    WebMessageRequest:
+    WebmessageRequest:
       required:
         - message
         - sender
@@ -371,11 +439,11 @@ components:
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     ConstraintViolationProblem:
       type: object
       properties:

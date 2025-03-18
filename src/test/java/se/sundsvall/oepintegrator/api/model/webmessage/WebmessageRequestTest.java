@@ -12,11 +12,11 @@ import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
-class WebMessageRequestTest {
+class WebmessageRequestTest {
 
 	@Test
 	void testBean() {
-		MatcherAssert.assertThat(WebMessageRequest.class, allOf(
+		MatcherAssert.assertThat(WebmessageRequest.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanHashCode(),
@@ -27,27 +27,28 @@ class WebMessageRequestTest {
 	@Test
 	void builder() {
 		// Arrange
-		final var sender = Sender.create().withUserId("userId");
-		final var externalReferences = List.of(ExternalReference.create());
 		final var message = "message";
+		final var externalReferences = List.of(ExternalReference.create());
+		final var sender = Sender.create();
+
 		// Act
-		final var bean = WebMessageRequest.create()
-			.withSender(sender)
+		final var bean = WebmessageRequest.create()
 			.withMessage(message)
-			.withExternalReferences(externalReferences);
+			.withExternalReferences(externalReferences)
+			.withSender(sender);
 
 		// Assert
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
-		assertThat(bean.getSender()).isEqualTo(sender);
 		assertThat(bean.getMessage()).isEqualTo(message);
 		assertThat(bean.getExternalReferences()).isEqualTo(externalReferences);
+		assertThat(bean.getSender()).isEqualTo(sender);
 
 	}
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(WebMessageRequest.create()).hasAllNullFieldsOrProperties();
-		assertThat(new WebMessageRequest()).hasAllNullFieldsOrProperties();
+		assertThat(WebmessageRequest.create()).hasAllNullFieldsOrProperties();
+		assertThat(new WebmessageRequest()).hasAllNullFieldsOrProperties();
 	}
 
 }
