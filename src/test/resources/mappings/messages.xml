@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<Messages>
+	<ExternalMessage>
+		<postedByManager>false</postedByManager>
+		<systemMessage>false</systemMessage>
+		<readReceiptEnabled>false</readReceiptEnabled>
+		<messageID>143750</messageID>
+		<message>Test message</message>
+		<poster>
+			<userID>123</userID>
+			<username>testuser</username>
+			<firstname>Test</firstname>
+			<lastname>User</lastname>
+			<email>test@example.com</email>
+			<admin>false</admin>
+			<enabled>true</enabled>
+			<lastLogin>2025-03-04 20:54</lastLogin>
+			<lastLoginInMilliseconds>1741118055000</lastLoginInMilliseconds>
+			<added>2017-09-25 09:04</added>
+			<isMutable>true</isMutable>
+			<hasFormProvider>true</hasFormProvider>
+		</poster>
+		<added>2025-03-03 10:41</added>
+		<flowInstanceID>1234</flowInstanceID>
+		<attachments>
+			<ExternalMessageAttachment>
+				<attachmentID>1</attachmentID>
+				<filename>test.pdf</filename>
+				<size>5916680</size>
+				<added>2025-03-03 15:08</added>
+				<FormatedSize>5,64 MB</FormatedSize>
+			</ExternalMessageAttachment>
+		</attachments>
+	</ExternalMessage>
+</Messages>

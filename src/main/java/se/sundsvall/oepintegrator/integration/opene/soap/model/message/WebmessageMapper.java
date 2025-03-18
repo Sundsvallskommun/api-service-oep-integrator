@@ -40,7 +40,6 @@ public final class WebmessageMapper {
 			return ofNullable(new XmlMapper().readValue(xmlString, Messages.class).getExternalMessages())
 				.orElse(emptyList())
 				.stream()
-				.filter(externalMessage -> !externalMessage.isPostedByManager())
 				.map(externalMessage -> toWebmessage(familyId, externalMessage, instance, municipalityId))
 				.toList();
 		} catch (final Exception e) {
