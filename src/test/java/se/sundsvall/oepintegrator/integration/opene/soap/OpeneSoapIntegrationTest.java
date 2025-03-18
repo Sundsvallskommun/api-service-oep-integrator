@@ -15,11 +15,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.sundsvall.dept44.test.annotation.resource.Load;
+import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({
+	MockitoExtension.class, ResourceLoaderExtension.class
+})
 class OpeneSoapIntegrationTest {
 
 	@Mock
@@ -53,7 +57,7 @@ class OpeneSoapIntegrationTest {
 	}
 
 	@Test
-	void getWebmessages() {
+	void getWebmessages(@Load("/mappings/messages.xml") final String xml) {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = InstanceType.EXTERNAL;
@@ -62,36 +66,6 @@ class OpeneSoapIntegrationTest {
 		final var toDateTime = LocalDateTime.now();
 		final var formattedFromDateTime = fromDateTime.format(OPEN_E_DATE_TIME_FORMAT);
 		final var formattedToDateTime = toDateTime.format(OPEN_E_DATE_TIME_FORMAT);
-		final var xml = """
-			<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
-			<Messages>
-			<ExternalMessage>
-			    <postedByManager>false</postedByManager>
-			    <systemMessage>false</systemMessage>
-			    <readReceiptEnabled>false</readReceiptEnabled>
-			    <messageID>143750</messageID>
-			    <message>Hej!&#13;
-			        Tack så mycket för utkastet, det ser bra ut men jag har några frågor.&#13;
-			        &#13;
-			        Mvh Testorsson</message>
-			    <poster>
-			        <userID>1234</userID>
-			        <firstname>Namn</firstname>
-			        <lastname>Efternamn</lastname>
-			        <email>test@testorsson.com</email>
-			        <admin>false</admin>
-			        <enabled>true</enabled>
-			        <lastLogin>2025-03-04 20:54</lastLogin>
-			        <lastLoginInMilliseconds>1741118055000</lastLoginInMilliseconds>
-			        <added>2017-09-25 09:04</added>
-			        <isMutable>true</isMutable>
-			        <hasFormProvider>true</hasFormProvider>
-			    </poster>
-			    <added>2025-03-03 10:41</added>
-			    <flowInstanceID>1234</flowInstanceID>
-			</ExternalMessage>
-			</Messages>
-			""";
 
 		when(clientFactory.getSoapClient(municipalityId, instanceType)).thenReturn(openeSoapClient);
 		when(openeSoapClient.getMessages(familyId, formattedFromDateTime, formattedToDateTime)).thenReturn(xml.getBytes());
@@ -101,7 +75,7 @@ class OpeneSoapIntegrationTest {
 
 		// Assert
 		assertThat(result).isNotNull().hasSize(1);
-		assertThat(result.getFirst().getMessage()).startsWith("Hej!");
+		assertThat(result.getFirst().getMessage()).startsWith("Test message");
 		assertThat(result.getFirst().getDirection()).isEqualTo(Direction.INBOUND);
 
 		verify(clientFactory).getSoapClient(municipalityId, instanceType);

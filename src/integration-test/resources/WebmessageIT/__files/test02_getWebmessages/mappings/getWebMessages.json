@@ -1,0 +1,14 @@
+{
+	"request": {
+		"method": "GET",
+		"urlPathPattern": "/external-oepMock/api/messageapi/getmessages/family/familyId.*"
+	},
+	"response": {
+		"bodyFileName": "test02_getWebmessages/response/getWebMessagesResponse.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		}
+	},
+	"name": "getWebMessages"
+}

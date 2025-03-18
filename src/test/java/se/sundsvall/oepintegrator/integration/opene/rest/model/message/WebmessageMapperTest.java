@@ -1,18 +1,15 @@
-package se.sundsvall.oepintegrator.integration.opene.soap.model.message;
+package se.sundsvall.oepintegrator.integration.opene.rest.model.message;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.zalando.problem.Problem;
-import se.sundsvall.dept44.test.annotation.resource.Load;
-import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
+import se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper;
 
-@ExtendWith(ResourceLoaderExtension.class)
 class WebmessageMapperTest {
 
 	private static final String MUNICIPALITY_ID = "2281";
@@ -20,7 +17,45 @@ class WebmessageMapperTest {
 	private static final InstanceType INSTANCE_TYPE = InstanceType.EXTERNAL;
 
 	@Test
-	void toWebmessages(@Load("/mappings/messages.xml") final String xml) {
+	void toWebmessages_success() {
+		// Arrange
+		final String xml = """
+			<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+			<Messages>
+			<ExternalMessage>
+			    <postedByManager>false</postedByManager>
+			    <systemMessage>false</systemMessage>
+			    <readReceiptEnabled>false</readReceiptEnabled>
+			    <messageID>143750</messageID>
+			    <message>Test message</message>
+			    <poster>
+			        <userID>123</userID>
+			        <username>testuser</username>
+			        <firstname>Test</firstname>
+			        <lastname>User</lastname>
+			        <email>test@example.com</email>
+			        <admin>false</admin>
+			        <enabled>true</enabled>
+			        <lastLogin>2025-03-04 20:54</lastLogin>
+			        <lastLoginInMilliseconds>1741118055000</lastLoginInMilliseconds>
+			        <added>2017-09-25 09:04</added>
+			        <isMutable>true</isMutable>
+			        <hasFormProvider>true</hasFormProvider>
+			    </poster>
+			    <added>2025-03-03 10:41</added>
+			    <flowInstanceID>1234</flowInstanceID>
+			     <attachments>
+			            <ExternalMessageAttachment>
+			                <attachmentID>1</attachmentID>
+			                <filename>test.pdf</filename>
+			                <size>5916680</size>
+			                <added>2025-03-03 15:08</added>
+			                <FormatedSize>5,64 MB</FormatedSize>
+			            </ExternalMessageAttachment>
+			        </attachments>
+			</ExternalMessage>
+			</Messages>
+			""";
 
 		// Act
 		final var result = WebmessageMapper.toWebmessages(MUNICIPALITY_ID, xml.getBytes(ISO_8859_1), FAMILY_ID, INSTANCE_TYPE);
@@ -76,7 +111,37 @@ class WebmessageMapperTest {
 	}
 
 	@Test
-	void toWebmessagesWithEmptyMessagesReturnsEmptyList(@Load("/mappings/empty-messages.xml") final String xml) {
+	void toWebmessages_withEmptyMessages_returnsEmptyList() {
+		// Arrange
+		final String xml = """
+			<?xml version="1.0" encoding="ISO-8859-1"?>
+			<messages>
+			    <externalMessages/>
+			</messages>
+			""";
+
+		// Act
+		final var result = WebmessageMapper.toWebmessages(MUNICIPALITY_ID, xml.getBytes(ISO_8859_1), FAMILY_ID, INSTANCE_TYPE);
+
+		// Assert
+		assertThat(result).isEmpty();
+	}
+
+	@Test
+	void toWebmessages_filtersOutManagerMessages() {
+		// Arrange
+		final String xml = """
+			<?xml version="1.0" encoding="ISO-8859-1"?>
+			<messages>
+			    <externalMessages>
+			        <externalMessage>
+			            <messageID>1001</messageID>
+			            <postedByManager>true</postedByManager>
+			        </externalMessage>
+			    </externalMessages>
+			</messages>
+			""";
+
 		// Act
 		final var result = WebmessageMapper.toWebmessages(MUNICIPALITY_ID, xml.getBytes(ISO_8859_1), FAMILY_ID, INSTANCE_TYPE);
 
