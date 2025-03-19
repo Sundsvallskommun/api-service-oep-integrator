@@ -11,11 +11,11 @@ import static org.hamcrest.CoreMatchers.allOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
-class WebmessageAttachmentTest {
+class WebmessageAttachmentDataTest {
 
 	@Test
 	void testBean() {
-		MatcherAssert.assertThat(WebmessageAttachment.class, allOf(
+		MatcherAssert.assertThat(WebmessageAttachmentData.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanHashCode(),
@@ -26,29 +26,21 @@ class WebmessageAttachmentTest {
 	@Test
 	void builder() {
 		// Arrange
-		final var attachmentId = 1234;
-		final var name = "name";
-		final var mimeType = "text/plain";
-		final var extension = ".txt";
+		final var data = new byte[10];
 
 		// Act
-		final var bean = WebmessageAttachment.create()
-			.withExtension(extension)
-			.withAttachmentId(attachmentId)
-			.withName(name)
-			.withMimeType(mimeType);
+		final var bean = WebmessageAttachmentData.create()
+			.withData(data);
 
 		// Assert
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
-		assertThat(bean.getAttachmentId()).isEqualTo(attachmentId);
-		assertThat(bean.getName()).isEqualTo(name);
-		assertThat(bean.getExtension()).isEqualTo(extension);
-		assertThat(bean.getMimeType()).isEqualTo(mimeType);
+		assertThat(bean.getData()).isEqualTo(data);
 	}
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(WebmessageAttachment.create()).hasAllNullFieldsOrProperties();
-		assertThat(new WebmessageAttachment()).hasAllNullFieldsOrProperties();
+		assertThat(WebmessageAttachmentData.create()).hasAllNullFieldsOrProperties();
+		assertThat(new WebmessageAttachmentData()).hasAllNullFieldsOrProperties();
 	}
+
 }

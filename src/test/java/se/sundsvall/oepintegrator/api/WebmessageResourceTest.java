@@ -29,6 +29,7 @@ import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
+import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.service.WebmessageService;
@@ -96,7 +97,7 @@ class WebmessageResourceTest {
 		when(webmessageService.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime)).thenReturn(List.of(webmessage));
 		// Act
 		final var result = webTestClient.get()
-			.uri(builder -> builder.path(PATH + "/familyId/{familyId}")
+			.uri(builder -> builder.path(PATH + "/families/{familyId}")
 				.queryParam("fromDateTime", fromDateTime)
 				.queryParam("toDateTime", toDateTime)
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "familyId", familyId)))
@@ -124,7 +125,7 @@ class WebmessageResourceTest {
 		when(webmessageService.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, null, null)).thenReturn(List.of(webmessage));
 		// Act
 		final var result = webTestClient.get()
-			.uri(builder -> builder.path(PATH + "/familyId/{familyId}")
+			.uri(builder -> builder.path(PATH + "/families/{familyId}")
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "familyId", familyId)))
 			.accept(APPLICATION_JSON)
 			.exchange()
@@ -152,7 +153,7 @@ class WebmessageResourceTest {
 		when(webmessageService.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime)).thenReturn(List.of(webmessage));
 		// Act
 		final var result = webTestClient.get()
-			.uri(builder -> builder.path(PATH + "/flowInstanceId/{flowInstanceId}")
+			.uri(builder -> builder.path(PATH + "/flow-instances/{flowInstanceId}")
 				.queryParam("fromDateTime", fromDateTime)
 				.queryParam("toDateTime", toDateTime)
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
@@ -182,7 +183,7 @@ class WebmessageResourceTest {
 		when(webmessageService.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, null, null)).thenReturn(List.of(webmessage));
 		// Act
 		final var result = webTestClient.get()
-			.uri(builder -> builder.path(PATH + "/flowInstanceId/{flowInstanceId}")
+			.uri(builder -> builder.path(PATH + "/flow-instances/{flowInstanceId}")
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
 			.accept(APPLICATION_JSON)
 			.exchange()
@@ -194,6 +195,34 @@ class WebmessageResourceTest {
 		assertThat(result).isNotNull().hasSize(1);
 		assertThat(result.getFirst()).isEqualTo(webmessage);
 		verify(webmessageService).getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, null, null);
+		verifyNoMoreInteractions(webmessageService);
+	}
+
+	@Test
+	void getAttachmentById() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var flowInstanceId = "123";
+		final var attachmentId = 123;
+		final var attachment = new WebmessageAttachmentData().withData(new byte[10]);
+
+		when(webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId)).thenReturn(attachment);
+
+		// Act
+		final var result = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(PATH + "/flow-instances/{flowInstanceId}/attachments/{attachmentId}")
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId, "attachmentId", attachmentId)))
+			.accept(APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk()
+			.expectBody(WebmessageAttachmentData.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(result).isNotNull().isEqualTo(attachment);
+		verify(webmessageService).getAttachmentById(municipalityId, instanceType, attachmentId);
 		verifyNoMoreInteractions(webmessageService);
 	}
 

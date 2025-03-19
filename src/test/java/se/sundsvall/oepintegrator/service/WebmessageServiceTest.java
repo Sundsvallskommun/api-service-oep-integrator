@@ -22,6 +22,7 @@ import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
+import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
@@ -122,6 +123,22 @@ class WebmessageServiceTest {
 		assertThat(result).isNotNull().hasSize(2);
 		assertThat(result.getFirst().getMessageId()).isEqualTo("2");
 		verify(openeSoapIntegrationMock).getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDate, toDate);
+		verifyNoMoreInteractions(openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getAttachmentById() {
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var attachmentId = 123;
+		final var attachment = new WebmessageAttachmentData().withData(new byte[10]);
+
+		when(openeSoapIntegrationMock.getAttachmentById(municipalityId, instanceType, attachmentId)).thenReturn(attachment);
+
+		final var result = webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId);
+
+		assertThat(result).isNotNull().isEqualTo(attachment);
+		verify(openeSoapIntegrationMock).getAttachmentById(municipalityId, instanceType, attachmentId);
 		verifyNoMoreInteractions(openeSoapIntegrationMock);
 	}
 }

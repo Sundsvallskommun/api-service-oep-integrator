@@ -33,4 +33,7 @@ public interface OpeneSoapClient extends OpeneClient {
 		@RequestParam(name = "fromDate") final String fromDate,
 		@RequestParam(name = "toDate") final String toDate);
 
+	@GetMapping(path = "/api/messageapi/getattachment/{attachmentId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
+	byte[] getAttachmentById(@PathVariable(name = "attachmentId") final int attachmentId);
+
 }

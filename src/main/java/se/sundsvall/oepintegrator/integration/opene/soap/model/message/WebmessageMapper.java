@@ -19,6 +19,7 @@ import org.zalando.problem.Status;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachment;
+import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 
 public final class WebmessageMapper {
@@ -27,6 +28,10 @@ public final class WebmessageMapper {
 
 	private WebmessageMapper() {
 		// Intentionally Empty
+	}
+
+	public static WebmessageAttachmentData toWebmessageAttachmentData(final byte[] data) {
+		return WebmessageAttachmentData.create().withData(data);
 	}
 
 	public static List<Webmessage> toWebmessages(final String municipalityId, final byte[] messages, final InstanceType instance) {
