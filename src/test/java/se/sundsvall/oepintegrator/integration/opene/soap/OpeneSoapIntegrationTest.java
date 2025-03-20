@@ -19,6 +19,7 @@ import org.zalando.problem.Problem;
 import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
+import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 
@@ -204,6 +205,25 @@ class OpeneSoapIntegrationTest {
 
 		verify(clientFactory).getSoapClient(municipalityId, instanceType);
 		verify(openeSoapClient).getWebmessagesByFlowInstanceId(flowInstanceId, formattedFromDateTime, formattedToDateTime);
+		verifyNoMoreInteractions(openeSoapClient, clientFactory);
+	}
+
+	@Test
+	void getAttachmentById() {
+		final var municipalityId = "2281";
+		final var instanceType = InstanceType.EXTERNAL;
+		final var attachmentId = 123;
+		final var bytes = new byte[10];
+		final var attachment = new WebmessageAttachmentData().withData(bytes);
+
+		when(clientFactory.getSoapClient(municipalityId, instanceType)).thenReturn(openeSoapClient);
+		when(openeSoapClient.getAttachmentById(attachmentId)).thenReturn(bytes);
+
+		final var result = openeSoapIntegration.getAttachmentById(municipalityId, instanceType, attachmentId);
+
+		assertThat(result).isNotNull().isEqualTo(attachment);
+		verify(openeSoapClient).getAttachmentById(attachmentId);
+		verify(clientFactory).getSoapClient(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeSoapClient, clientFactory);
 	}
 }

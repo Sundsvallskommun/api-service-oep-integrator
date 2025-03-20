@@ -59,7 +59,7 @@ class WebmessageIT extends AbstractAppTest {
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/familyId/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "123", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
+			.withServicePath(format(PATH + ("/families/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "123", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
@@ -71,7 +71,7 @@ class WebmessageIT extends AbstractAppTest {
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/familyId/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "123", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
+			.withServicePath(format(PATH + ("/families/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "123", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
@@ -83,7 +83,7 @@ class WebmessageIT extends AbstractAppTest {
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/flowInstanceId/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "102251", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
+			.withServicePath(format(PATH + ("/flow-instances/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "102251", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
@@ -95,9 +95,22 @@ class WebmessageIT extends AbstractAppTest {
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/flowInstanceId/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "102255", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
+			.withServicePath(format(PATH + ("/flow-instances/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "102255", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test06_getAttachmentById() {
+		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
+
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(format(PATH + ("/flow-instances/{2}/attachments/{3}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "102255", 123))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+
 	}
 }

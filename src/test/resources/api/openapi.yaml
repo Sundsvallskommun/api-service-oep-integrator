@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:63109
+  - url: http://localhost:57129
     description: Generated server url
 tags:
   - name: Webmessages
@@ -293,7 +293,7 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
-  /{municipalityId}/{instanceType}/webmessages/flowInstanceId/{flowInstanceId}:
+  /{municipalityId}/{instanceType}/webmessages/flow-instances/{flowInstanceId}:
     get:
       tags:
         - Webmessages
@@ -361,7 +361,65 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
-  /{municipalityId}/{instanceType}/webmessages/familyId/{familyId}:
+  /{municipalityId}/{instanceType}/webmessages/flow-instances/{flowInstanceId}/attachments/{attachmentId}:
+    get:
+      tags:
+        - Webmessages
+      summary: Get attachment by id
+      operationId: getAttachmentById
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: Which instanceType a message should be sent to
+          required: true
+          schema:
+            type: string
+            enum:
+              - INTERNAL
+              - EXTERNAL
+          example: 1
+        - name: flowInstanceId
+          in: path
+          description: Flow instance id
+          required: true
+          schema:
+            type: string
+          example: 123
+        - name: attachmentId
+          in: path
+          description: Attachment id
+          required: true
+          schema:
+            type: integer
+            format: int32
+          example: 123
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json: { }
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+  /{municipalityId}/{instanceType}/webmessages/families/{familyId}:
     get:
       tags:
         - Webmessages

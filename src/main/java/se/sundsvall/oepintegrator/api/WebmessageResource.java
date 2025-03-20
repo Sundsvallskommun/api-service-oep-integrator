@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,6 +36,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
+import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.service.WebmessageService;
@@ -70,7 +72,7 @@ class WebmessageResource {
 			.build();
 	}
 
-	@GetMapping(path = "/familyId/{familyId}", produces = APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/families/{familyId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get all webmessages for a familyId", responses = {
 		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = WebmessageRequest.class)))
 	})
@@ -85,7 +87,7 @@ class WebmessageResource {
 		return ok(webmessageService.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime));
 	}
 
-	@GetMapping(path = "/flowInstanceId/{flowInstanceId}", produces = APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/flow-instances/{flowInstanceId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get all webmessages for a given errand", responses = {
 		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = WebmessageRequest.class)))
 	})
@@ -98,5 +100,17 @@ class WebmessageResource {
 		@Parameter(name = "toDateTime", description = "The end date and time for filtering web messages (optional).", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(
 			iso = DateTimeFormat.ISO.DATE_TIME) final LocalDateTime toDateTime) {
 		return ok(webmessageService.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime));
+	}
+
+	@GetMapping(path = "/flow-instances/{flowInstanceId}/attachments/{attachmentId}")
+	@Operation(summary = "Get attachment by id", responses = {
+		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true)
+	})
+	ResponseEntity<WebmessageAttachmentData> getAttachmentById(
+		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "1") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "flowInstanceId", description = "Flow instance id", example = "123") @PathVariable final String flowInstanceId,
+		@Parameter(name = "attachmentId", description = "Attachment id", example = "123") @PathVariable @NotNull final Integer attachmentId) {
+		return ok(webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId));
 	}
 }

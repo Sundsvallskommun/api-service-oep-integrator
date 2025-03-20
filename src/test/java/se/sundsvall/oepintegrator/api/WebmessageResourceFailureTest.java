@@ -222,7 +222,7 @@ class WebmessageResourceFailureTest {
 	void getWebmessagesByFamilyIdWithInvalidMunicipalityId() {
 
 		final var response = webTestClient.get()
-			.uri(PATH + ("/familyId/{familyId}}"), "invalidId", InstanceType.INTERNAL, 123)
+			.uri(PATH + ("/families/{familyId}}"), "invalidId", InstanceType.INTERNAL, 123)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -237,10 +237,10 @@ class WebmessageResourceFailureTest {
 	}
 
 	@Test
-	void getWebmessagesByFlowInstanceIddWithInvalidMunicipalityId() {
+	void getWebmessagesByFlowInstanceIdWithInvalidMunicipalityId() {
 
 		final var response = webTestClient.get()
-			.uri(PATH + ("/flowInstanceId/{flowInstanceId}}"), "invalidId", InstanceType.INTERNAL, 123)
+			.uri(PATH + ("/flow-instances/{flowInstanceId}"), "invalidId", InstanceType.INTERNAL, 123)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -252,6 +252,23 @@ class WebmessageResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getWebmessagesByFlowInstanceId.municipalityId", "not a valid municipality ID"));
+	}
+
+	@Test
+	void getAttachmentByIdWithInvalidMunicipalityId() {
+		final var response = webTestClient.get()
+			.uri(PATH + ("/flow-instances/{flowInstanceId}/attachments/{attachmentId}"), "invalidId", InstanceType.INTERNAL, 123, 123)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getAttachmentById.municipalityId", "not a valid municipality ID"));
 	}
 
 }
