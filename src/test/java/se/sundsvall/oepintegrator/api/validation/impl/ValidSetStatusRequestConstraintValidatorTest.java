@@ -27,6 +27,13 @@ class ValidSetStatusRequestConstraintValidatorTest {
 	}
 
 	@Test
+	void validSetStatusRequestWithStatusId() {
+		final var setStatusRequest = new SetStatusRequest().withStatusId(123);
+
+		assertThat(validator.isValid(setStatusRequest, constraintValidatorContextMock)).isTrue();
+	}
+
+	@Test
 	void invalidSetStatusRequest() {
 		final var setStatusRequest = new SetStatusRequest();
 

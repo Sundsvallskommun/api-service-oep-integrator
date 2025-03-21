@@ -63,7 +63,7 @@ class WebmessageResource {
 	})
 	ResponseEntity<Void> createWebmessage(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "1") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Valid @RequestPart final WebmessageRequest request,
 		@RequestPart(value = "attachments", required = false) final List<MultipartFile> attachments) {
 
@@ -78,7 +78,7 @@ class WebmessageResource {
 	})
 	ResponseEntity<List<Webmessage>> getWebmessagesByFamilyId(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "1") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "familyId", description = "Family id", example = "123") @PathVariable final String familyId,
 		@Parameter(name = "fromDateTime", description = "The start date and time for filtering web messages (optional)", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(
 			iso = DateTimeFormat.ISO.DATE_TIME) final LocalDateTime fromDateTime,
@@ -93,7 +93,7 @@ class WebmessageResource {
 	})
 	ResponseEntity<List<Webmessage>> getWebmessagesByFlowInstanceId(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "1") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "flowInstanceId", description = "Flow instance id", example = "123") @PathVariable final String flowInstanceId,
 		@Parameter(name = "fromDateTime", description = "The start date and time for filtering web messages (optional)", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(
 			iso = DateTimeFormat.ISO.DATE_TIME) final LocalDateTime fromDateTime,
@@ -108,7 +108,7 @@ class WebmessageResource {
 	})
 	ResponseEntity<WebmessageAttachmentData> getAttachmentById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "1") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "flowInstanceId", description = "Flow instance id", example = "123") @PathVariable final String flowInstanceId,
 		@Parameter(name = "attachmentId", description = "Attachment id", example = "123") @PathVariable @NotNull final Integer attachmentId) {
 		return ok(webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId));

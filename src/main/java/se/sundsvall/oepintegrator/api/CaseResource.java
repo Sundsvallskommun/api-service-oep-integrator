@@ -46,7 +46,7 @@ class CaseResource {
 	})
 	ResponseEntity<Void> setStatus(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "1") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "flowInstanceId", description = "flow-instance id", example = "112233") @PathVariable final String flowInstanceId,
 		@NotNull @ValidSetStatusRequest @RequestBody final SetStatusRequest setStatusRequest) {
 		// TODO Add service call
@@ -61,7 +61,7 @@ class CaseResource {
 	})
 	ResponseEntity<Void> setStatus(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "1") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "system", description = "The system where external id exists", example = "CaseData") @PathVariable final String system,
 		@Parameter(name = "externalId", description = "Case id in specified system", example = "234") @PathVariable final String externalId,
 		@NotNull @ValidSetStatusRequest @RequestBody final SetStatusRequest setStatusRequest) {

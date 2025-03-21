@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import java.util.Objects;
 
+@Schema(description = "SetStatus request model")
 public class SetStatusRequest {
 
 	@Schema(description = "The status")
