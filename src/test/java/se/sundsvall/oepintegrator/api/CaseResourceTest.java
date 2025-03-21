@@ -41,7 +41,7 @@ class CaseResourceTest {
 
 		// Act
 		webTestClient.put()
-			.uri(builder -> builder.path(PATH + "/flowInstanceId/{flowInstanceId}/status").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.uri(builder -> builder.path(PATH + "/flow-instances/{flowInstanceId}/status").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -64,7 +64,7 @@ class CaseResourceTest {
 
 		// Act
 		webTestClient.put()
-			.uri(builder -> builder.path(PATH + "/flowInstanceId/{flowInstanceId}/status").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.uri(builder -> builder.path(PATH + "/flow-instances/{flowInstanceId}/status").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -94,7 +94,7 @@ class CaseResourceTest {
 
 		// Act
 		webTestClient.put()
-			.uri(builder -> builder.path(PATH + "/system/{system}/externalId/{externalId}/status")
+			.uri(builder -> builder.path(PATH + "/systems/{system}/external-id/{externalId}/status")
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "system", system, "externalId", externalId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)

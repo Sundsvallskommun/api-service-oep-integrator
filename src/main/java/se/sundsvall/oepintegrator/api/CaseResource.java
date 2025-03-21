@@ -40,7 +40,7 @@ class CaseResource {
 		// TODO Add service
 	}
 
-	@PutMapping("/flowInstanceId/{flowInstanceId}/status")
+	@PutMapping("/flow-instances/{flowInstanceId}/status")
 	@Operation(summary = "Set status", description = "Sets status of a case", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation"),
 	})
@@ -55,7 +55,7 @@ class CaseResource {
 			.build();
 	}
 
-	@PutMapping("/system/{system}/externalId/{externalId}/status")
+	@PutMapping("/systems/{system}/external-id/{externalId}/status")
 	@Operation(summary = "Set status", description = "Sets status of a case", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation"),
 	})

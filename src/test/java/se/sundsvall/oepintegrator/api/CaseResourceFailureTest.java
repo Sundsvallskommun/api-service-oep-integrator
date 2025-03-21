@@ -24,8 +24,8 @@ import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 @ActiveProfiles("junit")
 class CaseResourceFailureTest {
 
-	private static final String PATH_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/system/{system}/externalId/{externalId}/status";
-	private static final String PATH_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/flowInstanceId/{flowInstanceId}/status";
+	private static final String PATH_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/systems/{system}/external-id/{externalId}/status";
+	private static final String PATH_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/flow-instances/{flowInstanceId}/status";
 
 	@Autowired
 	private WebTestClient webTestClient;

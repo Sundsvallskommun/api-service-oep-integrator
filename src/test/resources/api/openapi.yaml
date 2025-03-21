@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:64717
+  - url: http://localhost:52530
     description: Generated server url
 tags:
   - name: Webmessages
@@ -17,7 +17,7 @@ tags:
   - name: Case
     description: Operations on case
 paths:
-  /{municipalityId}/{instanceType}/cases/system/{system}/externalId/{externalId}/status:
+  /{municipalityId}/{instanceType}/cases/systems/{system}/external-id/{externalId}/status:
     put:
       tags:
         - Case
@@ -79,7 +79,7 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
-  /{municipalityId}/{instanceType}/cases/flowInstanceId/{flowInstanceId}/status:
+  /{municipalityId}/{instanceType}/cases/flow-instances/{flowInstanceId}/status:
     put:
       tags:
         - Case
@@ -674,11 +674,11 @@ components:
     StatusType:
       type: object
       properties:
-        reasonPhrase:
-          type: string
         statusCode:
           type: integer
           format: int32
+        reasonPhrase:
+          type: string
     ConstraintViolationProblem:
       type: object
       properties:
