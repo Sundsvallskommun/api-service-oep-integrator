@@ -5,7 +5,7 @@ import static org.assertj.core.groups.Tuple.tuple;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.zalando.problem.Status.BAD_REQUEST;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -120,7 +120,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("""
 			Required request body is missing: org.springframework.http.ResponseEntity<java.lang.Void> se.sundsvall.oepintegrator.api.CaseResource\
-			.setStatus(java.lang.String,se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
+			.setStatus(java.lang.String,se.sundsvall.oepintegrator.utility.enums.InstanceType,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
 		// TODO verify no service call
 	}
 
@@ -220,7 +220,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("""
 			Required request body is missing: org.springframework.http.ResponseEntity<java.lang.Void> se.sundsvall.oepintegrator.api.CaseResource\
-			.setStatus(java.lang.String,se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType,java.lang.String,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
+			.setStatus(java.lang.String,se.sundsvall.oepintegrator.utility.enums.InstanceType,java.lang.String,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
 		// TODO verify no service call
 	}
 }

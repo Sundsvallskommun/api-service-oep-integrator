@@ -7,9 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.INTERNAL;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType.REST;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType.SOAP;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.REST;
+import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.SOAP;
 
 import java.util.List;
 import java.util.Optional;

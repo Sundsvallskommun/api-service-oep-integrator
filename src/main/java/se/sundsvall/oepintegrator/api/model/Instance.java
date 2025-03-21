@@ -5,8 +5,8 @@ import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.WRITE_ONLY;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.Objects;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
-import se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType;
+import se.sundsvall.oepintegrator.utility.enums.InstanceType;
+import se.sundsvall.oepintegrator.utility.enums.IntegrationType;
 
 @Schema(description = "Instance model")
 public class Instance {

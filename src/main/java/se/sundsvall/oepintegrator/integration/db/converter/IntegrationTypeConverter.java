@@ -3,7 +3,7 @@ package se.sundsvall.oepintegrator.integration.db.converter;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import java.util.Optional;
-import se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType;
+import se.sundsvall.oepintegrator.utility.enums.IntegrationType;
 
 @Converter(autoApply = true)
 public class IntegrationTypeConverter implements AttributeConverter<IntegrationType, String> {

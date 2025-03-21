@@ -9,6 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.zalando.problem.Status.BAD_REQUEST;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 import callback.AddMessageResponse;
 import java.util.List;
@@ -24,7 +25,6 @@ import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,7 +40,7 @@ class WebmessageServiceTest {
 	void createWebmessage() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var userId = "userId";
 		final var request = WebmessageRequest.create()
 			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("1234")))
@@ -64,7 +64,7 @@ class WebmessageServiceTest {
 	void createWebmessageThrowsExceptionWhenFlowInstanceIdIsMissing() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var userId = "userId";
 		final var request = WebmessageRequest.create()
 			.withMessage("message")
@@ -84,7 +84,7 @@ class WebmessageServiceTest {
 	void getWebmessagesByFamilyId() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var familyId = "familyId";
 		final var fromDate = now();
 		final var toDate = now();
@@ -107,7 +107,7 @@ class WebmessageServiceTest {
 	void getWebmessageByFlowInstanceId() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "flowInstanceId";
 		final var fromDate = now();
 		final var toDate = now();
@@ -129,7 +129,7 @@ class WebmessageServiceTest {
 	@Test
 	void getAttachmentById() {
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var attachmentId = 123;
 		final var attachment = new WebmessageAttachmentData().withData(new byte[10]);
 

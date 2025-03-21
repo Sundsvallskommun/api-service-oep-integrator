@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
-import se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestClient;
 import se.sundsvall.oepintegrator.integration.opene.rest.configuration.OpeneRestClientFactory;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapClient;
 import se.sundsvall.oepintegrator.integration.opene.soap.configuration.SoapClientFactory;
+import se.sundsvall.oepintegrator.utility.enums.InstanceType;
+import se.sundsvall.oepintegrator.utility.enums.IntegrationType;
 
 /**
  * Factory class for creating OpenE clients. This class is responsible for creating and managing OpenE clients.

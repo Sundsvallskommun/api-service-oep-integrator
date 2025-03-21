@@ -1,25 +1,24 @@
 package se.sundsvall.oepintegrator.apptest;
 
-import static java.text.MessageFormat.format;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
-
 import java.io.FileNotFoundException;
+import static java.text.MessageFormat.format;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.oepintegrator.Application;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 @AutoConfigureWireMock(port = 9090, files = "classpath:/WebmessageIT")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
@@ -44,7 +43,7 @@ class WebmessageIT extends AbstractAppTest {
 
 		setupCall()
 			.withHttpMethod(POST)
-			.withServicePath(format(PATH, MUNICIPALITY_ID, InstanceType.EXTERNAL))
+			.withServicePath(format(PATH, MUNICIPALITY_ID, EXTERNAL))
 			.withContentType(MULTIPART_FORM_DATA)
 			.withRequestFile("request", REQUEST_FILE)
 			.withRequestFile("attachments", "test.txt")
@@ -59,7 +58,7 @@ class WebmessageIT extends AbstractAppTest {
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/families/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "123", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
+			.withServicePath(format(PATH + ("/families/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "123", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
@@ -71,7 +70,7 @@ class WebmessageIT extends AbstractAppTest {
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/families/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "123", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
+			.withServicePath(format(PATH + ("/families/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "123", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
@@ -83,7 +82,7 @@ class WebmessageIT extends AbstractAppTest {
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/flow-instances/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "102251", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
+			.withServicePath(format(PATH + ("/flow-instances/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "102251", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
@@ -95,7 +94,7 @@ class WebmessageIT extends AbstractAppTest {
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/flow-instances/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "102255", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
+			.withServicePath(format(PATH + ("/flow-instances/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "102255", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
@@ -107,7 +106,7 @@ class WebmessageIT extends AbstractAppTest {
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/flow-instances/{2}/attachments/{3}"), MUNICIPALITY_ID, InstanceType.EXTERNAL, "102255", 123))
+			.withServicePath(format(PATH + ("/flow-instances/{2}/attachments/{3}"), MUNICIPALITY_ID, EXTERNAL, "102255", 123))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();

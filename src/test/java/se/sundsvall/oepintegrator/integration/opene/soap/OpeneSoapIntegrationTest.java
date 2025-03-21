@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORMAT;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 import callback.AddMessage;
 import callback.AddMessageResponse;
@@ -20,7 +21,6 @@ import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 
 @ExtendWith({
@@ -40,7 +40,7 @@ class OpeneSoapIntegrationTest {
 	void addMessage() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var addMessage = new AddMessage();
 
 		final var addMessageResponse = new AddMessageResponse();
@@ -62,7 +62,7 @@ class OpeneSoapIntegrationTest {
 	void getWebmessagesByFamilyId(@Load("/mappings/messages.xml") final String xml) {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var familyId = "familyId";
 		final var fromDateTime = LocalDateTime.now();
 		final var toDateTime = LocalDateTime.now();
@@ -89,7 +89,7 @@ class OpeneSoapIntegrationTest {
 	void getWebmessagesByFamilyIdNullResult() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var familyId = "familyId";
 		final var fromDateTime = LocalDateTime.now();
 		final var toDateTime = LocalDateTime.now();
@@ -113,7 +113,7 @@ class OpeneSoapIntegrationTest {
 	@Test
 	void getWebmessagesByFamilyIdParsingError() {
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var familyId = "familyId";
 		final var fromDateTime = LocalDateTime.now();
 		final var toDateTime = LocalDateTime.now();
@@ -137,7 +137,7 @@ class OpeneSoapIntegrationTest {
 	void getWebmessagesByFlowInstanceId(@Load("/mappings/messages.xml") final String xml) {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "flowInstanceId";
 		final var fromDateTime = LocalDateTime.now();
 		final var toDateTime = LocalDateTime.now();
@@ -164,7 +164,7 @@ class OpeneSoapIntegrationTest {
 	void getWebmessagesByFlowInstanceIdNullResult() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "flowInstanceId";
 		final var fromDateTime = LocalDateTime.now();
 		final var toDateTime = LocalDateTime.now();
@@ -188,7 +188,7 @@ class OpeneSoapIntegrationTest {
 	@Test
 	void getWebmessagesByFlowInstanceIdParsingError() {
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "flowInstanceId";
 		final var fromDateTime = LocalDateTime.now();
 		final var toDateTime = LocalDateTime.now();
@@ -211,7 +211,7 @@ class OpeneSoapIntegrationTest {
 	@Test
 	void getAttachmentById() {
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var attachmentId = 123;
 		final var bytes = new byte[10];
 		final var attachment = new WebmessageAttachmentData().withData(bytes);

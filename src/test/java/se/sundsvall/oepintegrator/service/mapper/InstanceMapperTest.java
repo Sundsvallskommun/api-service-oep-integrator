@@ -1,10 +1,10 @@
 package se.sundsvall.oepintegrator.service.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.EXTERNAL;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.INTERNAL;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType.REST;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType.SOAP;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.REST;
+import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.SOAP;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;

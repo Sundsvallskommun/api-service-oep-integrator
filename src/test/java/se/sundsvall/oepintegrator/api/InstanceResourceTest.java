@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.ALL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.REST;
 
 import java.util.List;
 import java.util.Map;
@@ -19,8 +21,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.api.model.Instance;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
-import se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType;
 import se.sundsvall.oepintegrator.service.InstanceService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
@@ -39,8 +39,8 @@ class InstanceResourceTest {
 	void getInstances() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var integrationType = IntegrationType.REST;
-		final var instanceType = InstanceType.EXTERNAL;
+		final var integrationType = REST;
+		final var instanceType = EXTERNAL;
 		final var baseUrl = "https://example.com";
 		final var username = "user123";
 		final var password = "pass123";
@@ -83,8 +83,8 @@ class InstanceResourceTest {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceId = UUID.randomUUID().toString();
-		final var integrationType = IntegrationType.REST;
-		final var instanceType = InstanceType.EXTERNAL;
+		final var integrationType = REST;
+		final var instanceType = EXTERNAL;
 		final var baseUrl = "https://example.com";
 		final var username = "user123";
 		final var password = "pass123";
@@ -125,8 +125,8 @@ class InstanceResourceTest {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceId = "1234";
-		final var integrationType = IntegrationType.REST;
-		final var instanceType = InstanceType.EXTERNAL;
+		final var integrationType = REST;
+		final var instanceType = EXTERNAL;
 		final var baseUrl = "https://example.com";
 		final var username = "user123";
 		final var password = "pass123";
@@ -166,8 +166,8 @@ class InstanceResourceTest {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceId = UUID.randomUUID().toString();
-		final var integrationType = IntegrationType.REST;
-		final var instanceType = InstanceType.EXTERNAL;
+		final var integrationType = REST;
+		final var instanceType = EXTERNAL;
 		final var baseUrl = "https://example.com";
 		final var username = "user123";
 		final var password = "pass123";

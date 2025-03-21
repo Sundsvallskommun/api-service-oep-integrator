@@ -3,7 +3,7 @@ package se.sundsvall.oepintegrator.api;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.ALL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;

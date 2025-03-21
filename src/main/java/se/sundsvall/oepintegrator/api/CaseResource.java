@@ -24,7 +24,7 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 import se.sundsvall.oepintegrator.api.validation.ValidSetStatusRequest;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
+import se.sundsvall.oepintegrator.utility.enums.InstanceType;
 
 @RestController
 @Validated
