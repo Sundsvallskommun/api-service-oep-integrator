@@ -13,6 +13,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 import java.time.ZoneId;
 import java.util.List;
@@ -31,7 +32,6 @@ import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.service.WebmessageService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
@@ -50,7 +50,7 @@ class WebmessageResourceTest {
 	void createWebmessage() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var sender = Sender.create().withUserId("userId");
 		final var message = "message";
 		final var request = WebmessageRequest.create()
@@ -88,7 +88,7 @@ class WebmessageResourceTest {
 	void getWebmessagesByFamilyId() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var familyId = "123";
 		final var fromDateTime = now(ZoneId.systemDefault()).minusDays(4);
 		final var toDateTime = now(ZoneId.systemDefault());
@@ -118,7 +118,7 @@ class WebmessageResourceTest {
 	void getWebmessagesByFamilyIdWithoutDateFilter() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var familyId = "123";
 		final var webmessage = Webmessage.create().withId(123).withMessage("message");
 
@@ -144,7 +144,7 @@ class WebmessageResourceTest {
 	void getWebmessagesByFlowInstanceId() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
 		final var fromDateTime = now(ZoneId.systemDefault()).minusDays(4);
 		final var toDateTime = now(ZoneId.systemDefault());
@@ -176,7 +176,7 @@ class WebmessageResourceTest {
 	void getWebmessagesByFlowInstanceIdWithoutDateFilter() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
 		final var webmessage = Webmessage.create().withId(123).withMessage("message");
 
@@ -202,7 +202,7 @@ class WebmessageResourceTest {
 	void getAttachmentById() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = InstanceType.EXTERNAL;
+		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
 		final var attachmentId = 123;
 		final var attachment = new WebmessageAttachmentData().withData(new byte[10]);

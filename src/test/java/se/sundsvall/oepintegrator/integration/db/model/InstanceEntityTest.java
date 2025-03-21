@@ -7,12 +7,12 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.REST;
 
 import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType;
 
 class InstanceEntityTest {
 
@@ -31,7 +31,7 @@ class InstanceEntityTest {
 		// Arrange
 		final var id = "id";
 		final var municipalityId = "municipalityId";
-		final var integrationType = IntegrationType.REST;
+		final var integrationType = REST;
 		final var instanceType = EXTERNAL;
 		final var baseUrl = "baseUrl";
 		final var username = "username";

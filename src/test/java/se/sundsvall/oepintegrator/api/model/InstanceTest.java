@@ -7,12 +7,12 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.REST;
 
 import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
-import se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType;
 
 class InstanceTest {
 
@@ -30,8 +30,8 @@ class InstanceTest {
 	void builder() {
 		// Arrange
 		final var id = "123e4567-e89b-12d3-a456-426614174000";
-		final var integrationType = IntegrationType.REST;
-		final var instance = InstanceType.EXTERNAL;
+		final var integrationType = REST;
+		final var instance = EXTERNAL;
 		final var baseUrl = "https://example.com";
 		final var username = "user123";
 		final var password = "pass123";

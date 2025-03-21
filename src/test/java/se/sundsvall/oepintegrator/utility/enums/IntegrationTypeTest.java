@@ -1,4 +1,4 @@
-package se.sundsvall.oepintegrator.integration.db.model.enums;
+package se.sundsvall.oepintegrator.utility.enums;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

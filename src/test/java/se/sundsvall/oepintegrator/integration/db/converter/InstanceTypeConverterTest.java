@@ -2,8 +2,8 @@ package se.sundsvall.oepintegrator.integration.db.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.EXTERNAL;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.INTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
 
 import org.junit.jupiter.api.Test;
 

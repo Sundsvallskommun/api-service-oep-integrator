@@ -20,7 +20,7 @@ import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachment;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
+import se.sundsvall.oepintegrator.utility.enums.InstanceType;
 
 public final class WebmessageMapper {
 

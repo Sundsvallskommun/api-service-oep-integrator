@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.zalando.problem.Status.BAD_REQUEST;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -21,7 +23,6 @@ import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
@@ -43,7 +44,7 @@ class WebmessageResourceFailureTest {
 		final var body = multipartBodyBuilder.build();
 
 		final var response = webTestClient.post()
-			.uri(PATH, "2281", InstanceType.EXTERNAL)
+			.uri(PATH, "2281", EXTERNAL)
 			.contentType(MediaType.MULTIPART_FORM_DATA)
 			.body(BodyInserters.fromMultipartData(body))
 			.exchange()
@@ -71,7 +72,7 @@ class WebmessageResourceFailureTest {
 		final var body = multipartBodyBuilder.build();
 
 		final var response = webTestClient.post()
-			.uri(PATH, "2281", InstanceType.INTERNAL)
+			.uri(PATH, "2281", INTERNAL)
 			.contentType(MediaType.MULTIPART_FORM_DATA)
 			.body(BodyInserters.fromMultipartData(body))
 			.exchange()
@@ -98,7 +99,7 @@ class WebmessageResourceFailureTest {
 		final var body = multipartBodyBuilder.build();
 
 		final var response = webTestClient.post()
-			.uri(PATH, "2281", InstanceType.EXTERNAL)
+			.uri(PATH, "2281", EXTERNAL)
 			.contentType(MediaType.MULTIPART_FORM_DATA)
 			.body(BodyInserters.fromMultipartData(body))
 			.exchange()
@@ -126,7 +127,7 @@ class WebmessageResourceFailureTest {
 		final var body = multipartBodyBuilder.build();
 
 		final var response = webTestClient.post()
-			.uri(PATH, "invalidId", InstanceType.INTERNAL)
+			.uri(PATH, "invalidId", INTERNAL)
 			.contentType(MediaType.MULTIPART_FORM_DATA)
 			.body(BodyInserters.fromMultipartData(body))
 			.exchange()
@@ -164,7 +165,7 @@ class WebmessageResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getDetail()).contains("Method parameter 'instanceType': Failed to convert value of type 'java.lang.String' to required type 'se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType'");
+		assertThat(response.getDetail()).contains("Method parameter 'instanceType': Failed to convert value of type 'java.lang.String' to required type 'se.sundsvall.oepintegrator.utility.enums.InstanceType'");
 	}
 
 	@Test
@@ -178,7 +179,7 @@ class WebmessageResourceFailureTest {
 		final var body = multipartBodyBuilder.build();
 
 		final var response = webTestClient.post()
-			.uri(PATH, "2281", InstanceType.EXTERNAL)
+			.uri(PATH, "2281", EXTERNAL)
 			.contentType(MediaType.MULTIPART_FORM_DATA)
 			.body(BodyInserters.fromMultipartData(body))
 			.exchange()
@@ -202,7 +203,7 @@ class WebmessageResourceFailureTest {
 		final var body = multipartBodyBuilder.build();
 
 		final var response = webTestClient.post()
-			.uri(PATH, "2281", InstanceType.EXTERNAL)
+			.uri(PATH, "2281", EXTERNAL)
 			.contentType(MediaType.MULTIPART_FORM_DATA)
 			.body(BodyInserters.fromMultipartData(body))
 			.exchange()
@@ -222,7 +223,7 @@ class WebmessageResourceFailureTest {
 	void getWebmessagesByFamilyIdWithInvalidMunicipalityId() {
 
 		final var response = webTestClient.get()
-			.uri(PATH + ("/families/{familyId}}"), "invalidId", InstanceType.INTERNAL, 123)
+			.uri(PATH + ("/families/{familyId}}"), "invalidId", INTERNAL, 123)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -240,7 +241,7 @@ class WebmessageResourceFailureTest {
 	void getWebmessagesByFlowInstanceIdWithInvalidMunicipalityId() {
 
 		final var response = webTestClient.get()
-			.uri(PATH + ("/flow-instances/{flowInstanceId}"), "invalidId", InstanceType.INTERNAL, 123)
+			.uri(PATH + ("/flow-instances/{flowInstanceId}"), "invalidId", INTERNAL, 123)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -257,7 +258,7 @@ class WebmessageResourceFailureTest {
 	@Test
 	void getAttachmentByIdWithInvalidMunicipalityId() {
 		final var response = webTestClient.get()
-			.uri(PATH + ("/flow-instances/{flowInstanceId}/attachments/{attachmentId}"), "invalidId", InstanceType.INTERNAL, 123, 123)
+			.uri(PATH + ("/flow-instances/{flowInstanceId}/attachments/{attachmentId}"), "invalidId", INTERNAL, 123, 123)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)

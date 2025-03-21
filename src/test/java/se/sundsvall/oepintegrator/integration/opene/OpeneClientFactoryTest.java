@@ -5,10 +5,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.EXTERNAL;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType.INTERNAL;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType.REST;
-import static se.sundsvall.oepintegrator.integration.db.model.enums.IntegrationType.SOAP;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.REST;
+import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.SOAP;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

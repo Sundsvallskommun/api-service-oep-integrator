@@ -11,8 +11,8 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
-import se.sundsvall.oepintegrator.integration.db.model.enums.InstanceType;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
+import se.sundsvall.oepintegrator.utility.enums.InstanceType;
 
 /**
  * Integration class for Open-E SOAP API. This will be used to call the Open-E SOAP API like this:
