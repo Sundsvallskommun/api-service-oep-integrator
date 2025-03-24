@@ -12,8 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
@@ -23,8 +21,6 @@ import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.utility.enums.InstanceType;
 
 public final class WebmessageMapper {
-
-	private static final Logger LOG = LoggerFactory.getLogger(WebmessageMapper.class);
 
 	private WebmessageMapper() {
 		// Intentionally Empty
@@ -96,12 +92,10 @@ public final class WebmessageMapper {
 		} catch (final IOException | URISyntaxException e) {
 			throw Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "Unable to determine mime type for file %s".formatted(file));
 		}
-
 	}
 
 	private static String getFileExtension(final String file) {
 		final int dotIndex = file.lastIndexOf('.');
 		return (dotIndex == -1) ? "" : file.substring(dotIndex + 1);
 	}
-
 }
