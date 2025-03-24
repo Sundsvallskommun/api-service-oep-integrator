@@ -6,6 +6,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -24,8 +25,9 @@ import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 @ActiveProfiles("junit")
 class CaseResourceFailureTest {
 
-	private static final String PATH_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/systems/{system}/external-id/{externalId}/status";
-	private static final String PATH_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/flow-instances/{flowInstanceId}/status";
+	private static final String PATH_SET_STATUS_BY_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/systems/{system}/external-id/{externalId}/status";
+	private static final String PATH_SET_STATUS_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/flow-instances/{flowInstanceId}/status";
+	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{municipalityId}/{instanceType}/cases/families/{familyId}";
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -45,7 +47,7 @@ class CaseResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.put()
-			.uri(builder -> builder.path(PATH_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.uri(builder -> builder.path(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -78,7 +80,7 @@ class CaseResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.put()
-			.uri(builder -> builder.path(PATH_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.uri(builder -> builder.path(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -106,7 +108,7 @@ class CaseResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.put()
-			.uri(builder -> builder.path(PATH_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.uri(builder -> builder.path(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
 			.contentType(APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isBadRequest()
@@ -140,7 +142,7 @@ class CaseResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.put()
-			.uri(builder -> builder.path(PATH_EXTERNAL_ID)
+			.uri(builder -> builder.path(PATH_SET_STATUS_BY_EXTERNAL_ID)
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "system", system, "externalId", externalId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
@@ -175,7 +177,7 @@ class CaseResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.put()
-			.uri(builder -> builder.path(PATH_EXTERNAL_ID)
+			.uri(builder -> builder.path(PATH_SET_STATUS_BY_EXTERNAL_ID)
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "system", system, "externalId", externalId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
@@ -205,7 +207,7 @@ class CaseResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.put()
-			.uri(builder -> builder.path(PATH_EXTERNAL_ID)
+			.uri(builder -> builder.path(PATH_SET_STATUS_BY_EXTERNAL_ID)
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "system", system, "externalId", externalId)))
 			.contentType(APPLICATION_JSON)
 			.exchange()
@@ -222,5 +224,23 @@ class CaseResourceFailureTest {
 			Required request body is missing: org.springframework.http.ResponseEntity<java.lang.Void> se.sundsvall.oepintegrator.api.CaseResource\
 			.setStatus(java.lang.String,se.sundsvall.oepintegrator.utility.enums.InstanceType,java.lang.String,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
 		// TODO verify no service call
+	}
+
+	@Test
+	void getCasesByFamilyIdWithInvalidMunicipalityId() {
+
+		final var response = webTestClient.get()
+			.uri(PATH_GET_CASES_BY_FAMILY_ID, "invalidId", INTERNAL, 123)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getCasesByFamilyId.municipalityId", "not a valid municipality ID"));
 	}
 }

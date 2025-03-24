@@ -45,5 +45,4 @@ class PrincipalTest {
 		assertThat(SetStatusRequest.create()).hasAllNullFieldsOrPropertiesExcept("statusId");
 		assertThat(new SetStatusRequest()).hasAllNullFieldsOrPropertiesExcept("statusId");
 	}
-
 }
