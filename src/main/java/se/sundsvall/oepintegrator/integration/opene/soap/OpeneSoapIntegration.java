@@ -6,6 +6,8 @@ import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORM
 
 import callback.AddMessage;
 import callback.AddMessageResponse;
+import callback.SetStatus;
+import callback.SetStatusResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -37,6 +39,11 @@ public class OpeneSoapIntegration {
 	public AddMessageResponse addMessage(final String municipalityId, final InstanceType instanceType, final AddMessage addMessage) {
 		final var client = clientFactory.getSoapClient(municipalityId, instanceType);
 		return client.addMessage(addMessage);
+	}
+
+	public SetStatusResponse setStatus(final String municipalityId, final InstanceType instanceType, final SetStatus setStatus) {
+		final var client = clientFactory.getSoapClient(municipalityId, instanceType);
+		return client.setStatus(setStatus);
 	}
 
 	public List<Webmessage> getWebmessagesByFamilyId(final String municipalityId, final InstanceType instanceType, final String familyId, final LocalDateTime fromDateTime, final LocalDateTime toDateTime) {
