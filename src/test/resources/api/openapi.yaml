@@ -1,20 +1,139 @@
 openapi: 3.0.1
 info:
   title: api-oep-integrator
-  contact: { }
+  contact: {}
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:57129
+  - url: http://localhost:52530
     description: Generated server url
 tags:
   - name: Webmessages
     description: Resource for sending webmessages to OpenE
   - name: Configuration for instances
     description: Settings for instances per municipalityId
+  - name: Case
+    description: Operations on case
 paths:
+  /{municipalityId}/{instanceType}/cases/systems/{system}/external-id/{externalId}/status:
+    put:
+      tags:
+        - Case
+      summary: Set status
+      description: Sets status of a case
+      operationId: setStatus
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            type: string
+            enum:
+              - INTERNAL
+              - EXTERNAL
+          example: INTERNAL
+        - name: system
+          in: path
+          description: The system where external id exists
+          required: true
+          schema:
+            type: string
+          example: CaseData
+        - name: externalId
+          in: path
+          description: Case id in specified system
+          required: true
+          schema:
+            type: string
+          example: 234
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetStatusRequest"
+        required: true
+      responses:
+        "204":
+          description: Successful operation
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+  /{municipalityId}/{instanceType}/cases/flow-instances/{flowInstanceId}/status:
+    put:
+      tags:
+        - Case
+      summary: Set status
+      description: Sets status of a case
+      operationId: setStatus_1
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            type: string
+            enum:
+              - INTERNAL
+              - EXTERNAL
+          example: INTERNAL
+        - name: flowInstanceId
+          in: path
+          description: flow-instance id
+          required: true
+          schema:
+            type: string
+          example: 112233
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetStatusRequest"
+        required: true
+      responses:
+        "204":
+          description: Successful operation
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
   /{municipalityId}/{instanceType}/webmessages:
     post:
       tags:
@@ -38,7 +157,7 @@ paths:
             enum:
               - INTERNAL
               - EXTERNAL
-          example: 1
+          example: INTERNAL
       requestBody:
         content:
           multipart/form-data:
@@ -95,7 +214,7 @@ paths:
         "200":
           description: Successful operation
           content:
-            application/json: { }
+            application/json: {}
         "500":
           description: Internal Server error
           content:
@@ -178,7 +297,7 @@ paths:
         "200":
           description: Successful operation
           content:
-            application/json: { }
+            application/json: {}
         "404":
           description: Instance not found
           content:
@@ -316,7 +435,7 @@ paths:
             enum:
               - INTERNAL
               - EXTERNAL
-          example: 1
+          example: INTERNAL
         - name: flowInstanceId
           in: path
           description: Flow instance id
@@ -384,7 +503,7 @@ paths:
             enum:
               - INTERNAL
               - EXTERNAL
-          example: 1
+          example: INTERNAL
         - name: flowInstanceId
           in: path
           description: Flow instance id
@@ -404,7 +523,7 @@ paths:
         "200":
           description: Successful operation
           content:
-            application/json: { }
+            application/json: {}
         "500":
           description: Internal Server error
           content:
@@ -442,7 +561,7 @@ paths:
             enum:
               - INTERNAL
               - EXTERNAL
-          example: 1
+          example: INTERNAL
         - name: familyId
           in: path
           description: Family id
@@ -505,45 +624,34 @@ paths:
       x-wso2-mutual-ssl: Optional
 components:
   schemas:
-    ExternalReference:
-      type: object
-      properties:
-        key:
-          type: string
-          description: The external reference key
-          example: flowInstanceId
-        value:
-          type: string
-          description: The external reference value
-          example: "356746349"
-      description: ExternalReference model
-    Sender:
+    Principal:
       required:
         - userId
       type: object
       properties:
+        name:
+          type: string
+          description: The name
+          example: John Doe
         userId:
           type: string
-          description: The user ID of the sender. I.e. employee ID
-          example: joe01doe
-      description: Sender model
-    WebmessageRequest:
-      required:
-        - message
-        - sender
+          description: The user id
+          example: joh12doe
+      description: Principal model
+    SetStatusRequest:
       type: object
       properties:
-        sender:
-          $ref: "#/components/schemas/Sender"
-        message:
+        status:
           type: string
-          description: The message
-          example: This is a message
-        externalReferences:
-          type: array
-          items:
-            $ref: "#/components/schemas/ExternalReference"
-      description: Webmessage request model
+          description: The status
+        statusId:
+          type: integer
+          description: Id of status
+          format: int32
+          example: 123
+        principal:
+          $ref: "#/components/schemas/Principal"
+      description: SetStatus request model
     Problem:
       type: object
       properties:
@@ -559,9 +667,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
     StatusType:
       type: object
@@ -694,9 +802,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
         suppressed:
           type: array
@@ -738,6 +846,45 @@ components:
           type: string
         message:
           type: string
+    ExternalReference:
+      type: object
+      properties:
+        key:
+          type: string
+          description: The external reference key
+          example: flowInstanceId
+        value:
+          type: string
+          description: The external reference value
+          example: "356746349"
+      description: ExternalReference model
+    Sender:
+      required:
+        - userId
+      type: object
+      properties:
+        userId:
+          type: string
+          description: The user ID of the sender. I.e. employee ID
+          example: joe01doe
+      description: Sender model
+    WebmessageRequest:
+      required:
+        - message
+        - sender
+      type: object
+      properties:
+        sender:
+          $ref: "#/components/schemas/Sender"
+        message:
+          type: string
+          description: The message
+          example: This is a message
+        externalReferences:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExternalReference"
+      description: Webmessage request model
     Instance:
       type: object
       properties:
@@ -794,4 +941,4 @@ components:
           format: int32
           example: 60
       description: Instance model
-  securitySchemes: { }
+  securitySchemes: {}
