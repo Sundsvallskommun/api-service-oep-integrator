@@ -10,6 +10,8 @@ import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 import callback.AddMessage;
 import callback.AddMessageResponse;
+import callback.SetStatus;
+import callback.SetStatusResponse;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -224,6 +226,29 @@ class OpeneSoapIntegrationTest {
 		assertThat(result).isNotNull().isEqualTo(attachment);
 		verify(openeSoapClient).getAttachmentById(attachmentId);
 		verify(clientFactory).getSoapClient(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeSoapClient, clientFactory);
+	}
+
+	@Test
+	void setStatus() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var setStatus = new SetStatus();
+
+		final var setStatusResponse = new SetStatusResponse();
+
+		when(openeSoapClient.setStatus(setStatus)).thenReturn(setStatusResponse);
+
+		when(clientFactory.getSoapClient(municipalityId, instanceType)).thenReturn(openeSoapClient);
+
+		// Act
+		final var result = openeSoapIntegration.setStatus(municipalityId, instanceType, setStatus);
+
+		// Assert
+		assertThat(result).isNotNull().isEqualTo(setStatusResponse);
+		verify(clientFactory).getSoapClient(municipalityId, instanceType);
+		verify(openeSoapClient).setStatus(setStatus);
 		verifyNoMoreInteractions(openeSoapClient, clientFactory);
 	}
 }
