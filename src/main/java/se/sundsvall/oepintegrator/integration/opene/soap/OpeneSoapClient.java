@@ -2,6 +2,8 @@ package se.sundsvall.oepintegrator.integration.opene.soap;
 
 import callback.AddMessage;
 import callback.AddMessageResponse;
+import callback.SetStatus;
+import callback.SetStatusResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +22,9 @@ public interface OpeneSoapClient extends OpeneClient {
 
 	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
 	AddMessageResponse addMessage(@RequestBody final AddMessage addMessage);
+
+	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
+	SetStatusResponse setStatus(@RequestBody SetStatus setStatus);
 
 	@GetMapping(path = "/api/messageapi/getmessages/family/{familyId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	byte[] getWebmessagesByFamilyId(
