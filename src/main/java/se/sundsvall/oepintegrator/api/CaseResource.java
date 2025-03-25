@@ -1,10 +1,7 @@
 package se.sundsvall.oepintegrator.api;
 
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
-import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,7 +27,9 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
+import se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse;
 import se.sundsvall.oepintegrator.api.validation.ValidSetStatusRequest;
+import se.sundsvall.oepintegrator.service.CaseService;
 import se.sundsvall.oepintegrator.utility.enums.InstanceType;
 
 @RestController
@@ -44,8 +43,10 @@ import se.sundsvall.oepintegrator.utility.enums.InstanceType;
 @Tag(name = "Case", description = "Operations on case")
 class CaseResource {
 
-	CaseResource() {
-		// TODO Add service
+	private final CaseService caseService;
+
+	CaseResource(final CaseService caseService) {
+		this.caseService = caseService;
 	}
 
 	@GetMapping("/families/{familyId}")
@@ -64,38 +65,32 @@ class CaseResource {
 		return ok(List.of(CaseEnvelope.create()));
 	}
 
-	@PutMapping("/flow-instances/{flowInstanceId}/status")
+	@PutMapping(value = "/{flowInstanceId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Set status", description = "Sets status of a case", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation"),
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
-	ResponseEntity<Void> setStatus(
+	ResponseEntity<SetStatusResponse> setStatus(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "flowInstanceId", description = "flow-instance id", example = "112233") @PathVariable final String flowInstanceId,
 		@NotNull @ValidSetStatusRequest @RequestBody final SetStatusRequest setStatusRequest) {
 
-		// TODO Add service call
-		return noContent()
-			.header(CONTENT_TYPE, ALL_VALUE)
-			.build();
+		return ok(caseService.setStatusByFlowinstanceId(municipalityId, instanceType, setStatusRequest, flowInstanceId));
 	}
 
-	@PutMapping("/systems/{system}/external-id/{externalId}/status")
+	@PutMapping(value = "/systems/{system}/{externalId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Set status", description = "Sets status of a case", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation"),
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
-	ResponseEntity<Void> setStatus(
+	ResponseEntity<SetStatusResponse> setStatus(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "system", description = "The system where external id exists", example = "CaseData") @PathVariable final String system,
 		@Parameter(name = "externalId", description = "Case id in specified system", example = "234") @PathVariable final String externalId,
 		@NotNull @ValidSetStatusRequest @RequestBody final SetStatusRequest setStatusRequest) {
 
-		// TODO Add service call
-		return noContent()
-			.header(CONTENT_TYPE, ALL_VALUE)
-			.build();
+		return ok(caseService.setStatusByExternalId(municipalityId, instanceType, setStatusRequest, system, externalId));
 	}
 }
