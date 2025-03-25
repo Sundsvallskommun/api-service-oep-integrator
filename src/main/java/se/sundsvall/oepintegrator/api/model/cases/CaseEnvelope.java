@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Schema(description = "Principal model")
+@Schema(description = "Case envelope model")
 public class CaseEnvelope {
 
 	@Schema(description = "The caseId (flowInstanceId in OEP)", example = "109581")

@@ -2,6 +2,7 @@ package se.sundsvall.oepintegrator.api;
 
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.ALL_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.noContent;
 import static org.springframework.http.ResponseEntity.ok;
@@ -38,8 +39,8 @@ import se.sundsvall.oepintegrator.utility.enums.InstanceType;
 @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
 	Problem.class, ConstraintViolationProblem.class
 })))
-@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 @ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+@ApiResponse(responseCode = "502", description = "Bad gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 @Tag(name = "Case", description = "Operations on case")
 class CaseResource {
 
@@ -48,7 +49,9 @@ class CaseResource {
 	}
 
 	@GetMapping("/families/{familyId}")
-	@Operation(summary = "Get cases by family ID", description = "Get a list of case envelopes by family ID", responses = @ApiResponse(responseCode = "200", description = "Successful operation"))
+	@Operation(summary = "Get cases by family ID",
+		description = "Get a list of case envelopes by family ID",
+		responses = @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true))
 	ResponseEntity<List<CaseEnvelope>> getCasesByFamilyId(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
@@ -62,7 +65,10 @@ class CaseResource {
 	}
 
 	@PutMapping("/flow-instances/{flowInstanceId}/status")
-	@Operation(summary = "Set status", description = "Sets status of a case", responses = @ApiResponse(responseCode = "204", description = "Successful operation"))
+	@Operation(summary = "Set status", description = "Sets status of a case", responses = {
+		@ApiResponse(responseCode = "204", description = "Successful operation"),
+		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	})
 	ResponseEntity<Void> setStatus(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
@@ -76,7 +82,10 @@ class CaseResource {
 	}
 
 	@PutMapping("/systems/{system}/external-id/{externalId}/status")
-	@Operation(summary = "Set status", description = "Sets status of a case", responses = @ApiResponse(responseCode = "204", description = "Successful operation"))
+	@Operation(summary = "Set status", description = "Sets status of a case", responses = {
+		@ApiResponse(responseCode = "204", description = "Successful operation"),
+		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	})
 	ResponseEntity<Void> setStatus(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
