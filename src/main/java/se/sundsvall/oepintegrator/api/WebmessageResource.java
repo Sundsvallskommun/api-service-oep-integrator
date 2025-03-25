@@ -45,6 +45,7 @@ import se.sundsvall.oepintegrator.utility.enums.InstanceType;
 @Validated
 @RequestMapping("/{municipalityId}/{instanceType}/webmessages")
 @ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+@ApiResponse(responseCode = "502", description = "Bad gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
 	Problem.class, ConstraintViolationProblem.class
 })))
@@ -74,7 +75,7 @@ class WebmessageResource {
 
 	@GetMapping(path = "/families/{familyId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get all webmessages for a familyId", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = WebmessageRequest.class)))
+		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true)
 	})
 	ResponseEntity<List<Webmessage>> getWebmessagesByFamilyId(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -89,7 +90,7 @@ class WebmessageResource {
 
 	@GetMapping(path = "/flow-instances/{flowInstanceId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get all webmessages for a given errand", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = WebmessageRequest.class)))
+		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true)
 	})
 	ResponseEntity<List<Webmessage>> getWebmessagesByFlowInstanceId(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,

@@ -5,17 +5,27 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCode;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
+import static com.google.code.beanmatchers.BeanMatchers.registerValueGenerator;
+import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 
+import java.time.LocalDateTime;
+import java.util.Random;
 import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-class SetStatusRequestTest {
+class CaseEnvelopeTest {
+
+	@BeforeAll
+	static void setup() {
+		registerValueGenerator(() -> LocalDateTime.now().plusDays(new Random().nextInt()), LocalDateTime.class);
+	}
 
 	@Test
 	void testBean() {
-		MatcherAssert.assertThat(SetStatusRequest.class, allOf(
+		MatcherAssert.assertThat(CaseEnvelope.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanHashCode(),
@@ -25,28 +35,28 @@ class SetStatusRequestTest {
 
 	@Test
 	void builder() {
+
 		// Arrange
-		final var status = "status";
-		final var statusId = 123;
-		final var principal = Principal.create().withUserId("userId").withName("name");
+		final var caseId = "caseId";
+		final var created = now();
+		final var updated = now();
 
 		// Act
-		final var bean = SetStatusRequest.create()
-			.withStatus(status)
-			.withStatusId(statusId)
-			.withPrincipal(principal);
+		final var bean = CaseEnvelope.create()
+			.withCaseId(caseId)
+			.withCreated(created)
+			.withUpdated(updated);
 
 		// Assert
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
-		assertThat(bean.getStatus()).isEqualTo(status);
-		assertThat(bean.getStatusId()).isEqualTo(statusId);
-		assertThat(bean.getPrincipal()).isEqualTo(principal);
-
+		assertThat(bean.getCaseId()).isEqualTo(caseId);
+		assertThat(bean.getCreated()).isEqualTo(created);
+		assertThat(bean.getUpdated()).isEqualTo(updated);
 	}
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(SetStatusRequest.create()).hasAllNullFieldsOrPropertiesExcept("statusId");
-		assertThat(new SetStatusRequest()).hasAllNullFieldsOrPropertiesExcept("statusId");
+		assertThat(CaseEnvelope.create()).hasAllNullFieldsOrProperties();
+		assertThat(new CaseEnvelope()).hasAllNullFieldsOrProperties();
 	}
 }

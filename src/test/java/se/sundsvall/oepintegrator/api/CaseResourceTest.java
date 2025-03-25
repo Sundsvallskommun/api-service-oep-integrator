@@ -1,5 +1,6 @@
 package se.sundsvall.oepintegrator.api;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.ALL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.oepintegrator.Application;
+import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 
@@ -105,5 +107,31 @@ class CaseResourceTest {
 
 		// Assert
 		// TODO verify service call
+	}
+
+	@Test
+	void getCases() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var familyId = "familyId";
+
+		// Act
+		final var result = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/families/{familyId}")
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "familyId", familyId)))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBodyList(CaseEnvelope.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst()).isNotNull();
+
+		// TODO Fix assert to look on mocked result and verify service call
 	}
 }

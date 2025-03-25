@@ -1,10 +1,6 @@
 #========================================
 # Test profile settings (IT tests)
 #========================================
-logging:
-  level:
-    root: INFO
-
 spring:
   datasource:
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
