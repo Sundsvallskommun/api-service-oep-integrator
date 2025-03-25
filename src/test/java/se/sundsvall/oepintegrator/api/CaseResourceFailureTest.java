@@ -2,17 +2,18 @@ package se.sundsvall.oepintegrator.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
@@ -20,17 +21,23 @@ import org.zalando.problem.violations.Violation;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
+import se.sundsvall.oepintegrator.service.CaseService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
 class CaseResourceFailureTest {
 
+	private static final String PATH_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/{system}/{externalId}/status";
+	private static final String PATH_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/status";
 	private static final String PATH_SET_STATUS_BY_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/systems/{system}/external-id/{externalId}/status";
 	private static final String PATH_SET_STATUS_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/flow-instances/{flowInstanceId}/status";
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{municipalityId}/{instanceType}/cases/families/{familyId}";
 
 	@Autowired
 	private WebTestClient webTestClient;
+
+	@MockitoBean
+	private CaseService caseServiceMock;
 
 	@Test
 	void setStatusWithFlowInstanceIdNoStatusOrStatusId() {
@@ -63,7 +70,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("setStatus.setStatusRequest", "must have a status or a statusId"));
-		// TODO verify no service call
+		verifyNoInteractions(caseServiceMock);
 	}
 
 	@Test
@@ -96,7 +103,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("principal.userId", "must not be blank"));
-		// TODO verify no service call
+		verifyNoInteractions(caseServiceMock);
 	}
 
 	@Test
@@ -121,9 +128,9 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("""
-			Required request body is missing: org.springframework.http.ResponseEntity<java.lang.Void> se.sundsvall.oepintegrator.api.CaseResource\
-			.setStatus(java.lang.String,se.sundsvall.oepintegrator.utility.enums.InstanceType,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
-		// TODO verify no service call
+			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse> \
+			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.utility.enums.InstanceType,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
+		verifyNoInteractions(caseServiceMock);
 	}
 
 	@Test
@@ -159,7 +166,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("setStatus.setStatusRequest", "must have a status or a statusId"));
-		// TODO verify no service call
+		verifyNoInteractions(caseServiceMock);
 	}
 
 	@Test
@@ -194,7 +201,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("principal.userId", "must not be blank"));
-		// TODO verify no service call
+		verifyNoInteractions(caseServiceMock);
 	}
 
 	@Test
@@ -221,9 +228,10 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("""
-			Required request body is missing: org.springframework.http.ResponseEntity<java.lang.Void> se.sundsvall.oepintegrator.api.CaseResource\
-			.setStatus(java.lang.String,se.sundsvall.oepintegrator.utility.enums.InstanceType,java.lang.String,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
-		// TODO verify no service call
+			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse> \
+			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.utility.enums.InstanceType,java.lang.String,java.lang.String,\
+			se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
+		verifyNoInteractions(caseServiceMock);
 	}
 
 	@Test

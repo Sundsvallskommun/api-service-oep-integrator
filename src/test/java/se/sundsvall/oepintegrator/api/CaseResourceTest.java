@@ -2,7 +2,6 @@ package se.sundsvall.oepintegrator.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.MediaType.ALL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
@@ -11,11 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
+import se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse;
+import se.sundsvall.oepintegrator.service.CaseService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
@@ -25,6 +27,9 @@ class CaseResourceTest {
 
 	@Autowired
 	private WebTestClient webTestClient;
+
+	@MockitoBean
+	private CaseService caseServiceMock;
 
 	@Test
 	void setStatusWithFlowInstanceId() {
@@ -40,21 +45,29 @@ class CaseResourceTest {
 		final var request = SetStatusRequest.create()
 			.withStatus(status)
 			.withPrincipal(principal);
+		final var response = new SetStatusResponse().withEventId(1);
+
+		// Mock
+		when(caseServiceMock.setStatusByFlowinstanceId(municipalityId, instanceType, request, flowInstanceId)).thenReturn(response);
 
 		// Act
 		webTestClient.put()
-			.uri(builder -> builder.path(PATH + "/flow-instances/{flowInstanceId}/status").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.uri(builder -> builder.path(PATH + "/{flowInstanceId}/status").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
-			.expectStatus().isNoContent()
-			.expectHeader().contentType(ALL)
-			.expectBody().isEmpty();
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(SetStatusResponse.class)
+			.returnResult()
+			.getResponseBody();
 
-		// Assert
-		// TODO verify service call
+		// Verify
+		verify(caseServiceMock).setStatusByFlowinstanceId(municipalityId, instanceType, request, flowInstanceId);
+		verifyNoMoreInteractions(caseServiceMock);
 	}
 
+	@Test
 	void setStatusWithFlowInstanceIdNoPrincipal() {
 		// Arrange
 		final var municipalityId = "2281";
@@ -64,18 +77,24 @@ class CaseResourceTest {
 		final var request = SetStatusRequest.create()
 			.withStatus(status);
 
+		// Mock
+		when(caseServiceMock.setStatusByFlowinstanceId(municipalityId, instanceType, request, flowInstanceId)).thenReturn(new SetStatusResponse().withEventId(1));
+
 		// Act
 		webTestClient.put()
-			.uri(builder -> builder.path(PATH + "/flow-instances/{flowInstanceId}/status").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.uri(builder -> builder.path(PATH + "/{flowInstanceId}/status").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
-			.expectStatus().isNoContent()
-			.expectHeader().contentType(ALL)
-			.expectBody().isEmpty();
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(SetStatusResponse.class)
+			.returnResult()
+			.getResponseBody();
 
-		// Assert
-		// TODO verify service call
+		// Verify
+		verify(caseServiceMock).setStatusByFlowinstanceId(municipalityId, instanceType, request, flowInstanceId);
+		verifyNoMoreInteractions(caseServiceMock);
 	}
 
 	@Test
@@ -94,19 +113,25 @@ class CaseResourceTest {
 			.withStatus(status)
 			.withPrincipal(principal);
 
+		// Mock
+		when(caseServiceMock.setStatusByExternalId(municipalityId, instanceType, request, system, externalId)).thenReturn(new SetStatusResponse().withEventId(1));
+
 		// Act
 		webTestClient.put()
-			.uri(builder -> builder.path(PATH + "/systems/{system}/external-id/{externalId}/status")
+			.uri(builder -> builder.path(PATH + "/{system}/{externalId}/status")
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "system", system, "externalId", externalId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
-			.expectStatus().isNoContent()
-			.expectHeader().contentType(ALL)
-			.expectBody().isEmpty();
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(SetStatusResponse.class)
+			.returnResult()
+			.getResponseBody();
 
-		// Assert
-		// TODO verify service call
+		// Verify
+		verify(caseServiceMock).setStatusByExternalId(municipalityId, instanceType, request, system, externalId);
+		verifyNoMoreInteractions(caseServiceMock);
 	}
 
 	@Test
