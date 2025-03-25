@@ -1,6 +1,9 @@
 package se.sundsvall.oepintegrator.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
@@ -118,7 +121,7 @@ class CaseResourceTest {
 
 		// Act
 		webTestClient.put()
-			.uri(builder -> builder.path(PATH + "/{system}/{externalId}/status")
+			.uri(builder -> builder.path(PATH + "/systems/{system}/{externalId}/status")
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "system", system, "externalId", externalId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)

@@ -79,7 +79,7 @@ class CaseResource {
 		return ok(caseService.setStatusByFlowinstanceId(municipalityId, instanceType, setStatusRequest, flowInstanceId));
 	}
 
-	@PutMapping(value = "/{system}/{externalId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+	@PutMapping(value = "/systems/{system}/{externalId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Set status", description = "Sets status of a case", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation"),
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))

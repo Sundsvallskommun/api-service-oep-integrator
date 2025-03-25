@@ -33,8 +33,9 @@ class CaseServiceTest {
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
+		final var eventId = 1234;
 		final var request = new SetStatusRequest().withStatus("status").withPrincipal(new Principal().withName("name").withUserId("userId"));
-		final var response = new SetStatusResponse().withEventID(1234);
+		final var response = new SetStatusResponse().withEventID(eventId);
 
 		when(openeSoapIntegrationMock.setStatus(eq(municipalityId), eq(instanceType), any())).thenReturn(response);
 
@@ -42,7 +43,7 @@ class CaseServiceTest {
 		final var result = caseService.setStatusByFlowinstanceId(municipalityId, instanceType, request, flowInstanceId);
 
 		// Assert
-		assertThat(result.getEventId()).isEqualTo(1234);
+		assertThat(result.getEventId()).isEqualTo(eventId);
 		verify(openeSoapIntegrationMock).setStatus(eq(municipalityId), eq(instanceType), any());
 		verifyNoMoreInteractions(openeSoapIntegrationMock);
 	}
@@ -54,8 +55,9 @@ class CaseServiceTest {
 		final var instanceType = EXTERNAL;
 		final var externalId = "externalId";
 		final var system = "system";
+		final var eventId = 1234;
 		final var request = new SetStatusRequest().withStatus("status").withPrincipal(new Principal().withName("name").withUserId("userId"));
-		final var response = new SetStatusResponse().withEventID(1234);
+		final var response = new SetStatusResponse().withEventID(eventId);
 
 		when(openeSoapIntegrationMock.setStatus(eq(municipalityId), eq(instanceType), any())).thenReturn(response);
 
@@ -63,7 +65,7 @@ class CaseServiceTest {
 		final var result = caseService.setStatusByExternalId(municipalityId, instanceType, request, externalId, system);
 
 		// Assert
-		assertThat(result.getEventId()).isEqualTo(1234);
+		assertThat(result.getEventId()).isEqualTo(eventId);
 		verify(openeSoapIntegrationMock).setStatus(eq(municipalityId), eq(instanceType), any());
 		verifyNoMoreInteractions(openeSoapIntegrationMock);
 	}

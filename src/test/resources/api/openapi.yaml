@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:65480
+  - url: http://localhost:52426
     description: Generated server url
 tags:
   - name: Webmessages
@@ -17,13 +17,84 @@ tags:
   - name: Case
     description: Operations on case
 paths:
-  /{municipalityId}/{instanceType}/cases/{system}/{externalId}/status:
+  /{municipalityId}/{instanceType}/cases/{flowInstanceId}/status:
     put:
       tags:
         - Case
       summary: Set status
       description: Sets status of a case
       operationId: setStatus
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            type: string
+            enum:
+              - INTERNAL
+              - EXTERNAL
+          example: INTERNAL
+        - name: flowInstanceId
+          in: path
+          description: flow-instance id
+          required: true
+          schema:
+            type: string
+          example: 112233
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetStatusRequest"
+        required: true
+      responses:
+        "204":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SetStatusResponse"
+        "404":
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+  /{municipalityId}/{instanceType}/cases/systems/{system}/{externalId}/status:
+    put:
+      tags:
+        - Case
+      summary: Set status
+      description: Sets status of a case
+      operationId: setStatus_1
       parameters:
         - name: municipalityId
           in: path
@@ -69,8 +140,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/SetStatusResponse"
-        "500":
-          description: Internal Server error
+        "404":
+          description: Not found
           content:
             application/problem+json:
               schema:
@@ -83,65 +154,18 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
-  /{municipalityId}/{instanceType}/cases/{flowInstanceId}/status:
-    put:
-      tags:
-        - Case
-      summary: Set status
-      description: Sets status of a case
-      operationId: setStatus_1
-      parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality id
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: instanceType
-          in: path
-          description: The instanceType where case belongs
-          required: true
-          schema:
-            type: string
-            enum:
-              - INTERNAL
-              - EXTERNAL
-          example: INTERNAL
-        - name: flowInstanceId
-          in: path
-          description: flow-instance id
-          required: true
-          schema:
-            type: string
-          example: 112233
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/SetStatusRequest"
-        required: true
-      responses:
-        "204":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SetStatusResponse"
         "500":
           description: Internal Server error
           content:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-        "400":
-          description: Bad request
+        "502":
+          description: Bad gateway
           content:
             application/problem+json:
               schema:
-                oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                $ref: "#/components/schemas/Problem"
   /{municipalityId}/{instanceType}/webmessages:
     post:
       tags:
@@ -191,6 +215,12 @@ paths:
                 type: string
         "500":
           description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad gateway
           content:
             application/problem+json:
               schema:
@@ -471,11 +501,15 @@ paths:
         "200":
           description: Successful operation
           content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WebmessageRequest"
+            application/json: {}
         "500":
           description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad gateway
           content:
             application/problem+json:
               schema:
@@ -534,6 +568,12 @@ paths:
             application/json: {}
         "500":
           description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad gateway
           content:
             application/problem+json:
               schema:
@@ -597,11 +637,15 @@ paths:
         "200":
           description: Successful operation
           content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WebmessageRequest"
+            application/json: {}
         "500":
           description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad gateway
           content:
             application/problem+json:
               schema:
@@ -614,6 +658,86 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
+  /{municipalityId}/{instanceType}/cases/families/{familyId}:
+    get:
+      tags:
+        - Case
+      summary: Get cases by family ID
+      description: Get a list of case envelopes by family ID
+      operationId: getCasesByFamilyId
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            type: string
+            enum:
+              - INTERNAL
+              - EXTERNAL
+          example: INTERNAL
+        - name: familyId
+          in: path
+          description: The family ID
+          required: true
+          schema:
+            type: string
+          example: 123
+        - name: createdAfter
+          in: query
+          description: Filter cases on created
+          required: false
+          schema:
+            type: string
+            format: date
+          example: 2024-01-01
+        - name: createdBefore
+          in: query
+          description: Filter cases on created
+          required: false
+          schema:
+            type: string
+            format: date
+          example: 2024-01-31
+        - name: status
+          in: query
+          description: Filter by status
+          required: false
+          schema:
+            type: string
+          example: Preliminär
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json: {}
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /api-docs:
     get:
       tags:
@@ -632,6 +756,33 @@ paths:
       x-wso2-mutual-ssl: Optional
 components:
   schemas:
+    Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
+    StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
     Principal:
       required:
         - userId
@@ -660,33 +811,6 @@ components:
         principal:
           $ref: "#/components/schemas/Principal"
       description: SetStatus request model
-    Problem:
-      type: object
-      properties:
-        instance:
-          type: string
-          format: uri
-        type:
-          type: string
-          format: uri
-        parameters:
-          type: object
-          additionalProperties:
-            type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
-    StatusType:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
-        reasonPhrase:
-          type: string
     ConstraintViolationProblem:
       type: object
       properties:

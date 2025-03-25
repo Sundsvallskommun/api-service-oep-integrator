@@ -7,6 +7,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -27,10 +28,8 @@ import se.sundsvall.oepintegrator.service.CaseService;
 @ActiveProfiles("junit")
 class CaseResourceFailureTest {
 
-	private static final String PATH_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/{system}/{externalId}/status";
-	private static final String PATH_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/status";
-	private static final String PATH_SET_STATUS_BY_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/systems/{system}/external-id/{externalId}/status";
-	private static final String PATH_SET_STATUS_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/flow-instances/{flowInstanceId}/status";
+	private static final String PATH_SET_STATUS_BY_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/systems/{system}/{externalId}/status";
+	private static final String PATH_SET_STATUS_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/status";
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{municipalityId}/{instanceType}/cases/families/{familyId}";
 
 	@Autowired
@@ -43,7 +42,6 @@ class CaseResourceFailureTest {
 	void setStatusWithFlowInstanceIdNoStatusOrStatusId() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
 		final var userId = "userId";
 		final var name = "name";
@@ -54,7 +52,7 @@ class CaseResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.put()
-			.uri(builder -> builder.path(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.uri(builder -> builder.path(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", EXTERNAL, "flowInstanceId", flowInstanceId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -77,7 +75,6 @@ class CaseResourceFailureTest {
 	void setStatusWithFlowInstanceIdNoUserId() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
 		final var name = "name";
 
@@ -87,7 +84,7 @@ class CaseResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.put()
-			.uri(builder -> builder.path(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.uri(builder -> builder.path(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", EXTERNAL, "flowInstanceId", flowInstanceId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -110,12 +107,11 @@ class CaseResourceFailureTest {
 	void setStatusWithFlowInstanceIdNoRequest() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
 
 		// Act
 		final var response = webTestClient.put()
-			.uri(builder -> builder.path(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.uri(builder -> builder.path(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", EXTERNAL, "flowInstanceId", flowInstanceId)))
 			.contentType(APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isBadRequest()
@@ -137,7 +133,6 @@ class CaseResourceFailureTest {
 	void setStatusWithExternalIdNoStatusOrStatusId() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = EXTERNAL;
 		final var externalId = "externalId";
 		final var system = "system";
 		final var userId = "userId";
@@ -150,7 +145,7 @@ class CaseResourceFailureTest {
 		// Act
 		final var response = webTestClient.put()
 			.uri(builder -> builder.path(PATH_SET_STATUS_BY_EXTERNAL_ID)
-				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "system", system, "externalId", externalId)))
+				.build(Map.of("municipalityId", municipalityId, "instanceType", EXTERNAL, "system", system, "externalId", externalId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -173,7 +168,6 @@ class CaseResourceFailureTest {
 	void setStatusWithExternalIdNoUserId() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = EXTERNAL;
 		final var externalId = "externalId";
 		final var system = "system";
 		final var name = "name";
@@ -185,7 +179,7 @@ class CaseResourceFailureTest {
 		// Act
 		final var response = webTestClient.put()
 			.uri(builder -> builder.path(PATH_SET_STATUS_BY_EXTERNAL_ID)
-				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "system", system, "externalId", externalId)))
+				.build(Map.of("municipalityId", municipalityId, "instanceType", EXTERNAL, "system", system, "externalId", externalId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()
@@ -208,14 +202,13 @@ class CaseResourceFailureTest {
 	void setStatusWithExternalIdNoRequest() {
 		// Arrange
 		final var municipalityId = "2281";
-		final var instanceType = EXTERNAL;
 		final var externalId = "externalId";
 		final var system = "system";
 
 		// Act
 		final var response = webTestClient.put()
 			.uri(builder -> builder.path(PATH_SET_STATUS_BY_EXTERNAL_ID)
-				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "system", system, "externalId", externalId)))
+				.build(Map.of("municipalityId", municipalityId, "instanceType", EXTERNAL, "system", system, "externalId", externalId)))
 			.contentType(APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isBadRequest()
