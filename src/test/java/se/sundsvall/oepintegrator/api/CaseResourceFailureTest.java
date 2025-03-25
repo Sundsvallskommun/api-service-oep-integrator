@@ -230,6 +230,7 @@ class CaseResourceFailureTest {
 	@Test
 	void getCasesByFamilyIdWithInvalidMunicipalityId() {
 
+		// Act
 		final var response = webTestClient.get()
 			.uri(PATH_GET_CASES_BY_FAMILY_ID, "invalidId", INTERNAL, 123)
 			.exchange()
@@ -237,11 +238,14 @@ class CaseResourceFailureTest {
 			.expectBody(ConstraintViolationProblem.class)
 			.returnResult().getResponseBody();
 
+		// Assert
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getCasesByFamilyId.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(caseServiceMock);
 	}
 }

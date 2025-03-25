@@ -8,6 +8,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
+import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,6 +146,8 @@ class CaseResourceTest {
 		final var instanceType = EXTERNAL;
 		final var familyId = "familyId";
 
+		when(caseServiceMock.getCaseEnvelopeListByFamilyId(municipalityId, instanceType, familyId, null, null, null)).thenReturn(List.of(CaseEnvelope.create()));
+
 		// Act
 		final var result = webTestClient.get()
 			.uri(builder -> builder.path(PATH + "/families/{familyId}")
@@ -160,6 +163,6 @@ class CaseResourceTest {
 		assertThat(result).isNotNull().hasSize(1);
 		assertThat(result.getFirst()).isNotNull();
 
-		// TODO Fix assert to look on mocked result and verify service call
+		verify(caseServiceMock).getCaseEnvelopeListByFamilyId(municipalityId, instanceType, familyId, null, null, null);
 	}
 }

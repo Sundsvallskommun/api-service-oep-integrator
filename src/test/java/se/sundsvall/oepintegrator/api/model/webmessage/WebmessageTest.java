@@ -8,6 +8,7 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetter
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ class WebmessageTest {
 		final var externalCaseId = "externalCaseId";
 		final var message = "message";
 		final var messageId = "messageId";
-		final var sent = "sent";
+		final var sent = LocalDateTime.now();
 		final var username = "username";
 		final var firstName = "firstName";
 		final var lastName = "lastName";
@@ -86,5 +87,4 @@ class WebmessageTest {
 		assertThat(Webmessage.create()).hasAllNullFieldsOrProperties();
 		assertThat(new Webmessage()).hasAllNullFieldsOrProperties();
 	}
-
 }

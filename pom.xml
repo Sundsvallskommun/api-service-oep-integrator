@@ -17,6 +17,7 @@
 		<generated-sources-java-path>src/main/java</generated-sources-java-path>
 		<jaxb-plugins.version>4.0.8</jaxb-plugins.version>
 		<overviewproject.mimetypes.version>2.0.0</overviewproject.mimetypes.version>
+		<xsoup.version>0.3.7</xsoup.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -54,6 +55,11 @@
 			<groupId>org.overviewproject</groupId>
 			<artifactId>mime-types</artifactId>
 			<version>${overviewproject.mimetypes.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>us.codecraft</groupId>
+			<artifactId>xsoup</artifactId>
+			<version>${xsoup.version}</version>
 		</dependency>
 		<!-- Test -->
 		<dependency>

@@ -2,6 +2,7 @@ package se.sundsvall.oepintegrator.integration.opene.soap.model.message;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
+import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORMAT;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
@@ -62,7 +64,7 @@ public final class WebmessageMapper {
 			.withExternalCaseId(String.valueOf(externalMessage.getFlowInstanceID()))
 			.withMessage(externalMessage.getMessage())
 			.withMunicipalityId(municipalityId)
-			.withSent(externalMessage.getAdded());
+			.withSent(LocalDateTime.parse(externalMessage.getAdded(), OPEN_E_DATE_TIME_FORMAT));
 
 		ofNullable(externalMessage.getPoster())
 			.ifPresent(poster -> webmessage

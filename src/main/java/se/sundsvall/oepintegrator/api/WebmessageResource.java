@@ -75,7 +75,7 @@ class WebmessageResource {
 
 	@GetMapping(path = "/families/{familyId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get all webmessages for a familyId", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true)
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
 	})
 	ResponseEntity<List<Webmessage>> getWebmessagesByFamilyId(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -90,7 +90,7 @@ class WebmessageResource {
 
 	@GetMapping(path = "/flow-instances/{flowInstanceId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get all webmessages for a given errand", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true)
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
 	})
 	ResponseEntity<List<Webmessage>> getWebmessagesByFlowInstanceId(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -105,7 +105,7 @@ class WebmessageResource {
 
 	@GetMapping(path = "/flow-instances/{flowInstanceId}/attachments/{attachmentId}")
 	@Operation(summary = "Get attachment by id", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true)
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
 	})
 	ResponseEntity<WebmessageAttachmentData> getAttachmentById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
