@@ -25,6 +25,7 @@ import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
+import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +33,9 @@ class WebmessageServiceTest {
 
 	@Mock
 	private OpeneSoapIntegration openeSoapIntegrationMock;
+
+	@Mock
+	private OpeneRestIntegration openeRestIntegrationMock;
 
 	@InjectMocks
 	private WebmessageService webmessageService;
@@ -57,7 +61,7 @@ class WebmessageServiceTest {
 		// Assert
 		assertThat(result).isEqualTo(1234);
 		verify(openeSoapIntegrationMock).addMessage(eq(municipalityId), eq(instanceType), any());
-		verifyNoMoreInteractions(openeSoapIntegrationMock);
+		verifyNoMoreInteractions(openeSoapIntegrationMock, openeRestIntegrationMock);
 	}
 
 	@Test
@@ -77,7 +81,7 @@ class WebmessageServiceTest {
 			.hasFieldOrPropertyWithValue("status", BAD_REQUEST)
 			.hasMessage("Bad Request: Flow instance id is required");
 
-		verifyNoMoreInteractions(openeSoapIntegrationMock);
+		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
 	}
 
 	@Test
@@ -92,15 +96,15 @@ class WebmessageServiceTest {
 		final var webmessages = List.of(
 			new Webmessage().withMessageId("2"),
 			new Webmessage().withMessageId("1"));
-		when(openeSoapIntegrationMock.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDate, toDate)).thenReturn(webmessages);
+		when(openeRestIntegrationMock.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDate, toDate)).thenReturn(webmessages);
 		// Act
 		final var result = webmessageService.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDate, toDate);
 
 		// Assert
 		assertThat(result).isNotNull().hasSize(2);
 		assertThat(result.getFirst().getMessageId()).isEqualTo("2");
-		verify(openeSoapIntegrationMock).getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDate, toDate);
-		verifyNoMoreInteractions(openeSoapIntegrationMock);
+		verify(openeRestIntegrationMock).getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDate, toDate);
+		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
 	}
 
 	@Test
@@ -115,15 +119,15 @@ class WebmessageServiceTest {
 		final var webmessages = List.of(
 			new Webmessage().withMessageId("2"),
 			new Webmessage().withMessageId("1"));
-		when(openeSoapIntegrationMock.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDate, toDate)).thenReturn(webmessages);
+		when(openeRestIntegrationMock.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDate, toDate)).thenReturn(webmessages);
 		// Act
 		final var result = webmessageService.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDate, toDate);
 
 		// Assert
 		assertThat(result).isNotNull().hasSize(2);
 		assertThat(result.getFirst().getMessageId()).isEqualTo("2");
-		verify(openeSoapIntegrationMock).getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDate, toDate);
-		verifyNoMoreInteractions(openeSoapIntegrationMock);
+		verify(openeRestIntegrationMock).getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDate, toDate);
+		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
 	}
 
 	@Test
@@ -133,12 +137,12 @@ class WebmessageServiceTest {
 		final var attachmentId = 123;
 		final var attachment = new WebmessageAttachmentData().withData(new byte[10]);
 
-		when(openeSoapIntegrationMock.getAttachmentById(municipalityId, instanceType, attachmentId)).thenReturn(attachment);
+		when(openeRestIntegrationMock.getAttachmentById(municipalityId, instanceType, attachmentId)).thenReturn(attachment);
 
 		final var result = webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId);
 
 		assertThat(result).isNotNull().isEqualTo(attachment);
-		verify(openeSoapIntegrationMock).getAttachmentById(municipalityId, instanceType, attachmentId);
-		verifyNoMoreInteractions(openeSoapIntegrationMock);
+		verify(openeRestIntegrationMock).getAttachmentById(municipalityId, instanceType, attachmentId);
+		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
 	}
 }

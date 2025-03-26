@@ -3,6 +3,7 @@ package se.sundsvall.oepintegrator.apptest;
 import java.io.FileNotFoundException;
 import static java.text.MessageFormat.format;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +13,7 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
+import static org.springframework.http.HttpHeaders.LOCATION;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -49,6 +51,7 @@ class WebmessageIT extends AbstractAppTest {
 			.withRequestFile("attachments", "test.txt")
 			.withRequestFile("attachments", "test2.txt")
 			.withExpectedResponseStatus(CREATED)
+			.withExpectedResponseHeader(LOCATION, List.of("/2281/webmessages/151"))
 			.sendRequestAndVerifyResponse();
 	}
 
