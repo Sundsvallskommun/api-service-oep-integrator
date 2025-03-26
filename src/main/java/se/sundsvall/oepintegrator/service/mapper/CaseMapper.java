@@ -1,5 +1,6 @@
 package se.sundsvall.oepintegrator.service.mapper;
 
+import static java.util.Optional.ofNullable;
 import static se.sundsvall.oepintegrator.service.util.XPathUtil.evaluateXPath;
 import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORMAT;
 
@@ -24,6 +25,6 @@ public class CaseMapper {
 	}
 
 	private static LocalDateTime parseLocalDateTime(String value) {
-		return LocalDateTime.parse(value, OPEN_E_DATE_TIME_FORMAT);
+		return ofNullable(value).map(dateStr -> LocalDateTime.parse(value, OPEN_E_DATE_TIME_FORMAT)).orElse(null);
 	}
 }

@@ -64,7 +64,7 @@ public final class WebmessageMapper {
 			.withExternalCaseId(String.valueOf(externalMessage.getFlowInstanceID()))
 			.withMessage(externalMessage.getMessage())
 			.withMunicipalityId(municipalityId)
-			.withSent(LocalDateTime.parse(externalMessage.getAdded(), OPEN_E_DATE_TIME_FORMAT));
+			.withSent(ofNullable(externalMessage.getAdded()).map(dateStr -> LocalDateTime.parse(dateStr, OPEN_E_DATE_TIME_FORMAT)).orElse(null));
 
 		ofNullable(externalMessage.getPoster())
 			.ifPresent(poster -> webmessage

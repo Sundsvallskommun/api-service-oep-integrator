@@ -1,5 +1,6 @@
 package se.sundsvall.oepintegrator.api;
 
+import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -145,12 +146,18 @@ class CaseResourceTest {
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var familyId = "familyId";
+		final var status = "status";
+		final var fromDate = now();
+		final var toDate = now();
 
-		when(caseServiceMock.getCaseEnvelopeListByFamilyId(municipalityId, instanceType, familyId, null, null, null)).thenReturn(List.of(CaseEnvelope.create()));
+		when(caseServiceMock.getCaseEnvelopeListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate)).thenReturn(List.of(CaseEnvelope.create()));
 
 		// Act
 		final var result = webTestClient.get()
 			.uri(builder -> builder.path(PATH + "/families/{familyId}")
+				.queryParam("fromDate", List.of(fromDate))
+				.queryParam("toDate", List.of(toDate))
+				.queryParam("status", List.of(status))
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "familyId", familyId)))
 			.exchange()
 			.expectStatus().isOk()
@@ -163,6 +170,6 @@ class CaseResourceTest {
 		assertThat(result).isNotNull().hasSize(1);
 		assertThat(result.getFirst()).isNotNull();
 
-		verify(caseServiceMock).getCaseEnvelopeListByFamilyId(municipalityId, instanceType, familyId, null, null, null);
+		verify(caseServiceMock).getCaseEnvelopeListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate);
 	}
 }
