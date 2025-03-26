@@ -1,0 +1,19 @@
+{
+	"request": {
+		"method": "POST",
+		"bodyPatterns": [
+			{
+				"equalToXml": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"><SOAP-ENV:Header/><SOAP-ENV:Body><setStatus xmlns=\"http://www.oeplatform.org/version/1.0/schemas/integration/callback\"><flowInstanceID>12345</flowInstanceID><statusAlias>Inskickat</statusAlias><principal><name>John Doe</name><userID>joh12doe</userID></principal></setStatus></SOAP-ENV:Body></SOAP-ENV:Envelope>"
+			}
+		],
+		"urlPath": "/external-oepMock/api/callback"
+	},
+	"response": {
+		"bodyFileName": "test01_setStatusByFlowinstanceId/response/setStatusResponse.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		}
+	},
+	"name": "api-oep-set-status-by-flowinstance-id"
+}

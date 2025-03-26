@@ -16,6 +16,21 @@ public interface OpeneRestClient extends OpeneClient {
 
 	String TEXT_XML_CHARSET_ISO_8859_1 = "text/xml; charset=ISO-8859-1";
 
+	@GetMapping(path = "/api/messageapi/getmessages/family/{familyId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
+	byte[] getWebmessagesByFamilyId(
+		@PathVariable(name = "familyId") final String familyId,
+		@RequestParam(name = "fromDate") final String fromDate,
+		@RequestParam(name = "toDate") final String toDate);
+
+	@GetMapping(path = "/api/messageapi/getmessages/flowinstance/{flowInstanceId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
+	byte[] getWebmessagesByFlowInstanceId(
+		@PathVariable(name = "flowInstanceId") final String flowInstanceId,
+		@RequestParam(name = "fromDate") final String fromDate,
+		@RequestParam(name = "toDate") final String toDate);
+
+	@GetMapping(path = "/api/messageapi/getattachment/{attachmentId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
+	byte[] getAttachmentById(@PathVariable(name = "attachmentId") final int attachmentId);
+
 	@GetMapping(path = "/api/instanceapi/getinstances/family/{familyId}/{status}", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	Optional<byte[]> getCaseListByFamilyId(
 		@PathVariable(name = "familyId") final String familyId,

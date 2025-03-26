@@ -6,6 +6,7 @@ import feign.Logger;
 import feign.Request;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.jaxb.JAXBContextFactory;
+import feign.soap.SOAPDecoder;
 import feign.soap.SOAPEncoder;
 import feign.soap.SOAPErrorDecoder;
 import jakarta.xml.soap.SOAPConstants;
@@ -30,6 +31,8 @@ public class SoapClientFactory {
 		.withJAXBContextFactory(JAXB_FACTORY)
 		.withSOAPProtocol(SOAPConstants.SOAP_1_1_PROTOCOL)
 		.withWriteXmlDeclaration(true);
+	private static final SOAPDecoder.Builder DECODER_BUILDER = new SOAPDecoder.Builder()
+		.withJAXBContextFactory(JAXB_FACTORY);
 	private final EncryptionUtility encryptionUtility;
 	private final ApplicationContext applicationContext;
 
@@ -46,6 +49,7 @@ public class SoapClientFactory {
 			.forType(OpeneSoapClient.class, clientName)
 			.customize(builder -> builder
 				.encoder(ENCODER_BUILDER.build())
+				.decoder(DECODER_BUILDER.build())
 				.errorDecoder(new SOAPErrorDecoder())
 				.logLevel(Logger.Level.FULL)
 				.requestInterceptor(new BasicAuthRequestInterceptor(instanceEntity.getUsername(), encryptionUtility.decrypt(instanceEntity.getPassword())))

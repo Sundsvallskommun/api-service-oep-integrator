@@ -13,6 +13,7 @@ import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
+import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 import se.sundsvall.oepintegrator.service.mapper.MessageMapper;
 import se.sundsvall.oepintegrator.utility.enums.InstanceType;
@@ -22,8 +23,11 @@ public class WebmessageService {
 
 	private final OpeneSoapIntegration openeSoapIntegration;
 
-	public WebmessageService(final OpeneSoapIntegration openeSoapIntegration) {
+	private final OpeneRestIntegration openeRestIntegration;
+
+	public WebmessageService(final OpeneSoapIntegration openeSoapIntegration, final OpeneRestIntegration openeRestIntegration) {
 		this.openeSoapIntegration = openeSoapIntegration;
+		this.openeRestIntegration = openeRestIntegration;
 	}
 
 	public Integer createWebmessage(final String municipalityId, final InstanceType instanceType, final WebmessageRequest request, final List<MultipartFile> attachments) {
@@ -43,14 +47,14 @@ public class WebmessageService {
 	}
 
 	public List<Webmessage> getWebmessagesByFamilyId(final String municipalityId, final InstanceType instanceType, final String familyId, final LocalDateTime fromDateTime, final LocalDateTime toDateTime) {
-		return openeSoapIntegration.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime);
+		return openeRestIntegration.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime);
 	}
 
 	public List<Webmessage> getWebmessagesByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final LocalDateTime fromDateTime, final LocalDateTime toDateTime) {
-		return openeSoapIntegration.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime);
+		return openeRestIntegration.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime);
 	}
 
 	public WebmessageAttachmentData getAttachmentById(final String municipalityId, final InstanceType instanceType, final Integer attachmentId) {
-		return openeSoapIntegration.getAttachmentById(municipalityId, instanceType, attachmentId);
+		return openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId);
 	}
 }
