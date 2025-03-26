@@ -49,25 +49,24 @@ class CaseResource {
 		this.caseService = caseService;
 	}
 
-	@GetMapping("/families/{familyId}")
+	@GetMapping(path = "/families/{familyId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get cases by family ID",
 		description = "Get a list of case envelopes by family ID",
-		responses = @ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true))
+		responses = @ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true))
 	ResponseEntity<List<CaseEnvelope>> getCasesByFamilyId(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "familyId", description = "The family ID", example = "123") @PathVariable final String familyId,
-		@Parameter(name = "createdAfter", description = "Filter cases on created", example = "2024-01-01") @RequestParam(value = "from", required = false) final LocalDate createdAfter,
-		@Parameter(name = "createdBefore", description = "Filter cases on created", example = "2024-01-31") @RequestParam(value = "from", required = false) final LocalDate createdBefore,
+		@Parameter(name = "fromDate", description = "Filter cases on fromDate", example = "2024-01-01") @RequestParam(value = "fromDate", required = false) final LocalDate fromDate,
+		@Parameter(name = "toDate", description = "Filter cases on toDate", example = "2024-01-31") @RequestParam(value = "toDate", required = false) final LocalDate toDate,
 		@Parameter(name = "status", description = "Filter by status", example = "Preliminär") @RequestParam(value = "status", required = false) final String status) {
 
-		// TODO Add service call
-		return ok(List.of(CaseEnvelope.create()));
+		return ok(caseService.getCaseEnvelopeListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate));
 	}
 
 	@PutMapping(value = "/{flowInstanceId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Set status", description = "Sets status of a case", responses = {
-		@ApiResponse(responseCode = "204", description = "Successful operation"),
+		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	ResponseEntity<SetStatusResponse> setStatus(
@@ -81,7 +80,7 @@ class CaseResource {
 
 	@PutMapping(value = "/systems/{system}/{externalId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Set status", description = "Sets status of a case", responses = {
-		@ApiResponse(responseCode = "204", description = "Successful operation"),
+		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	ResponseEntity<SetStatusResponse> setStatus(

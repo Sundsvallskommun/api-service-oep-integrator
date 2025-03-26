@@ -2,6 +2,7 @@ package se.sundsvall.oepintegrator.api.model.webmessage;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,8 +30,8 @@ public class Webmessage {
 	@Schema(description = "The unique messageId from openE for the message", example = "12")
 	private String messageId;
 
-	@Schema(description = "Time and date the message was sent ", example = "2023-02-23 17:26:23")
-	private String sent;
+	@Schema(description = "Time and date the message was sent ", example = "2023-02-23T17:26:23")
+	private LocalDateTime sent;
 
 	@Schema(description = "Username for the poster", example = "te01st")
 	private String username;
@@ -148,15 +149,15 @@ public class Webmessage {
 		return this;
 	}
 
-	public String getSent() {
+	public LocalDateTime getSent() {
 		return sent;
 	}
 
-	public void setSent(final String sent) {
+	public void setSent(final LocalDateTime sent) {
 		this.sent = sent;
 	}
 
-	public Webmessage withSent(final String sent) {
+	public Webmessage withSent(final LocalDateTime sent) {
 		this.sent = sent;
 		return this;
 	}
@@ -254,8 +255,9 @@ public class Webmessage {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (o == null || getClass() != o.getClass())
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		final Webmessage that = (Webmessage) o;
 		return Objects.equals(id, that.id) && direction == that.direction && Objects.equals(municipalityId, that.municipalityId) && Objects.equals(familyId, that.familyId) && Objects.equals(externalCaseId,
 			that.externalCaseId) && Objects.equals(message, that.message) && Objects.equals(messageId, that.messageId) && Objects.equals(sent, that.sent) && Objects.equals(username, that.username)

@@ -53,18 +53,16 @@ class InstanceResource {
 		this.service = service;
 	}
 
-	@GetMapping
-	@Operation(summary = "Get instances", description = "Get all instances for a municipalityId ", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true)
-	})
+	@GetMapping(produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get instances", description = "Get all instances for a municipalityId ", responses = @ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true))
 	ResponseEntity<List<Instance>> getInstances(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId) {
 		return ok(service.getInstances(municipalityId));
 	}
 
-	@GetMapping("/{instanceId}")
+	@GetMapping(path = "/{instanceId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get instance", description = "Get an instance", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE), useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Instance not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	ResponseEntity<Instance> getInstance(
@@ -87,7 +85,7 @@ class InstanceResource {
 			.build();
 	}
 
-	@PatchMapping("/{instanceId}")
+	@PatchMapping(path = "/{instanceId}", consumes = APPLICATION_JSON_VALUE, produces = ALL_VALUE)
 	@Operation(summary = "Update instance", description = "Updates an instance", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Instance not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
@@ -116,5 +114,4 @@ class InstanceResource {
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
 	}
-
 }
