@@ -1,5 +1,13 @@
 package se.sundsvall.oepintegrator.integration.opene.rest;
 
+import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessageAttachmentData;
+import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessages;
+import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseEnvelopeList;
+import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORMAT;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
