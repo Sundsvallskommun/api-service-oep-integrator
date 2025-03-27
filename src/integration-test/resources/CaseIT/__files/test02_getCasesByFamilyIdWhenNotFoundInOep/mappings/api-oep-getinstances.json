@@ -2,7 +2,7 @@
 	"name": "getInstancesByFamilyIdNotFound",
 	"request": {
 		"method": "GET",
-		"urlPath": "/external-oepMock/api/instanceapi/getinstances/family/12345/"
+		"urlPath": "/external-oepMock/api/instanceapi/getinstances/family/123/"
 	},
 	"response": {
 		"status": 404

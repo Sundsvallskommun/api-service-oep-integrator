@@ -31,7 +31,7 @@ class CaseIT extends AbstractAppTest {
 	private static final String RESPONSE_FILE = "response.json";
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{0}/{1}/cases/families/{2}";
 	private static final String MUNICIPALITY_ID = "2281";
-	private static final String FAMILY_ID = "12345";
+	private static final String FAMILY_ID = "123";
 	private static final String STATUS = "TheStatus";
 
 	@Autowired
