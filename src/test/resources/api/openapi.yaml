@@ -575,7 +575,7 @@ paths:
         "200":
           description: Successful operation
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: "#/components/schemas/WebmessageAttachmentData"
         "500":
@@ -791,9 +791,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
     StatusType:
       type: object
@@ -954,9 +954,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
         suppressed:
           type: array
