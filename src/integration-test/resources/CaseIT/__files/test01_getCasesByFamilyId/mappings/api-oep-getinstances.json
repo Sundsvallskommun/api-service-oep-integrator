@@ -1,0 +1,22 @@
+{
+	"name": "getInstancesByFamilyId",
+	"request": {
+		"method": "GET",
+		"urlPath": "/external-oepMock/api/instanceapi/getinstances/family/123/TheStatus",
+		"queryParameters": {
+			"fromDate": {
+				"equalTo": "2020-01-01"
+			},
+			"toDate": {
+				"equalTo": "2025-12-31"
+			}
+		}
+	},
+	"response": {
+		"bodyFileName": "test01_getCasesByFamilyId/responses/getInstancesResponse.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		}
+	}
+}
