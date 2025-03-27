@@ -1,5 +1,6 @@
 package se.sundsvall.oepintegrator.integration.opene.rest;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.Mockito.verify;
@@ -46,7 +47,7 @@ class OpeneRestIntegrationTest {
 		final var toDate = LocalDate.now();
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
-		when(openeRestClient.getCaseListByFamilyId(familyId, status, fromDate, toDate)).thenReturn(Optional.of(xml.getBytes()));
+		when(openeRestClient.getCaseListByFamilyId(familyId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE))).thenReturn(Optional.of(xml.getBytes()));
 
 		// Act
 		final var result = openeRestIntegration.getCaseListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate);
@@ -62,7 +63,7 @@ class OpeneRestIntegrationTest {
 				tuple("4932", LocalDateTime.parse("2025-02-14T12:39"), LocalDateTime.parse("2025-02-18T20:10")));
 
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
-		verify(openeRestClient).getCaseListByFamilyId(familyId, status, fromDate, toDate);
+		verify(openeRestClient).getCaseListByFamilyId(familyId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE));
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
 	}
 

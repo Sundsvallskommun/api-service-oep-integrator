@@ -1,5 +1,7 @@
 package se.sundsvall.oepintegrator.integration.opene.rest;
 
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.util.Optional.ofNullable;
 import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessageAttachmentData;
 import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessages;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseEnvelopeList;
@@ -55,6 +57,10 @@ public class OpeneRestIntegration {
 
 	public List<CaseEnvelope> getCaseListByFamilyId(final String municipalityId, final InstanceType instanceType, final String familyId, final String status, final LocalDate fromDate, final LocalDate toDate) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-		return toCaseEnvelopeList(client.getCaseListByFamilyId(familyId, status, fromDate, toDate).orElse(new byte[0]));
+		return toCaseEnvelopeList(client.getCaseListByFamilyId(familyId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(new byte[0]));
+	}
+
+	private String formatLocalDate(LocalDate localDate) {
+		return ofNullable(localDate).map(date -> date.format(ISO_LOCAL_DATE)).orElse(null);
 	}
 }
