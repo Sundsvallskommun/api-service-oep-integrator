@@ -7,6 +7,8 @@ import static org.mockito.Mockito.when;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 import callback.AddMessage;
+import callback.AddMessageAsOwner;
+import callback.AddMessageAsOwnerResponse;
 import callback.AddMessageResponse;
 import callback.ConfirmDelivery;
 import callback.SetStatus;
@@ -69,6 +71,28 @@ class OpeneSoapIntegrationTest {
 		assertThat(result).isNotNull().isEqualTo(addMessageResponse);
 		verify(clientFactory).getSoapClient(municipalityId, instanceType);
 		verify(openeSoapClient).addMessage(addMessage);
+		verifyNoMoreInteractions(openeSoapClient, clientFactory);
+	}
+
+	@Test
+	void addMessageAsOwner() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var addMessageAsOwner = new AddMessageAsOwner();
+
+		final var addMessageAsOwnerResponse = new AddMessageAsOwnerResponse();
+		when(openeSoapClient.addMessageAsOwner(addMessageAsOwner)).thenReturn(addMessageAsOwnerResponse);
+
+		when(clientFactory.getSoapClient(municipalityId, instanceType)).thenReturn(openeSoapClient);
+
+		// Act
+		final var result = openeSoapIntegration.addMessageAsOwner(municipalityId, instanceType, addMessageAsOwner);
+
+		// Assert
+		assertThat(result).isNotNull().isEqualTo(addMessageAsOwnerResponse);
+		verify(clientFactory).getSoapClient(municipalityId, instanceType);
+		verify(openeSoapClient).addMessageAsOwner(addMessageAsOwner);
 		verifyNoMoreInteractions(openeSoapClient, clientFactory);
 	}
 

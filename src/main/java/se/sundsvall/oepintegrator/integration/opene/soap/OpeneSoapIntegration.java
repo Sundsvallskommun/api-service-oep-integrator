@@ -1,6 +1,8 @@
 package se.sundsvall.oepintegrator.integration.opene.soap;
 
 import callback.AddMessage;
+import callback.AddMessageAsOwner;
+import callback.AddMessageAsOwnerResponse;
 import callback.AddMessageResponse;
 import callback.ConfirmDelivery;
 import callback.SetStatus;
@@ -37,6 +39,11 @@ public class OpeneSoapIntegration {
 	public AddMessageResponse addMessage(final String municipalityId, final InstanceType instanceType, final AddMessage addMessage) {
 		final var client = clientFactory.getSoapClient(municipalityId, instanceType);
 		return client.addMessage(addMessage);
+	}
+
+	public AddMessageAsOwnerResponse addMessageAsOwner(final String municipalityId, final InstanceType instanceType, final AddMessageAsOwner addMessageAsOwner) {
+		final var client = clientFactory.getSoapClient(municipalityId, instanceType);
+		return client.addMessageAsOwner(addMessageAsOwner);
 	}
 
 	public SetStatusResponse setStatus(final String municipalityId, final InstanceType instanceType, final SetStatus setStatus) {
