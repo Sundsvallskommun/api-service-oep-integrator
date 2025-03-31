@@ -25,17 +25,23 @@ class SenderTest {
 
 	@Test
 	void builder() {
+
 		// Arrange
-		final var userId = "joe01doe";
+		final var administratorId = "administratorId";
+		final var userId = "userId";
+		final var partyId = "partyId";
 
 		// Act
 		final var bean = Sender.create()
+			.withAdministratorId(administratorId)
+			.withPartyId(partyId)
 			.withUserId(userId);
 
 		// Assert
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
+		assertThat(bean.getAdministratorId()).isEqualTo(administratorId);
 		assertThat(bean.getUserId()).isEqualTo(userId);
-
+		assertThat(bean.getPartyId()).isEqualTo(partyId);
 	}
 
 	@Test
