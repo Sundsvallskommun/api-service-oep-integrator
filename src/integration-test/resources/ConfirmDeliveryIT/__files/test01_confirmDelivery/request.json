@@ -1,0 +1,6 @@
+{
+	"caseId": "1234567890",
+	"delivered": true,
+	"logMessage": "Test message",
+	"system": "TestSystem"
+}
