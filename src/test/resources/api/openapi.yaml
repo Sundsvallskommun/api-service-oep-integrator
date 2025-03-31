@@ -1020,15 +1020,23 @@ components:
           example: "356746349"
       description: ExternalReference model
     Sender:
-      required:
-      - userId
       type: object
       properties:
         userId:
           type: string
           description: The user ID of the sender. I.e. employee ID
           example: joe01doe
-      description: Sender model
+        administratorId:
+          type: string
+          description: The user ID of the case administrator. I.e. the employee ID
+            of the administrative official.
+          example: joe01doe
+        partyId:
+          type: string
+          description: The party ID of the sender.
+          example: 582462d3-ae94-476f-96de-f495a927dea8
+      description: "Sender model. The attributes in this object are mutually exclusive,\
+        \ meaning that only one of them can be set at a time."
     WebmessageRequest:
       required:
       - message
