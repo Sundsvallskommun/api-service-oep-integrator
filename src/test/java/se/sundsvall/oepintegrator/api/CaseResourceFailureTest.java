@@ -32,7 +32,7 @@ class CaseResourceFailureTest {
 	private static final String PATH_SET_STATUS_BY_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/systems/{system}/{externalId}/status";
 	private static final String PATH_SET_STATUS_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/status";
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{municipalityId}/{instanceType}/cases/families/{familyId}";
-	private static final String PATH_CONFIRM_DELIVERY = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/confirm-delivery";
+	private static final String PATH_CONFIRM_DELIVERY = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/delivery";
 
 	@Autowired
 	private WebTestClient webTestClient;

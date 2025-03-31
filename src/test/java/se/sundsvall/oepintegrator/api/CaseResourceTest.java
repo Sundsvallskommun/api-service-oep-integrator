@@ -185,7 +185,7 @@ class CaseResourceTest {
 
 		// Act
 		webTestClient.post()
-			.uri(builder -> builder.path(PATH + "/{flowInstanceId}/confirm-delivery").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.uri(builder -> builder.path(PATH + "/{flowInstanceId}/delivery").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
 			.contentType(APPLICATION_JSON)
 			.bodyValue(request)
 			.exchange()

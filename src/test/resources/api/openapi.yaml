@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:59069
+  - url: http://localhost:64569
     description: Generated server url
 tags:
   - name: Webmessages
@@ -233,7 +233,7 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
-  /{municipalityId}/{instanceType}/cases/{flowInstanceId}/confirm-delivery:
+  /{municipalityId}/{instanceType}/cases/{flowInstanceId}/delivery:
     post:
       tags:
         - Case
@@ -1129,8 +1129,9 @@ components:
       properties:
         caseId:
           type: string
-          description: The case id
-          example: "123456"
+          description: The case id in the system that delivered the case. From Open-E
+            Platforms perspective this is the 'external case id
+          example: caa230c6-abb4-4592-ad9a-34e263c2787d
         delivered:
           type: boolean
           description: If the case was delivered

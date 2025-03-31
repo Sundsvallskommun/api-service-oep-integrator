@@ -98,7 +98,7 @@ class CaseResource {
 		return ok(caseService.setStatusByExternalId(municipalityId, instanceType, setStatusRequest, system, externalId));
 	}
 
-	@PostMapping(value = "/{flowInstanceId}/confirm-delivery", consumes = APPLICATION_JSON_VALUE, produces = ALL_VALUE)
+	@PostMapping(value = "/{flowInstanceId}/delivery", consumes = APPLICATION_JSON_VALUE, produces = ALL_VALUE)
 	@Operation(summary = "Confirm delivery", description = "Confirms delivery of a case", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))

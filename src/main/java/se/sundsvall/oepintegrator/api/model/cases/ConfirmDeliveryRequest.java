@@ -8,7 +8,7 @@ import java.util.Objects;
 public class ConfirmDeliveryRequest {
 
 	@NotBlank
-	@Schema(description = "The case id", example = "123456")
+	@Schema(description = "The case id in the system that delivered the case. From Open-E Platforms perspective this is the 'external case id", example = "caa230c6-abb4-4592-ad9a-34e263c2787d")
 	private String caseId;
 
 	@Schema(description = "If the case was delivered", example = "true")
