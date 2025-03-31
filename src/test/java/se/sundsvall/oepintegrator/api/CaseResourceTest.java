@@ -19,6 +19,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
+import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse;
@@ -171,5 +172,28 @@ class CaseResourceTest {
 		assertThat(result.getFirst()).isNotNull();
 
 		verify(caseServiceMock).getCaseEnvelopeListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate);
+	}
+
+	@Test
+	void confirmDelivery() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+		final var request = new ConfirmDeliveryRequest().withCaseId("caseId").withDelivered(true).withLogMessage("logMessage").withSystem("system");
+
+		// Act
+		webTestClient.post()
+			.uri(builder -> builder.path(PATH + "/{flowInstanceId}/delivery").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.contentType(APPLICATION_JSON)
+			.bodyValue(request)
+			.exchange()
+			.expectStatus().isNoContent()
+			.expectHeader().doesNotExist("Content-Type")
+			.expectBody()
+			.returnResult();
+
+		verify(caseServiceMock).confirmDelivery(municipalityId, instanceType, flowInstanceId, request);
 	}
 }

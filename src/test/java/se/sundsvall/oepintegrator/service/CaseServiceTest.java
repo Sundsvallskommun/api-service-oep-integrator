@@ -14,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
@@ -26,6 +27,22 @@ class CaseServiceTest {
 
 	@InjectMocks
 	private CaseService caseService;
+
+	@Test
+	void confirmDelivery() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+		final var request = new ConfirmDeliveryRequest().withCaseId("caseId").withDelivered(true).withLogMessage("logMessage").withSystem("system");
+
+		// Act
+		caseService.confirmDelivery(municipalityId, instanceType, flowInstanceId, request);
+
+		// Assert
+		verify(openeSoapIntegrationMock).confirmDelivery(eq(municipalityId), eq(instanceType), any());
+		verifyNoMoreInteractions(openeSoapIntegrationMock);
+	}
 
 	@Test
 	void setStatusByFlowinstanceId() {

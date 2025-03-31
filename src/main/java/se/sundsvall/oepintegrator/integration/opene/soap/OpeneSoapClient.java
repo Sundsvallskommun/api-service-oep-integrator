@@ -4,6 +4,7 @@ import callback.AddMessage;
 import callback.AddMessageAsOwner;
 import callback.AddMessageAsOwnerResponse;
 import callback.AddMessageResponse;
+import callback.ConfirmDelivery;
 import callback.SetStatus;
 import callback.SetStatusResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -18,6 +19,9 @@ import se.sundsvall.oepintegrator.integration.opene.OpeneClient;
 public interface OpeneSoapClient extends OpeneClient {
 
 	String TEXT_XML_CHARSET_ISO_8859_1 = "text/xml; charset=ISO-8859-1";
+
+	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
+	void confirmDelivery(@RequestBody ConfirmDelivery confirmDelivery);
 
 	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
 	AddMessageResponse addMessage(@RequestBody final AddMessage addMessage);
