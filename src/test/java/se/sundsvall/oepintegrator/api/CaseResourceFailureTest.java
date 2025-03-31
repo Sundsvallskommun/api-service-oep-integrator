@@ -20,6 +20,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.oepintegrator.Application;
+import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 import se.sundsvall.oepintegrator.service.CaseService;
@@ -31,6 +32,7 @@ class CaseResourceFailureTest {
 	private static final String PATH_SET_STATUS_BY_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/systems/{system}/{externalId}/status";
 	private static final String PATH_SET_STATUS_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/status";
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{municipalityId}/{instanceType}/cases/families/{familyId}";
+	private static final String PATH_CONFIRM_DELIVERY = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/confirm-delivery";
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -245,6 +247,55 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getCasesByFamilyId.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(caseServiceMock);
+	}
+
+	@Test
+	void confirmDeliveryWithInvalidMunicipalityId() {
+
+		// Act
+		final var response = webTestClient.post()
+			.uri(builder -> builder.path(PATH_CONFIRM_DELIVERY).build(Map.of("municipalityId", "invalidId", "instanceType", INTERNAL, "flowInstanceId", 123)))
+			.contentType(APPLICATION_JSON)
+			.bodyValue(new ConfirmDeliveryRequest().withCaseId("someCaseId").withDelivered(true).withLogMessage("logMessage").withSystem("system"))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("confirmDelivery.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(caseServiceMock);
+	}
+
+	@Test
+	void confirmDeliveryWithInvalidRequest() {
+
+		// Act
+		final var response = webTestClient.post()
+			.uri(builder -> builder.path(PATH_CONFIRM_DELIVERY).build(Map.of("municipalityId", "2281", "instanceType", INTERNAL, "flowInstanceId", 123)))
+			.contentType(APPLICATION_JSON)
+			.bodyValue(new ConfirmDeliveryRequest())
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("caseId", "must not be blank"),
+				tuple("system", "must not be blank"));
 
 		verifyNoInteractions(caseServiceMock);
 	}

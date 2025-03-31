@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
+import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 
 @ExtendWith(ResourceLoaderExtension.class)
 class CaseMapperTest {
@@ -38,5 +39,49 @@ class CaseMapperTest {
 
 		// Assert
 		assertThat(result).isEmpty();
+	}
+
+	@Test
+	void toConfirmDelivery() {
+		// Arrange
+		final var flowInstanceId = "123456";
+		final var request = new ConfirmDeliveryRequest()
+			.withCaseId("789012")
+			.withDelivered(true)
+			.withLogMessage("The case was delivered successfully")
+			.withSystem("ByggR");
+
+		// Act
+		final var result = CaseMapper.toConfirmDelivery(flowInstanceId, request);
+
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.getFlowInstanceID()).isEqualTo(123456);
+		assertThat(result.getExternalID().getID()).isEqualTo("789012");
+		assertThat(result.getExternalID().getSystem()).isEqualTo("ByggR");
+		assertThat(result.isDelivered()).isTrue();
+		assertThat(result.getLogMessage()).isEqualTo("The case was delivered successfully");
+	}
+
+	@Test
+	void toConfirmDeliveryWithNullValues() {
+		// Arrange
+		final var flowInstanceId = "123456";
+		final var request = new ConfirmDeliveryRequest()
+			.withCaseId(null)
+			.withDelivered(false)
+			.withLogMessage(null)
+			.withSystem(null);
+
+		// Act
+		final var result = CaseMapper.toConfirmDelivery(flowInstanceId, request);
+
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.getFlowInstanceID()).isEqualTo(Integer.valueOf(flowInstanceId));
+		assertThat(result.getExternalID().getID()).isNull();
+		assertThat(result.getExternalID().getSystem()).isNull();
+		assertThat(result.isDelivered()).isFalse();
+		assertThat(result.getLogMessage()).isNull();
 	}
 }

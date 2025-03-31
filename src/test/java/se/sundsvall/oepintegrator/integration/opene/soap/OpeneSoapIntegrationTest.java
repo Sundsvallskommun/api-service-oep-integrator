@@ -8,6 +8,7 @@ import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 import callback.AddMessage;
 import callback.AddMessageResponse;
+import callback.ConfirmDelivery;
 import callback.SetStatus;
 import callback.SetStatusResponse;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,24 @@ class OpeneSoapIntegrationTest {
 
 	@InjectMocks
 	private OpeneSoapIntegration openeSoapIntegration;
+
+	@Test
+	void confirmDelivery() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var confirmDelivery = new ConfirmDelivery();
+
+		when(clientFactory.getSoapClient(municipalityId, instanceType)).thenReturn(openeSoapClient);
+
+		// Act
+		openeSoapIntegration.confirmDelivery(municipalityId, instanceType, confirmDelivery);
+
+		// Assert
+		verify(clientFactory).getSoapClient(municipalityId, instanceType);
+		verify(openeSoapClient).confirmDelivery(confirmDelivery);
+		verifyNoMoreInteractions(openeSoapClient, clientFactory);
+	}
 
 	@Test
 	void addMessage() {

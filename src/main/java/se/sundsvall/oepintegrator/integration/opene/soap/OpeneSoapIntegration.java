@@ -2,6 +2,7 @@ package se.sundsvall.oepintegrator.integration.opene.soap;
 
 import callback.AddMessage;
 import callback.AddMessageResponse;
+import callback.ConfirmDelivery;
 import callback.SetStatus;
 import callback.SetStatusResponse;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,11 @@ public class OpeneSoapIntegration {
 
 	public OpeneSoapIntegration(final OpeneClientFactory clientFactory) {
 		this.clientFactory = clientFactory;
+	}
+
+	public void confirmDelivery(final String municipalityId, final InstanceType instanceType, final ConfirmDelivery confirmDelivery) {
+		final var client = clientFactory.getSoapClient(municipalityId, instanceType);
+		client.confirmDelivery(confirmDelivery);
 	}
 
 	public AddMessageResponse addMessage(final String municipalityId, final InstanceType instanceType, final AddMessage addMessage) {

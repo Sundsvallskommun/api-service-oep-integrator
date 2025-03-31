@@ -1,9 +1,12 @@
 package se.sundsvall.oepintegrator.service;
 
+import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toConfirmDelivery;
+
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
+import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
@@ -22,7 +25,11 @@ public class CaseService {
 		this.openeRestIntegration = openeRestIntegration;
 	}
 
-	public SetStatusResponse setStatusByFlowinstanceId(final String municipalityId, final InstanceType instanceType, final SetStatusRequest request, String flowInstanceId) {
+	public void confirmDelivery(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final ConfirmDeliveryRequest request) {
+		openeSoapIntegration.confirmDelivery(municipalityId, instanceType, toConfirmDelivery(flowInstanceId, request));
+	}
+
+	public SetStatusResponse setStatusByFlowinstanceId(final String municipalityId, final InstanceType instanceType, final SetStatusRequest request, final String flowInstanceId) {
 		return new SetStatusResponse().withEventId(openeSoapIntegration.setStatus(municipalityId, instanceType, StatusMapper.toSetStatus(request, flowInstanceId)).getEventID());
 	}
 
