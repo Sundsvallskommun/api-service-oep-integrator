@@ -1,6 +1,8 @@
 package se.sundsvall.oepintegrator.integration.opene.soap;
 
 import callback.AddMessage;
+import callback.AddMessageAsOwner;
+import callback.AddMessageAsOwnerResponse;
 import callback.AddMessageResponse;
 import callback.SetStatus;
 import callback.SetStatusResponse;
@@ -19,6 +21,9 @@ public interface OpeneSoapClient extends OpeneClient {
 
 	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
 	AddMessageResponse addMessage(@RequestBody final AddMessage addMessage);
+
+	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
+	AddMessageAsOwnerResponse addMessageAsOwner(@RequestBody final AddMessageAsOwner addMessageAsOwner);
 
 	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
 	SetStatusResponse setStatus(@RequestBody SetStatus setStatus);
