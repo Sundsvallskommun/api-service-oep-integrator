@@ -6,13 +6,14 @@ import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.We
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseEnvelopeList;
 import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORMAT;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.zalando.problem.Problem;
+import org.zalando.problem.Status;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
@@ -50,10 +51,12 @@ public class OpeneRestIntegration {
 		return toWebmessages(municipalityId, messages, instanceType);
 	}
 
-	public ResponseEntity<InputStreamResource> getAttachmentById(final String municipalityId, final InstanceType instanceType, final Integer attachmentId, final HttpServletResponse response) {
+	public ResponseEntity<InputStreamResource> getAttachmentById(final String municipalityId, final InstanceType instanceType, final Integer attachmentId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
 
-		return client.getAttachmentById(attachmentId);
+		final var responseEntity = client.getAttachmentById(attachmentId);
+		validateResponse(responseEntity, "Failed to get attachment by ID");
+		return responseEntity;
 	}
 
 	public List<CaseEnvelope> getCaseListByFamilyId(final String municipalityId, final InstanceType instanceType, final String familyId, final String status, final LocalDate fromDate, final LocalDate toDate) {
@@ -61,14 +64,22 @@ public class OpeneRestIntegration {
 		return toCaseEnvelopeList(client.getCaseListByFamilyId(familyId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(new byte[0]));
 	}
 
-	public ResponseEntity<InputStreamResource> getCasePdfByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final HttpServletResponse response) {
+	public ResponseEntity<InputStreamResource> getCasePdfByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
 
-		return client.getCasePdfByFlowInstanceId(flowInstanceId);
+		final var responseEntity = client.getCasePdfByFlowInstanceId(flowInstanceId);
+		validateResponse(responseEntity, "Failed to get case PDF by flow instance ID");
+		return responseEntity;
 	}
 
 	private String formatLocalDate(final LocalDate localDate) {
 		return ofNullable(localDate).map(date -> date.format(ISO_LOCAL_DATE)).orElse(null);
+	}
+
+	private void validateResponse(final ResponseEntity<InputStreamResource> response, final String errorMessage) {
+		if (!response.getStatusCode().is2xxSuccessful()) {
+			throw Problem.valueOf(Status.valueOf(response.getStatusCode().value()), errorMessage);
+		}
 	}
 
 }

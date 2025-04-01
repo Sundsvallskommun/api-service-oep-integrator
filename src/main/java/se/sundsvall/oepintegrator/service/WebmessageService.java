@@ -56,7 +56,7 @@ public class WebmessageService {
 	}
 
 	public void getAttachmentById(final String municipalityId, final InstanceType instanceType, final Integer attachmentId, final HttpServletResponse response) {
-		final var responseEntity = openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId, response);
+		final var responseEntity = openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId);
 		copyResponseEntityToHttpServletResponse(responseEntity, response, "Unable to get case pdf");
 
 	}

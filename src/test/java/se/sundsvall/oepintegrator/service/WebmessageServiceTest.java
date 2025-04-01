@@ -152,7 +152,7 @@ class WebmessageServiceTest {
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
 			.body(inputStreamResource);
 
-		when(openeRestIntegrationMock.getAttachmentById(municipalityId, instanceType, attachmentId, mockHttpServletResponse)).thenReturn(responseEntity);
+		when(openeRestIntegrationMock.getAttachmentById(municipalityId, instanceType, attachmentId)).thenReturn(responseEntity);
 
 		// Act
 		webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId, mockHttpServletResponse);
@@ -162,7 +162,7 @@ class WebmessageServiceTest {
 		assertThat(mockHttpServletResponse.getHeader("Content-Disposition")).isEqualTo("attachment; filename=case.pdf");
 		assertThat(mockHttpServletResponse.getHeader("Content-Length")).isEqualTo("0");
 		assertThat(mockHttpServletResponse.getHeader("Last-Modified")).isEqualTo("Wed, 21 Oct 2015 07:28:00 GMT");
-		verify(openeRestIntegrationMock).getAttachmentById(municipalityId, instanceType, attachmentId, mockHttpServletResponse);
+		verify(openeRestIntegrationMock).getAttachmentById(municipalityId, instanceType, attachmentId);
 		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
 	}
 }
