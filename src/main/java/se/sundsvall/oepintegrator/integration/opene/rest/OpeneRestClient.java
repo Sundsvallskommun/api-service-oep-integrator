@@ -2,6 +2,8 @@ package se.sundsvall.oepintegrator.integration.opene.rest;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.util.Optional;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,4 +38,8 @@ public interface OpeneRestClient extends OpeneClient {
 		@PathVariable(name = "status", required = false) final String status,
 		@RequestParam(name = "fromDate", required = false) final String fromDate,
 		@RequestParam(name = "toDate", required = false) final String toDate);
+
+	@GetMapping(path = "/api/instanceapi/getinstance/{flowInstanceId}/pdf")
+	ResponseEntity<InputStreamResource> getCasePdfByFlowInstanceId(@PathVariable("flowInstanceId") String flowInstanceId);
+
 }
