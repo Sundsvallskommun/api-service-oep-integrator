@@ -10,7 +10,19 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-
+  security:
+    oauth2:
+      client:
+        registration:
+          party:
+            client-id: someClientId
+            client-secret: someClientSecret
+        provider:
+          party:
+            token-uri: http://localhost:${wiremock.server.port}/api-token
+integration:
+  party:
+    url: http://localhost:${wiremock.server.port}/api-party
 properties:
   credentials:
     secret-key: "WbVG8XC%m&9Z!7a$xyKGWzB^#kUSoUUs"
