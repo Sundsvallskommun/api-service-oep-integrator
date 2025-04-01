@@ -1,7 +1,9 @@
 package se.sundsvall.oepintegrator.service;
 
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toConfirmDelivery;
+import static se.sundsvall.oepintegrator.utility.StreamUtils.copyResponseEntityToHttpServletResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,11 @@ public class CaseService {
 	public CaseService(final OpeneSoapIntegration openeSoapIntegration, final OpeneRestIntegration openeRestIntegration) {
 		this.openeSoapIntegration = openeSoapIntegration;
 		this.openeRestIntegration = openeRestIntegration;
+	}
+
+	public void getCasePdfByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final HttpServletResponse response) {
+		final var responseEntity = openeRestIntegration.getCasePdfByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
+		copyResponseEntityToHttpServletResponse(responseEntity, response, "Unable to get case pdf");
 	}
 
 	public void confirmDelivery(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final ConfirmDeliveryRequest request) {
