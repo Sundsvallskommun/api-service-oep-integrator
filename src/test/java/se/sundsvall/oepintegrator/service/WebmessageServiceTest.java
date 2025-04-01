@@ -12,12 +12,16 @@ import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 import callback.AddMessageResponse;
+import java.io.ByteArrayInputStream;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
@@ -136,12 +140,28 @@ class WebmessageServiceTest {
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var attachmentId = 123;
+
 		final var mockHttpServletResponse = new MockHttpServletResponse();
+		final var headers = Map.of(
+			"Content-Type", List.of("application/pdf"),
+			"Content-Disposition", List.of("attachment; filename=case.pdf"),
+			"Content-Length", List.of("0"),
+			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
+		final var responseEntity = ResponseEntity.ok()
+			.headers(httpHeaders -> httpHeaders.putAll(headers))
+			.body(inputStreamResource);
+
+		when(openeRestIntegrationMock.getAttachmentById(municipalityId, instanceType, attachmentId, mockHttpServletResponse)).thenReturn(responseEntity);
 
 		// Act
 		webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId, mockHttpServletResponse);
 
 		// Assert
+		assertThat(mockHttpServletResponse.getContentType()).isEqualTo("application/pdf");
+		assertThat(mockHttpServletResponse.getHeader("Content-Disposition")).isEqualTo("attachment; filename=case.pdf");
+		assertThat(mockHttpServletResponse.getHeader("Content-Length")).isEqualTo("0");
+		assertThat(mockHttpServletResponse.getHeader("Last-Modified")).isEqualTo("Wed, 21 Oct 2015 07:28:00 GMT");
 		verify(openeRestIntegrationMock).getAttachmentById(municipalityId, instanceType, attachmentId, mockHttpServletResponse);
 		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
 	}

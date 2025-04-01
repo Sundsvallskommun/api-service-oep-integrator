@@ -217,13 +217,14 @@ class OpeneRestIntegrationTest {
 		when(openeRestClient.getAttachmentById(attachmentId)).thenReturn(responseEntity);
 
 		// Act
-		openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId, mockHttpServletResponse);
+		final var result = openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId, mockHttpServletResponse);
 
 		// Assert
-		assertThat(mockHttpServletResponse.getContentType()).isEqualTo("application/pdf");
-		assertThat(mockHttpServletResponse.getHeader("Content-Disposition")).isEqualTo("attachment; filename=case.pdf");
-		assertThat(mockHttpServletResponse.getHeader("Content-Length")).isEqualTo("0");
-		assertThat(mockHttpServletResponse.getHeader("Last-Modified")).isEqualTo("Wed, 21 Oct 2015 07:28:00 GMT");
+		assertThat(result).isNotNull();
+		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of("application/pdf"));
+		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=case.pdf"));
+		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
+		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
 		verify(openeRestClient).getAttachmentById(attachmentId);
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
@@ -311,12 +312,16 @@ class OpeneRestIntegrationTest {
 		when(openeRestClient.getCasePdfByFlowInstanceId(familyId)).thenReturn(responseEntity);
 
 		// Act
-		openeRestIntegration.getCasePdfByFlowInstanceId(municipalityId, instanceType, familyId, mockHttpServletResponse);
+		final var result = openeRestIntegration.getCasePdfByFlowInstanceId(municipalityId, instanceType, familyId, mockHttpServletResponse);
 
 		// Assert
-		assertThat(mockHttpServletResponse.getContentType()).isEqualTo("application/pdf");
-		assertThat(mockHttpServletResponse.getHeader("Content-Disposition")).isEqualTo("attachment; filename=case.pdf");
-		assertThat(mockHttpServletResponse.getHeader("Content-Length")).isEqualTo("0");
-		assertThat(mockHttpServletResponse.getHeader("Last-Modified")).isEqualTo("Wed, 21 Oct 2015 07:28:00 GMT");
+		assertThat(result).isNotNull();
+		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of("application/pdf"));
+		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=case.pdf"));
+		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
+		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		verify(openeRestClient).getCasePdfByFlowInstanceId(familyId);
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
 	}
 }

@@ -2,6 +2,7 @@ package se.sundsvall.oepintegrator.service;
 
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
+import static se.sundsvall.oepintegrator.utility.StreamUtils.copyResponseEntityToHttpServletResponse;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
@@ -55,6 +56,8 @@ public class WebmessageService {
 	}
 
 	public void getAttachmentById(final String municipalityId, final InstanceType instanceType, final Integer attachmentId, final HttpServletResponse response) {
-		openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId, response);
+		final var responseEntity = openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId, response);
+		copyResponseEntityToHttpServletResponse(responseEntity, response, "Unable to get case pdf");
+
 	}
 }
