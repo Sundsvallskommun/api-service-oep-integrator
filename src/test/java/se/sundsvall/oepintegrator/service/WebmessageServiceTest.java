@@ -5,14 +5,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.zalando.problem.Status.BAD_REQUEST;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 import callback.AddMessageResponse;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -163,6 +167,28 @@ class WebmessageServiceTest {
 		assertThat(mockHttpServletResponse.getHeader("Content-Length")).isEqualTo("0");
 		assertThat(mockHttpServletResponse.getHeader("Last-Modified")).isEqualTo("Wed, 21 Oct 2015 07:28:00 GMT");
 		verify(openeRestIntegrationMock).getAttachmentById(municipalityId, instanceType, attachmentId);
+		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getAttachmentByIdThrowsException() throws IOException {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var attachmentId = 123;
+		final var mockHttpServletResponse = mock(HttpServletResponse.class);
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
+		final var responseEntity = ResponseEntity.badRequest().body(inputStreamResource);
+		when(mockHttpServletResponse.getOutputStream()).thenThrow(new IOException());
+
+		when(openeRestIntegrationMock.getAttachmentById(municipalityId, instanceType, attachmentId)).thenReturn(responseEntity);
+
+		// Act & Assert
+		assertThatThrownBy(() -> webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId, mockHttpServletResponse))
+			.isInstanceOf(Problem.class)
+			.hasFieldOrPropertyWithValue("status", INTERNAL_SERVER_ERROR)
+			.hasMessage("Internal Server Error: Unable to get attachment by ID");
+
 		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
 	}
 }
