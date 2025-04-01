@@ -30,7 +30,7 @@ public interface OpeneRestClient extends OpeneClient {
 		@RequestParam(name = "toDate") final String toDate);
 
 	@GetMapping(path = "/api/messageapi/getattachment/{attachmentId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
-	byte[] getAttachmentById(@PathVariable(name = "attachmentId") final int attachmentId);
+	ResponseEntity<InputStreamResource> getAttachmentById(@PathVariable(name = "attachmentId") final int attachmentId);
 
 	@GetMapping(path = "/api/instanceapi/getinstances/family/{familyId}/{status}", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	Optional<byte[]> getCaseListByFamilyId(

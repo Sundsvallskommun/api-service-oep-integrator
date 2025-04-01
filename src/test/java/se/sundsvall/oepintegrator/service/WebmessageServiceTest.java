@@ -18,12 +18,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
-import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
@@ -132,17 +132,17 @@ class WebmessageServiceTest {
 
 	@Test
 	void getAttachmentById() {
+		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var attachmentId = 123;
-		final var attachment = new WebmessageAttachmentData().withData(new byte[10]);
+		final var mockHttpServletResponse = new MockHttpServletResponse();
 
-		when(openeRestIntegrationMock.getAttachmentById(municipalityId, instanceType, attachmentId)).thenReturn(attachment);
+		// Act
+		webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId, mockHttpServletResponse);
 
-		final var result = webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId);
-
-		assertThat(result).isNotNull().isEqualTo(attachment);
-		verify(openeRestIntegrationMock).getAttachmentById(municipalityId, instanceType, attachmentId);
+		// Assert
+		verify(openeRestIntegrationMock).getAttachmentById(municipalityId, instanceType, attachmentId, mockHttpServletResponse);
 		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
 	}
 }
