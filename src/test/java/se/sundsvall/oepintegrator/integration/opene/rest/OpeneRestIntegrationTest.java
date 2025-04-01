@@ -10,11 +10,9 @@ import static org.mockito.Mockito.when;
 import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORMAT;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
-import feign.Request;
-import feign.Response;
+import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +21,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.zalando.problem.Problem;
 import se.sundsvall.dept44.test.annotation.resource.Load;
@@ -286,15 +286,14 @@ class OpeneRestIntegrationTest {
 			"Content-Type", List.of("application/pdf"),
 			"Content-Disposition", List.of("attachment; filename=case.pdf"),
 			"Content-Length", List.of("0"),
-			"Last-Modified", (Collection<String>) List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
-		final var response = Response.builder()
-			.body(new byte[0])
-			.headers(headers)
-			.request(Request.create(Request.HttpMethod.GET, "", Map.of(), null, null, null)) // Provide a dummy request
-			.build();
+			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final var responseEntity = ResponseEntity.ok()
+			.headers(httpHeaders -> httpHeaders.putAll(headers))
+			.body(inputStreamResource);
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
-		when(openeRestClient.getCasePdfByFlowInstanceId(familyId)).thenReturn(response);
+		when(openeRestClient.getCasePdfByFlowInstanceId(familyId)).thenReturn(responseEntity);
 
 		// Act
 		openeRestIntegration.getCasePdfByFlowInstanceId(municipalityId, instanceType, familyId, mockHttpServletResponse);

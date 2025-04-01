@@ -17,8 +17,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StreamUtils;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
@@ -71,19 +73,18 @@ public class OpeneRestIntegration {
 
 	public void getCasePdfByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final HttpServletResponse response) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-		try (final var feignResponse = client.getCasePdfByFlowInstanceId(flowInstanceId);
-			final var inputStream = feignResponse.body().asInputStream();
+
+		final var responseEntity = client.getCasePdfByFlowInstanceId(flowInstanceId);
+		try (final var inputStream = Objects.requireNonNull(responseEntity.getBody()).getInputStream();
 			final var outputStream = response.getOutputStream()) {
 
 			final var headerSet = Set.of(LAST_MODIFIED, CONTENT_TYPE, CONTENT_DISPOSITION, CONTENT_LENGTH);
-
-			headerSet.forEach(header -> feignResponse.headers()
+			headerSet.forEach(header -> responseEntity.getHeaders()
 				.getOrDefault(header, List.of())
 				.stream()
 				.findFirst().ifPresent(value -> response.setHeader(header, value)));
 
-			inputStream.transferTo(outputStream);
-			outputStream.flush();
+			StreamUtils.copy(inputStream, outputStream);
 		} catch (final IOException e) {
 			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "Unable to get case pdf");
 		}
