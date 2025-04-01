@@ -8,6 +8,13 @@ openapi:
 spring:
   application:
     name: api-oep-integrator
+  security:
+    oauth2:
+      client:
+        registration:
+          party:
+            authorization-grant-type: client_credentials
+            provider: party
 turkraft:
   springfilter:
     offsetdatetimeformatter:

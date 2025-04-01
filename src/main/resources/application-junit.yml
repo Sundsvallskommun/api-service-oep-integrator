@@ -22,6 +22,22 @@ spring:
             scripts:
               action: create
               create-target: target/database/generated-schema.sql
+  security:
+    oauth2:
+      client:
+        registration:
+          party:
+            client-id: someClientId
+            client-secret: someClientSecret
+        provider:
+          party:
+            token-uri: http://localhost:${wiremock.server.port}/api-token
+integration:
+  party:
+    url: http://party.url
+    connect-timeout: 11
+    read-timeout: 22
+
 properties:
   credentials:
     secret-key: "WbVG8XC%m&9Z!7a$xyKGWzB^#kUSoUUs"
