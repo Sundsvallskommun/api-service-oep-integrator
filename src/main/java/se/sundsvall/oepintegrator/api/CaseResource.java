@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -110,5 +111,18 @@ class CaseResource {
 		@NotNull @Valid @RequestBody final ConfirmDeliveryRequest confirmDeliveryRequest) {
 		caseService.confirmDelivery(municipalityId, instanceType, flowInstanceId, confirmDeliveryRequest);
 		return noContent().build();
+	}
+
+	@GetMapping(value = "/{flowInstanceId}/pdf", produces = ALL_VALUE)
+	@Operation(summary = "Get case PDF", description = "Get case PDF by flow instance ID", responses = {
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	})
+	void getCasePdfByFlowInstanceId(
+		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "flowInstanceId", description = "flow-instance id", example = "112233") @PathVariable final String flowInstanceId,
+		final HttpServletResponse response) {
+		caseService.getCasePdfByFlowInstanceId(municipalityId, instanceType, flowInstanceId, response);
 	}
 }

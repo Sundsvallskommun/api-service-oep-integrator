@@ -2,10 +2,16 @@ package se.sundsvall.oepintegrator.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.zalando.problem.Status.BAD_REQUEST;
+import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
 
@@ -33,6 +39,7 @@ class CaseResourceFailureTest {
 	private static final String PATH_SET_STATUS_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/status";
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{municipalityId}/{instanceType}/cases/families/{familyId}";
 	private static final String PATH_CONFIRM_DELIVERY = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/delivery";
+	private static final String PATH_GET_CASE_PDF_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/pdf";
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -299,4 +306,52 @@ class CaseResourceFailureTest {
 
 		verifyNoInteractions(caseServiceMock);
 	}
+
+	@Test
+	void getCasePdfByFlowInstanceIdWithInvalidMunicipalityId() {
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(builder -> builder.path(PATH_GET_CASE_PDF_BY_FLOW_INSTANCE_ID).build(Map.of("municipalityId", "invalidId", "instanceType", INTERNAL, "flowInstanceId", 123)))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getCasePdfByFlowInstanceId.municipalityId", "not a valid municipality ID"));
+	}
+
+	@Test
+	void getCasePdfByFlowInstanceIdNotFound() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var flowInstanceId = "123";
+
+		doThrow(Problem.valueOf(NOT_FOUND, "PDF for flow instance ID '123' not found"))
+			.when(caseServiceMock).getCasePdfByFlowInstanceId(eq(municipalityId), eq(INTERNAL), eq(flowInstanceId), any());
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(builder -> builder.path(PATH_GET_CASE_PDF_BY_FLOW_INSTANCE_ID).build(Map.of("municipalityId", municipalityId, "instanceType", INTERNAL, "flowInstanceId", flowInstanceId)))
+			.exchange()
+			.expectStatus().isNotFound()
+			.expectBody(Problem.class)
+			.returnResult().getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Not Found");
+		assertThat(response.getStatus()).isEqualTo(NOT_FOUND);
+		assertThat(response.getDetail()).isEqualTo("PDF for flow instance ID '123' not found");
+
+		verify(caseServiceMock).getCasePdfByFlowInstanceId(eq(municipalityId), eq(INTERNAL), eq(flowInstanceId), any());
+		verifyNoMoreInteractions(caseServiceMock);
+	}
+
 }
