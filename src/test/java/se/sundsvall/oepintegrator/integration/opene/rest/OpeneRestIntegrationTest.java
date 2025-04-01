@@ -23,13 +23,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.zalando.problem.Problem;
 import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
-import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 
 @ExtendWith({
@@ -197,18 +195,57 @@ class OpeneRestIntegrationTest {
 
 	@Test
 	void getAttachmentById() {
+
+		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var attachmentId = 123;
-		final var bytes = new byte[10];
-		final var attachment = new WebmessageAttachmentData().withData(bytes);
+
+		final var headers = Map.of(
+			"Content-Type", List.of("application/pdf"),
+			"Content-Disposition", List.of("attachment; filename=case.pdf"),
+			"Content-Length", List.of("0"),
+			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
+		final var responseEntity = ResponseEntity.ok()
+			.headers(httpHeaders -> httpHeaders.putAll(headers))
+			.body(inputStreamResource);
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
-		when(openeRestClient.getAttachmentById(attachmentId)).thenReturn(bytes);
+		when(openeRestClient.getAttachmentById(attachmentId)).thenReturn(responseEntity);
 
+		// Act
 		final var result = openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId);
 
-		assertThat(result).isNotNull().isEqualTo(attachment);
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of("application/pdf"));
+		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=case.pdf"));
+		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
+		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		verify(openeRestClient).getAttachmentById(attachmentId);
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getAttachmentByIdThrowsException() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var attachmentId = 123;
+
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final var responseEntity = ResponseEntity.internalServerError().body(inputStreamResource);
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getAttachmentById(attachmentId)).thenReturn(responseEntity);
+
+		// Act & Assert
+		assertThatThrownBy(() -> openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId))
+			.isInstanceOf(Problem.class)
+			.hasMessageStartingWith("Internal Server Error: Failed to get attachment by ID");
+
 		verify(openeRestClient).getAttachmentById(attachmentId);
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
@@ -281,7 +318,7 @@ class OpeneRestIntegrationTest {
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var familyId = "familyId";
-		final var mockHttpServletResponse = new MockHttpServletResponse();
+
 		final var headers = Map.of(
 			"Content-Type", List.of("application/pdf"),
 			"Content-Disposition", List.of("attachment; filename=case.pdf"),
@@ -296,12 +333,40 @@ class OpeneRestIntegrationTest {
 		when(openeRestClient.getCasePdfByFlowInstanceId(familyId)).thenReturn(responseEntity);
 
 		// Act
-		openeRestIntegration.getCasePdfByFlowInstanceId(municipalityId, instanceType, familyId, mockHttpServletResponse);
+		final var result = openeRestIntegration.getCasePdfByFlowInstanceId(municipalityId, instanceType, familyId);
 
 		// Assert
-		assertThat(mockHttpServletResponse.getContentType()).isEqualTo("application/pdf");
-		assertThat(mockHttpServletResponse.getHeader("Content-Disposition")).isEqualTo("attachment; filename=case.pdf");
-		assertThat(mockHttpServletResponse.getHeader("Content-Length")).isEqualTo("0");
-		assertThat(mockHttpServletResponse.getHeader("Last-Modified")).isEqualTo("Wed, 21 Oct 2015 07:28:00 GMT");
+		assertThat(result).isNotNull();
+		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of("application/pdf"));
+		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=case.pdf"));
+		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
+		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		verify(openeRestClient).getCasePdfByFlowInstanceId(familyId);
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getCasePdfByFlowInstanceIdError() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var familyId = "familyId";
+
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+
+		final var responseEntity = ResponseEntity.internalServerError().body(inputStreamResource);
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getCasePdfByFlowInstanceId(familyId)).thenReturn(responseEntity);
+
+		// Act & Assert
+		assertThatThrownBy(() -> openeRestIntegration.getCasePdfByFlowInstanceId(municipalityId, instanceType, familyId))
+			.isInstanceOf(Problem.class)
+			.hasMessageStartingWith("Internal Server Error: Failed to get case PDF by flow instance ID");
+
+		verify(openeRestClient).getCasePdfByFlowInstanceId(familyId);
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
 	}
 }

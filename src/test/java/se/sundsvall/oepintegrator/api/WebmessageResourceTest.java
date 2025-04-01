@@ -15,6 +15,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +31,6 @@ import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
-import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.service.WebmessageService;
 
@@ -205,24 +205,17 @@ class WebmessageResourceTest {
 		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
 		final var attachmentId = 123;
-		final var attachment = new WebmessageAttachmentData().withData(new byte[10]);
-
-		when(webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId)).thenReturn(attachment);
 
 		// Act
-		final var result = webTestClient.get()
+		webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(PATH + "/flow-instances/{flowInstanceId}/attachments/{attachmentId}")
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId, "attachmentId", attachmentId)))
 			.accept(APPLICATION_JSON)
 			.exchange()
-			.expectStatus().isOk()
-			.expectBody(WebmessageAttachmentData.class)
-			.returnResult()
-			.getResponseBody();
+			.expectStatus().isOk();
 
 		// Assert
-		assertThat(result).isNotNull().isEqualTo(attachment);
-		verify(webmessageService).getAttachmentById(municipalityId, instanceType, attachmentId);
+		verify(webmessageService).getAttachmentById(eq(municipalityId), eq(instanceType), eq(attachmentId), any(HttpServletResponse.class));
 		verifyNoMoreInteractions(webmessageService);
 	}
 

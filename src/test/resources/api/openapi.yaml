@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:64569
+  - url: http://localhost:63748
     description: Generated server url
 tags:
   - name: Webmessages
@@ -641,10 +641,6 @@ paths:
       responses:
         "200":
           description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/WebmessageAttachmentData"
         "500":
           description: Internal Server error
           content:
@@ -865,11 +861,11 @@ components:
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     Principal:
       required:
         - userId
@@ -1292,13 +1288,6 @@ components:
           example: text/plain
       description: Webmessage attachment model
       example: "attachment1, attachment2"
-    WebmessageAttachmentData:
-      type: object
-      properties:
-        data:
-          type: string
-          format: byte
-      description: Webmessage attachment data model
     CaseEnvelope:
       type: object
       properties:

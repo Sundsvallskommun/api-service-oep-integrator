@@ -2,7 +2,9 @@ package se.sundsvall.oepintegrator.service;
 
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
+import static se.sundsvall.oepintegrator.utility.StreamUtils.copyResponseEntityToHttpServletResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
-import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
@@ -54,7 +55,9 @@ public class WebmessageService {
 		return openeRestIntegration.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime);
 	}
 
-	public WebmessageAttachmentData getAttachmentById(final String municipalityId, final InstanceType instanceType, final Integer attachmentId) {
-		return openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId);
+	public void getAttachmentById(final String municipalityId, final InstanceType instanceType, final Integer attachmentId, final HttpServletResponse response) {
+		final var responseEntity = openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId);
+		copyResponseEntityToHttpServletResponse(responseEntity, response, "Unable to get attachment by ID");
+
 	}
 }

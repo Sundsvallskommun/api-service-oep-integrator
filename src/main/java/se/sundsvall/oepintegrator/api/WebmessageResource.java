@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -36,7 +37,6 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
-import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.service.WebmessageService;
 import se.sundsvall.oepintegrator.utility.enums.InstanceType;
@@ -103,12 +103,13 @@ class WebmessageResource {
 
 	@GetMapping(path = "/flow-instances/{flowInstanceId}/attachments/{attachmentId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get attachment by id", responses = @ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true))
-	ResponseEntity<WebmessageAttachmentData> getAttachmentById(
+	void getAttachmentById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "flowInstanceId", description = "Flow instance id", example = "123") @PathVariable final String flowInstanceId,
-		@Parameter(name = "attachmentId", description = "Attachment id", example = "123") @PathVariable @NotNull final Integer attachmentId) {
+		@Parameter(name = "attachmentId", description = "Attachment id", example = "123") @PathVariable @NotNull final Integer attachmentId,
+		final HttpServletResponse response) {
 
-		return ok(webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId));
+		webmessageService.getAttachmentById(municipalityId, instanceType, attachmentId, response);
 	}
 }
