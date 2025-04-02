@@ -4,7 +4,7 @@
 		"urlPathPattern": "/external-oepMock/api/messageapi/getmessages/flowinstance/102255.*"
 	},
 	"response": {
-		"bodyFileName": "test05_getWebmessagesByFlowInstanceId_emptyResult/response/getWebMessagesResponse.xml",
+		"bodyFileName": "test08_getWebmessagesByFlowInstanceId_emptyResult/response/getWebMessagesResponse.xml",
 		"status": 200,
 		"headers": {
 			"Content-Type": "text/xml;charset=ISO-8859-1"

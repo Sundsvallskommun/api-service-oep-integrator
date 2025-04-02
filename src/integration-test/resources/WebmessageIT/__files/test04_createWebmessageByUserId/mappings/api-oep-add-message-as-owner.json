@@ -1,0 +1,14 @@
+{
+	"request": {
+		"method": "POST",
+		"urlPath": "/external-oepMock/api/callback"
+	},
+	"response": {
+		"bodyFileName": "test04_createWebmessageByUserId/response/addMessageAsOwnerResponse.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml; charset=UTF-8"
+		}
+	},
+	"name": "addMessageByUserId"
+}

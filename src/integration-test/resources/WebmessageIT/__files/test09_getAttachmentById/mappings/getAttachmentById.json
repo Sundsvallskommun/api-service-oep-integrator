@@ -4,7 +4,7 @@
 		"urlPathPattern": "/external-oepMock/api/messageapi/getattachment/123"
 	},
 	"response": {
-		"bodyFileName": "test06_getAttachmentById/response/Test_image.jpg",
+		"bodyFileName": "test09_getAttachmentById/response/Test_image.jpg",
 		"status": 200,
 		"headers": {
 			"Content-Type": "image/jpeg"

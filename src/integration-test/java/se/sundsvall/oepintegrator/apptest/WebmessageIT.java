@@ -6,6 +6,7 @@ import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
@@ -60,7 +61,52 @@ class WebmessageIT extends AbstractAppTest {
 	}
 
 	@Test
-	void test02_getWebmessagesByFamilyId() {
+	void test02_createWebmessageByPartyId() throws FileNotFoundException {
+		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
+
+		setupCall()
+			.withHttpMethod(POST)
+			.withServicePath(format(PATH, MUNICIPALITY_ID, EXTERNAL))
+			.withContentType(MULTIPART_FORM_DATA)
+			.withRequestFile("request", REQUEST_FILE)
+			.withRequestFile("attachments", "test.txt")
+			.withExpectedResponseStatus(CREATED)
+			.withExpectedResponseHeader(LOCATION, List.of("/2281/webmessages/152"))
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test03_createWebmessageByPartyIdNotFoundInParty() throws FileNotFoundException {
+		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
+
+		setupCall()
+			.withHttpMethod(POST)
+			.withServicePath(format(PATH, MUNICIPALITY_ID, EXTERNAL))
+			.withContentType(MULTIPART_FORM_DATA)
+			.withRequestFile("request", REQUEST_FILE)
+			.withRequestFile("attachments", "test.txt")
+			.withExpectedResponseStatus(NOT_FOUND)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test04_createWebmessageByUserId() throws FileNotFoundException {
+		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
+
+		setupCall()
+			.withHttpMethod(POST)
+			.withServicePath(format(PATH, MUNICIPALITY_ID, EXTERNAL))
+			.withContentType(MULTIPART_FORM_DATA)
+			.withRequestFile("request", REQUEST_FILE)
+			.withRequestFile("attachments", "test.txt")
+			.withExpectedResponseStatus(CREATED)
+			.withExpectedResponseHeader(LOCATION, List.of("/2281/webmessages/153"))
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test05_getWebmessagesByFamilyId() {
 		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
 
 		setupCall()
@@ -72,7 +118,7 @@ class WebmessageIT extends AbstractAppTest {
 	}
 
 	@Test
-	void test03_getWebmessagesByFamilyId_emptyResult() {
+	void test06_getWebmessagesByFamilyId_emptyResult() {
 		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
 
 		setupCall()
@@ -84,7 +130,7 @@ class WebmessageIT extends AbstractAppTest {
 	}
 
 	@Test
-	void test04_getWebmessagesByFlowInstanceId() {
+	void test07_getWebmessagesByFlowInstanceId() {
 		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
 
 		setupCall()
@@ -96,7 +142,7 @@ class WebmessageIT extends AbstractAppTest {
 	}
 
 	@Test
-	void test05_getWebmessagesByFlowInstanceId_emptyResult() {
+	void test08_getWebmessagesByFlowInstanceId_emptyResult() {
 		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
 
 		setupCall()
@@ -108,7 +154,7 @@ class WebmessageIT extends AbstractAppTest {
 	}
 
 	@Test
-	void test06_getAttachmentById() throws IOException {
+	void test09_getAttachmentById() throws IOException {
 		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
 
 		setupCall()
