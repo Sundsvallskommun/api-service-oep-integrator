@@ -159,7 +159,7 @@ class WebmessageIT extends AbstractAppTest {
 
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/flow-instances/{2}/attachments/{3}"), MUNICIPALITY_ID, EXTERNAL, "102255", 123))
+			.withServicePath(format(PATH + ("/attachments/{2}"), MUNICIPALITY_ID, EXTERNAL, 123))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(IMAGE_JPEG_VALUE))
 			.withExpectedBinaryResponse("response/Test_image.jpg")

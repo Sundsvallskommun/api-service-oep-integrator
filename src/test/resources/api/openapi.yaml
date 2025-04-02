@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:54027
+  - url: http://localhost:62505
     description: Generated server url
 tags:
   - name: Webmessages
@@ -599,68 +599,6 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
-  /{municipalityId}/{instanceType}/webmessages/flow-instances/{flowInstanceId}/attachments/{attachmentId}:
-    get:
-      tags:
-        - Webmessages
-      summary: Get attachment by id
-      operationId: getAttachmentById
-      parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality id
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: instanceType
-          in: path
-          description: Which instanceType a message should be sent to
-          required: true
-          schema:
-            type: string
-            enum:
-              - INTERNAL
-              - EXTERNAL
-          example: INTERNAL
-        - name: flowInstanceId
-          in: path
-          description: Flow instance id
-          required: true
-          schema:
-            type: string
-          example: 123
-        - name: attachmentId
-          in: path
-          description: Attachment id
-          required: true
-          schema:
-            type: integer
-            format: int32
-          example: 123
-      responses:
-        "200":
-          description: Successful operation
-        "500":
-          description: Internal Server error
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "502":
-          description: Bad gateway
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "400":
-          description: Bad request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
   /{municipalityId}/{instanceType}/webmessages/families/{familyId}:
     get:
       tags:
@@ -717,6 +655,61 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Webmessage"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+  /{municipalityId}/{instanceType}/webmessages/attachments/{attachmentId}:
+    get:
+      tags:
+        - Webmessages
+      summary: Get attachment by id
+      operationId: getAttachmentById
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: Which instanceType a message should be sent to
+          required: true
+          schema:
+            type: string
+            enum:
+              - INTERNAL
+              - EXTERNAL
+          example: INTERNAL
+        - name: attachmentId
+          in: path
+          description: Attachment id
+          required: true
+          schema:
+            type: integer
+            format: int32
+          example: 123
+      responses:
+        "200":
+          description: Successful operation
         "500":
           description: Internal Server error
           content:
@@ -997,12 +990,12 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
     StatusType:
       type: object
       properties:
@@ -1160,12 +1153,12 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
         suppressed:
           type: array
           items:

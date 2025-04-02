@@ -203,13 +203,12 @@ class WebmessageResourceTest {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
-		final var flowInstanceId = "123";
 		final var attachmentId = 123;
 
 		// Act
 		webTestClient.get()
-			.uri(uriBuilder -> uriBuilder.path(PATH + "/flow-instances/{flowInstanceId}/attachments/{attachmentId}")
-				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId, "attachmentId", attachmentId)))
+			.uri(uriBuilder -> uriBuilder.path(PATH + "/attachments/{attachmentId}")
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "attachmentId", attachmentId)))
 			.accept(APPLICATION_JSON)
 			.exchange()
 			.expectStatus().isOk();
