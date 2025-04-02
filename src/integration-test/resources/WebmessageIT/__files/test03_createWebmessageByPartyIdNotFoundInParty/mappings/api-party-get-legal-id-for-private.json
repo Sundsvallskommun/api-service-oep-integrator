@@ -1,0 +1,26 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			},
+			"x-request-id": {
+				"matches": "^[0-9a-fA-F]{8}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{4}\\b-[0-9a-fA-F]{12}$"
+			}
+		},
+		"method": "GET",
+		"urlPath": "/api-party/2281/PRIVATE/b1538c35-d850-4f94-8271-c21319e6ec2d/legalId"
+	},
+	"response": {
+		"headers": {
+			"content-type": "application/problem+json"
+		},
+		"jsonBody": {
+			"title": "Not Found",
+			"status": 404,
+			"detail": "No legalId found!"
+		},
+		"status": 404
+	},
+	"name": "api-party-get-legal-id-for-private"
+}

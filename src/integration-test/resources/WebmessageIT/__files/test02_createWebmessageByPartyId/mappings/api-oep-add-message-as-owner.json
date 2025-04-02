@@ -4,11 +4,11 @@
 		"urlPath": "/external-oepMock/api/callback"
 	},
 	"response": {
-		"bodyFileName": "test01_createWebmessage/response/addMessageResponse.xml",
+		"bodyFileName": "test02_createWebmessageByPartyId/response/addMessageAsOwnerResponse.xml",
 		"status": 200,
 		"headers": {
 			"Content-Type": "text/xml; charset=UTF-8"
 		}
 	},
-	"name": "addMessage"
+	"name": "addMessageByPartyId"
 }

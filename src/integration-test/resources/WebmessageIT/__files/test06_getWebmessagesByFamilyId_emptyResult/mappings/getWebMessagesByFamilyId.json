@@ -4,7 +4,7 @@
 		"urlPathPattern": "/external-oepMock/api/messageapi/getmessages/family/123.*"
 	},
 	"response": {
-		"bodyFileName": "test02_getWebmessagesByFamilyId/response/getWebMessagesResponse.xml",
+		"bodyFileName": "test06_getWebmessagesByFamilyId_emptyResult/response/getWebMessagesResponse.xml",
 		"status": 200,
 		"headers": {
 			"Content-Type": "text/xml;charset=ISO-8859-1"
