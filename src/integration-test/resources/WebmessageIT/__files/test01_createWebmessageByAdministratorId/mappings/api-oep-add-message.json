@@ -1,0 +1,14 @@
+{
+	"request": {
+		"method": "POST",
+		"urlPath": "/external-oepMock/api/callback"
+	},
+	"response": {
+		"bodyFileName": "test01_createWebmessageByAdministratorId/response/addMessageResponse.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml; charset=UTF-8"
+		}
+	},
+	"name": "addMessageByAdministratorId"
+}

@@ -44,7 +44,7 @@ class WebmessageIT extends AbstractAppTest {
 	private OpeneClientFactory openeClientFactory;
 
 	@Test
-	void test01_createWebmessage() throws FileNotFoundException {
+	void test01_createWebmessageByAdministratorId() throws FileNotFoundException {
 		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
 
 		setupCall()
@@ -118,6 +118,5 @@ class WebmessageIT extends AbstractAppTest {
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(IMAGE_JPEG_VALUE))
 			.withExpectedBinaryResponse("response/Test_image.jpg")
 			.sendRequestAndVerifyResponse();
-
 	}
 }

@@ -5,8 +5,10 @@ import static javax.xml.datatype.DatatypeFactory.newInstance;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 
 import callback.AddMessage;
+import callback.AddMessageAsOwner;
 import callback.Attachment;
 import callback.IntegrationMessage;
+import callback.OwnerPrincipal;
 import callback.Principal;
 import java.io.IOException;
 import java.util.GregorianCalendar;
@@ -42,6 +44,26 @@ public final class MessageMapper {
 				.map(value -> new Principal().withUserID(value))
 				.orElse(null));
 
+	}
+
+	public static AddMessageAsOwner toAddMessageAsOwner(final WebmessageRequest request, final String legalId, final Integer flowInstanceId, final List<MultipartFile> attachments) {
+
+		final IntegrationMessage integrationMessage;
+		try {
+			integrationMessage = new IntegrationMessage()
+				.withAdded(newInstance().newXMLGregorianCalendar(new GregorianCalendar()))
+				.withAttachments(toAttachments(attachments))
+				.withMessage(request.getMessage());
+		} catch (final DatatypeConfigurationException e) {
+			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "Failed to create message");
+		}
+
+		return new AddMessageAsOwner()
+			.withFlowInstanceID(flowInstanceId)
+			.withMessage(integrationMessage)
+			.withPrincipal(new OwnerPrincipal()
+				.withUserID(request.getSender().getUserId())
+				.withCitizenID(legalId));
 	}
 
 	static List<Attachment> toAttachments(final List<MultipartFile> attachments) {
