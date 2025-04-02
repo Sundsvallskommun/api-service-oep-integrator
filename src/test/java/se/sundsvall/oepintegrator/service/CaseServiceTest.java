@@ -12,11 +12,14 @@ import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 import callback.SetStatusResponse;
+import generated.se.sundsvall.party.PartyType;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,14 +30,20 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.zalando.problem.Problem;
+import org.zalando.problem.Status;
+import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
+import se.sundsvall.oepintegrator.integration.party.PartyClient;
 
 @ExtendWith(MockitoExtension.class)
 class CaseServiceTest {
+
+	@Mock
+	private PartyClient partyClientMock;
 
 	@Mock
 	private OpeneSoapIntegration openeSoapIntegrationMock;
@@ -156,5 +165,82 @@ class CaseServiceTest {
 			.isInstanceOf(Problem.class)
 			.hasFieldOrPropertyWithValue("status", INTERNAL_SERVER_ERROR)
 			.hasMessage("Internal Server Error: Unable to get case pdf");
+	}
+
+	@Test
+	void getCaseEnvelopeListByFamilyId() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var familyId = "familyId";
+		final var status = "status";
+		final var fromDate = LocalDate.of(2023, 1, 1);
+		final var toDate = LocalDate.of(2023, 12, 31);
+
+		final var expectedCaseEnvelopeList = List.of(new CaseEnvelope());
+
+		when(openeRestIntegrationMock.getCaseListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate))
+			.thenReturn(expectedCaseEnvelopeList);
+
+		// Act
+		final var result = caseService.getCaseEnvelopeListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate);
+
+		// Assert
+		assertThat(result).isEqualTo(expectedCaseEnvelopeList);
+		verify(openeRestIntegrationMock).getCaseListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock, partyClientMock);
+	}
+
+	@Test
+	void getCaseEnvelopeListByCitizenIdentifier() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var partyId = "partyId";
+		final var legalId = "legalId";
+		final var status = "status";
+		final var fromDate = LocalDate.of(2023, 1, 1);
+		final var toDate = LocalDate.of(2023, 12, 31);
+		final var expectedCaseEnvelopeList = List.of(new CaseEnvelope());
+
+		when(partyClientMock.getLegalId(municipalityId, PartyType.PRIVATE, partyId))
+			.thenReturn(Optional.of(legalId));
+
+		when(openeRestIntegrationMock.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate))
+			.thenReturn(expectedCaseEnvelopeList);
+
+		// Act
+		final var result = caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate);
+
+		// Assert
+		assertThat(result).isEqualTo(expectedCaseEnvelopeList);
+		verify(openeRestIntegrationMock).getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
+		verify(partyClientMock).getLegalId(municipalityId, PartyType.PRIVATE, partyId);
+		verifyNoMoreInteractions(openeRestIntegrationMock, partyClientMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getCaseEnvelopeListByCitizenIdentifierPartyNotFound() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var partyId = "partyId";
+		final var status = "status";
+		final var fromDate = LocalDate.of(2023, 1, 1);
+		final var toDate = LocalDate.of(2023, 12, 31);
+
+		when(partyClientMock.getLegalId(municipalityId, PartyType.PRIVATE, partyId))
+			.thenReturn(Optional.empty());
+
+		// Act & Assert
+		assertThatThrownBy(() -> caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, EXTERNAL, partyId, status, fromDate, toDate))
+			.isInstanceOf(Problem.class)
+			.hasFieldOrPropertyWithValue("status", Status.NOT_FOUND)
+			.hasMessage("Not Found: Citizen identifier not found for partyId: %s".formatted(partyId));
+
+		verify(partyClientMock).getLegalId(municipalityId, PartyType.PRIVATE, partyId);
+		verifyNoMoreInteractions(partyClientMock);
+		verifyNoInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
 	}
 }
