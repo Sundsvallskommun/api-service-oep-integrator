@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:65401
+  - url: http://localhost:54027
     description: Generated server url
 tags:
   - name: Webmessages
@@ -798,6 +798,90 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+  /{municipalityId}/{instanceType}/cases/parties/{partyId}:
+    get:
+      tags:
+        - Case
+      summary: Get cases by citizen identifier
+      description: Get a list of case envelopes by citizen identifier
+      operationId: getCasesByPartyId
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            type: string
+            enum:
+              - INTERNAL
+              - EXTERNAL
+          example: INTERNAL
+        - name: partyId
+          in: path
+          description: The party ID
+          required: true
+          schema:
+            type: string
+          example: 123
+        - name: fromDate
+          in: query
+          description: Filter cases on fromDate
+          required: false
+          schema:
+            type: string
+            format: date
+          example: 2024-01-01
+        - name: toDate
+          in: query
+          description: Filter cases on toDate
+          required: false
+          schema:
+            type: string
+            format: date
+          example: 2024-01-31
+        - name: status
+          in: query
+          description: Filter by status
+          required: false
+          schema:
+            type: string
+          example: Preliminär
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CaseEnvelope"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /{municipalityId}/{instanceType}/cases/families/{familyId}:
     get:
       tags:
@@ -913,12 +997,12 @@ components:
           type: object
           additionalProperties:
             type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
     StatusType:
       type: object
       properties:
@@ -1076,12 +1160,12 @@ components:
           type: object
           additionalProperties:
             type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
         suppressed:
           type: array
           items:
