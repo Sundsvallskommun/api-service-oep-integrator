@@ -101,12 +101,11 @@ class WebmessageResource {
 		return ok(webmessageService.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime));
 	}
 
-	@GetMapping(path = "/flow-instances/{flowInstanceId}/attachments/{attachmentId}", produces = APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/attachments/{attachmentId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get attachment by id", responses = @ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true))
 	void getAttachmentById(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "INTERNAL") @PathVariable final InstanceType instanceType,
-		@Parameter(name = "flowInstanceId", description = "Flow instance id", example = "123") @PathVariable final String flowInstanceId,
 		@Parameter(name = "attachmentId", description = "Attachment id", example = "123") @PathVariable @NotNull final Integer attachmentId,
 		final HttpServletResponse response) {
 

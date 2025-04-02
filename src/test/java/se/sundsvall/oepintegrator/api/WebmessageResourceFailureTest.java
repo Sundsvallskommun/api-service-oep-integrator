@@ -346,7 +346,7 @@ class WebmessageResourceFailureTest {
 	@Test
 	void getAttachmentByIdWithInvalidMunicipalityId() {
 		final var response = webTestClient.get()
-			.uri(PATH + ("/flow-instances/{flowInstanceId}/attachments/{attachmentId}"), "invalidId", INTERNAL, 123, 123)
+			.uri(PATH + ("/attachments/{attachmentId}"), "invalidId", INTERNAL, 123)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
