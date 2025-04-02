@@ -252,7 +252,7 @@ class OpeneRestIntegrationTest {
 	}
 
 	@Test
-	void getCaseList(@Load("/mappings/flow-instances.xml") final String xml) {
+	void getCaseListByFamilyId(@Load("/mappings/flow-instances.xml") final String xml) {
 
 		// Arrange
 		final var municipalityId = "2281";
@@ -284,7 +284,7 @@ class OpeneRestIntegrationTest {
 	}
 
 	@Test
-	void getCaseListWithoutOptionalParameters(@Load("/mappings/flow-instances.xml") final String xml) {
+	void getCaseListByFamilyIdWithoutOptionalParameters(@Load("/mappings/flow-instances.xml") final String xml) {
 
 		// Arrange
 		final var municipalityId = "2281";
@@ -309,6 +309,67 @@ class OpeneRestIntegrationTest {
 
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verify(openeRestClient).getCaseListByFamilyId(familyId, null, null, null);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getCaseListByCitizenIdentifier(@Load("/mappings/flow-instances.xml") final String xml) {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var legalId = "legalId";
+		final var status = "status";
+		final var fromDate = LocalDate.now();
+		final var toDate = LocalDate.now();
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getCaseListByCitizenIdentifier(legalId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE))).thenReturn(Optional.of(xml.getBytes()));
+
+		// Act
+		final var result = openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(4);
+		assertThat(result)
+			.extracting(CaseEnvelope::getFlowInstanceId, CaseEnvelope::getCreated, CaseEnvelope::getStatusUpdated)
+			.containsExactlyInAnyOrder(
+				tuple("4999", LocalDateTime.parse("2025-02-27T11:16"), LocalDateTime.parse("2025-03-06T09:10")),
+				tuple("4965", LocalDateTime.parse("2025-02-18T19:12"), LocalDateTime.parse("2025-02-18T19:45")),
+				tuple("4933", LocalDateTime.parse("2025-02-14T12:39"), LocalDateTime.parse("2025-02-14T12:40")),
+				tuple("4932", LocalDateTime.parse("2025-02-14T12:39"), LocalDateTime.parse("2025-02-18T20:10")));
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getCaseListByCitizenIdentifier(legalId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE));
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getCaseListByCitizenIdentifierWithoutOptionalParameters(@Load("/mappings/flow-instances.xml") final String xml) {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var legalId = "legalId";
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getCaseListByCitizenIdentifier(legalId, null, null, null)).thenReturn(Optional.of(xml.getBytes()));
+
+		// Act
+		final var result = openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, null, null, null);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(4);
+		assertThat(result)
+			.extracting(CaseEnvelope::getFlowInstanceId, CaseEnvelope::getCreated, CaseEnvelope::getStatusUpdated)
+			.containsExactlyInAnyOrder(
+				tuple("4999", LocalDateTime.parse("2025-02-27T11:16"), LocalDateTime.parse("2025-03-06T09:10")),
+				tuple("4965", LocalDateTime.parse("2025-02-18T19:12"), LocalDateTime.parse("2025-02-18T19:45")),
+				tuple("4933", LocalDateTime.parse("2025-02-14T12:39"), LocalDateTime.parse("2025-02-14T12:40")),
+				tuple("4932", LocalDateTime.parse("2025-02-14T12:39"), LocalDateTime.parse("2025-02-18T20:10")));
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getCaseListByCitizenIdentifier(legalId, null, null, null);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
 	}
 
