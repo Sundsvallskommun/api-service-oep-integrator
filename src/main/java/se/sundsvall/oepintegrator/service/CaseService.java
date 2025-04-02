@@ -11,6 +11,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse;
@@ -60,5 +61,9 @@ public class CaseService {
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, "Citizen identifier not found for partyId: %s".formatted(partyId)));
 
 		return openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
+	}
+
+	public CaseStatus getCaseStatusByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
+		return openeRestIntegration.getCaseStatusByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
 	}
 }
