@@ -39,6 +39,13 @@ public interface OpeneRestClient extends OpeneClient {
 		@RequestParam(name = "fromDate", required = false) final String fromDate,
 		@RequestParam(name = "toDate", required = false) final String toDate);
 
+	@GetMapping(path = " /api/instanceapi/getinstances/owner/citizenidentifier/{legalId}/{status}", produces = TEXT_XML_CHARSET_ISO_8859_1)
+	Optional<byte[]> getCaseListByCitizenIdentifier(
+		@PathVariable(name = "legalId") final String legalId,
+		@PathVariable(name = "status", required = false) final String status,
+		@RequestParam(name = "fromDate", required = false) final String fromDate,
+		@RequestParam(name = "toDate", required = false) final String toDate);
+
 	@GetMapping(path = "/api/instanceapi/getinstance/{flowInstanceId}/pdf")
 	ResponseEntity<InputStreamResource> getCasePdfByFlowInstanceId(@PathVariable("flowInstanceId") String flowInstanceId);
 

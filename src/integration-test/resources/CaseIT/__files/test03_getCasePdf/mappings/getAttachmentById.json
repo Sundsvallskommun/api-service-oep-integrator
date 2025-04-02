@@ -1,0 +1,14 @@
+{
+	"request": {
+		"method": "GET",
+		"urlPathPattern": "/external-oepMock/api/instanceapi/getinstance/123456789/pdf"
+	},
+	"response": {
+		"bodyFileName": "test03_getCasePdf/response/test.pdf",
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/pdf"
+		}
+	},
+	"name": "getAttachmentById"
+}

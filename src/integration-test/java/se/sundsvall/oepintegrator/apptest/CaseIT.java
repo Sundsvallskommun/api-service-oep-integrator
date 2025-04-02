@@ -5,8 +5,10 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
+import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +62,19 @@ class CaseIT extends AbstractAppTest {
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test03_getCasePdf() throws IOException {
+		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
+
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(format("/{0}/{1}/cases/{2}/pdf", MUNICIPALITY_ID, EXTERNAL, "123456789"))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_PDF_VALUE))
+			.withExpectedBinaryResponse("response/test.pdf")
 			.sendRequestAndVerifyResponse();
 	}
 }
