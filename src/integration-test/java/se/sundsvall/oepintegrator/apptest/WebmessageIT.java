@@ -118,6 +118,5 @@ class WebmessageIT extends AbstractAppTest {
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(IMAGE_JPEG_VALUE))
 			.withExpectedBinaryResponse("response/Test_image.jpg")
 			.sendRequestAndVerifyResponse();
-
 	}
 }
