@@ -44,7 +44,7 @@ class WebmessageIT extends AbstractAppTest {
 	private OpeneClientFactory openeClientFactory;
 
 	@Test
-	void test01_createWebmessage() throws FileNotFoundException {
+	void test01_createWebmessageByAdministratorId() throws FileNotFoundException {
 		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
 
 		setupCall()
