@@ -252,4 +252,22 @@ class CaseResourceTest {
 		verifyNoMoreInteractions(caseServiceMock);
 	}
 
+	@Test
+	void getCaseStatusByFlowInstanceId() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+
+		// Act
+		webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/{flowInstanceId}/status").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.accept(APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk();
+
+		verify(caseServiceMock).getCaseStatusByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
+		verifyNoMoreInteractions(caseServiceMock);
+	}
+
 }

@@ -31,6 +31,7 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse;
@@ -139,5 +140,17 @@ class CaseResource {
 		@Parameter(name = "flowInstanceId", description = "flow-instance id", example = "112233") @PathVariable final String flowInstanceId,
 		final HttpServletResponse response) {
 		caseService.getCasePdfByFlowInstanceId(municipalityId, instanceType, flowInstanceId, response);
+	}
+
+	@GetMapping(path = "/{flowInstanceId}/status", produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get case status", description = "Get case status by flow instance ID", responses = {
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	})
+	ResponseEntity<CaseStatus> getCaseStatusByFlowInstanceId(
+		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "flowInstanceId", description = "flow-instance id", example = "112233") @PathVariable final String flowInstanceId) {
+		return ResponseEntity.ok(caseService.getCaseStatusByFlowInstanceId(municipalityId, instanceType, flowInstanceId));
 	}
 }
