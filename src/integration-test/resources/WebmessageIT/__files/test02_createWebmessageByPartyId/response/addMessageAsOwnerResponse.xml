@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+	<S:Body>
+		<addMessageAsOwnerResponse xmlns="http://www.oeplatform.org/version/1.0/schemas/integration/callback">
+			<messageID>152</messageID>
+		</addMessageAsOwnerResponse>
+	</S:Body>
+</S:Envelope>

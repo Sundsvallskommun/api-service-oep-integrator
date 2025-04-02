@@ -1,0 +1,12 @@
+{
+	"sender": {
+		"partyId": "b1538c35-d850-4f94-8271-c21319e6ec2d"
+	},
+	"message": "This is a message",
+	"externalReferences": [
+		{
+			"key": "flowInstanceId",
+			"value": "123456"
+		}
+	]
+}
