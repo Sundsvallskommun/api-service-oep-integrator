@@ -1,0 +1,22 @@
+{
+	"name": "getInstancesByPartyId",
+	"request": {
+		"method": "GET",
+		"urlPath": "/external-oepMock/api/instanceapi/getinstances/owner/citizenidentifier/202206222396/TheStatus",
+		"queryParameters": {
+			"fromDate": {
+				"equalTo": "2020-01-01"
+			},
+			"toDate": {
+				"equalTo": "2025-12-31"
+			}
+		}
+	},
+	"response": {
+		"bodyFileName": "test04_getCasesByPartyId/responses/getInstancesResponse.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		}
+	}
+}
