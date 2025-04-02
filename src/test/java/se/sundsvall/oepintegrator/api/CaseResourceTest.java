@@ -144,7 +144,7 @@ class CaseResourceTest {
 	}
 
 	@Test
-	void getCases() {
+	void getCasesByFamilyId() {
 
 		// Arrange
 		final var municipalityId = "2281";
@@ -175,6 +175,40 @@ class CaseResourceTest {
 		assertThat(result.getFirst()).isNotNull();
 
 		verify(caseServiceMock).getCaseEnvelopeListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate);
+	}
+
+	@Test
+	void getCasesByCitizenIdentifier() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var partyId = "partyId";
+		final var status = "status";
+		final var fromDate = now();
+		final var toDate = now();
+
+		when(caseServiceMock.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate)).thenReturn(List.of(CaseEnvelope.create()));
+
+		// Act
+		final var result = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/party/{partyId}")
+				.queryParam("fromDate", List.of(fromDate))
+				.queryParam("toDate", List.of(toDate))
+				.queryParam("status", List.of(status))
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "partyId", partyId)))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBodyList(CaseEnvelope.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst()).isNotNull();
+
+		verify(caseServiceMock).getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate);
 	}
 
 	@Test
