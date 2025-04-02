@@ -11,11 +11,14 @@ import java.util.List;
 import java.util.Optional;
 import org.jsoup.select.Elements;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 
-public class CaseMapper {
+public final class CaseMapper {
 
-	private CaseMapper() {}
+	private CaseMapper() {
+		// Prevent instantiation
+	}
 
 	public static List<CaseEnvelope> toCaseEnvelopeList(final byte[] xml) {
 		final var flowInstances = evaluateXPath(xml, "/FlowInstances/FlowInstance");
@@ -25,6 +28,11 @@ public class CaseMapper {
 				.withCreated(parseLocalDateTime(evaluateXPath(element, "/added").text()))
 				.withStatusUpdated(parseLocalDateTime(evaluateXPath(element, "/lastStatusChange").text())))
 			.toList();
+	}
+
+	public static CaseStatus toCaseStatus(final byte[] xml) {
+		return CaseStatus.create()
+			.withName(evaluateXPath(xml, "/Status/name").text());
 	}
 
 	private static LocalDateTime parseLocalDateTime(final String value) {
