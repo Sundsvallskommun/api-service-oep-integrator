@@ -798,13 +798,13 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-  /{municipalityId}/{instanceType}/cases/party/{partyId}:
+  /{municipalityId}/{instanceType}/cases/parties/{partyId}:
     get:
       tags:
         - Case
       summary: Get cases by citizen identifier
       description: Get a list of case envelopes by citizen identifier
-      operationId: getCasesByCitizenIdentifier
+      operationId: getCasesByPartyId
       parameters:
         - name: municipalityId
           in: path

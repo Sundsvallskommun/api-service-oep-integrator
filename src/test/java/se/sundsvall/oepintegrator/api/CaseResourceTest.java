@@ -192,7 +192,7 @@ class CaseResourceTest {
 
 		// Act
 		final var result = webTestClient.get()
-			.uri(builder -> builder.path(PATH + "/party/{partyId}")
+			.uri(builder -> builder.path(PATH + "/parties/{partyId}")
 				.queryParam("fromDate", List.of(fromDate))
 				.queryParam("toDate", List.of(toDate))
 				.queryParam("status", List.of(status))

@@ -70,11 +70,11 @@ class CaseResource {
 		return ok(caseService.getCaseEnvelopeListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate));
 	}
 
-	@GetMapping(path = "/party/{partyId}", produces = APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/parties/{partyId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get cases by citizen identifier",
 		description = "Get a list of case envelopes by citizen identifier",
 		responses = @ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true))
-	ResponseEntity<List<CaseEnvelope>> getCasesByCitizenIdentifier(
+	ResponseEntity<List<CaseEnvelope>> getCasesByPartyId(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "partyId", description = "The party ID", example = "123") @PathVariable final String partyId,
