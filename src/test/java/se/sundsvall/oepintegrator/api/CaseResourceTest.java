@@ -2,6 +2,8 @@ package se.sundsvall.oepintegrator.api;
 
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -9,6 +11,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -196,4 +199,23 @@ class CaseResourceTest {
 
 		verify(caseServiceMock).confirmDelivery(municipalityId, instanceType, flowInstanceId, request);
 	}
+
+	@Test
+	void getCasePdfByFlowInstanceId() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+
+		// Act
+		webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/{flowInstanceId}/pdf").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.accept(APPLICATION_JSON)
+			.exchange()
+			.expectStatus().isOk();
+
+		verify(caseServiceMock).getCasePdfByFlowInstanceId(eq(municipalityId), eq(instanceType), eq(flowInstanceId), any(HttpServletResponse.class));
+		verifyNoMoreInteractions(caseServiceMock);
+	}
+
 }
