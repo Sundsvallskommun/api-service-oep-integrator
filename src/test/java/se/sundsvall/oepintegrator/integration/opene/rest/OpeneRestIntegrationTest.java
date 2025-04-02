@@ -430,4 +430,46 @@ class OpeneRestIntegrationTest {
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
 	}
+
+	@Test
+	void getCaseStatusByFlowInstanceId(@Load("/mappings/case-status.xml") final String xml) {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "flowInstanceId";
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getCaseStatusByFlowInstanceId(flowInstanceId)).thenReturn(Optional.of(xml.getBytes()));
+
+		// Act
+		final var result = openeRestIntegration.getCaseStatusByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
+
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.getName()).isEqualTo("Inskickat");
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getCaseStatusByFlowInstanceId(flowInstanceId);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getCaseStatusByFlowInstanceIdNotFound() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "flowInstanceId";
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getCaseStatusByFlowInstanceId(flowInstanceId)).thenReturn(Optional.empty());
+
+		// Act & Assert
+		assertThatThrownBy(() -> openeRestIntegration.getCaseStatusByFlowInstanceId(municipalityId, instanceType, flowInstanceId))
+			.isInstanceOf(Problem.class)
+			.hasMessageStartingWith("Not Found: No status found for flow instance ID: flowInstanceId");
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getCaseStatusByFlowInstanceId(flowInstanceId);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
 }

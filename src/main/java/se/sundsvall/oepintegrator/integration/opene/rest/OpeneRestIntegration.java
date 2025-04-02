@@ -4,6 +4,7 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Optional.ofNullable;
 import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessages;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseEnvelopeList;
+import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseStatus;
 import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORMAT;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 import se.sundsvall.oepintegrator.utility.enums.InstanceType;
@@ -67,6 +69,11 @@ public class OpeneRestIntegration {
 	public List<CaseEnvelope> getCaseListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String legalId, final String status, final LocalDate fromDate, final LocalDate toDate) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
 		return toCaseEnvelopeList(client.getCaseListByCitizenIdentifier(legalId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(new byte[0]));
+	}
+
+	public CaseStatus getCaseStatusByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
+		final var client = clientFactory.getRestClient(municipalityId, instanceType);
+		return toCaseStatus(client.getCaseStatusByFlowInstanceId(flowInstanceId).orElseThrow(() -> Problem.valueOf(Status.NOT_FOUND, "No status found for flow instance ID: " + flowInstanceId)));
 	}
 
 	public ResponseEntity<InputStreamResource> getCasePdfByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
