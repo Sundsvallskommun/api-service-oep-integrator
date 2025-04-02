@@ -38,6 +38,7 @@ class CaseResourceFailureTest {
 	private static final String PATH_SET_STATUS_BY_EXTERNAL_ID = "/{municipalityId}/{instanceType}/cases/systems/{system}/{externalId}/status";
 	private static final String PATH_SET_STATUS_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/status";
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{municipalityId}/{instanceType}/cases/families/{familyId}";
+	private static final String PATH_GET_CASES_BY_PARTY_ID = "/{municipalityId}/{instanceType}/cases/parties/{partyId}";
 	private static final String PATH_CONFIRM_DELIVERY = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/delivery";
 	private static final String PATH_GET_CASE_PDF_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/pdf";
 
@@ -254,6 +255,28 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getCasesByFamilyId.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(caseServiceMock);
+	}
+
+	@Test
+	void getCasesByPartyIdWithInvalidMunicipalityId() {
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(PATH_GET_CASES_BY_PARTY_ID, "invalidId", INTERNAL, 123)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getCasesByPartyId.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(caseServiceMock);
 	}
