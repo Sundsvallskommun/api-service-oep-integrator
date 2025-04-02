@@ -64,6 +64,11 @@ public class OpeneRestIntegration {
 		return toCaseEnvelopeList(client.getCaseListByFamilyId(familyId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(new byte[0]));
 	}
 
+	public List<CaseEnvelope> getCaseListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String legalId, final String status, final LocalDate fromDate, final LocalDate toDate) {
+		final var client = clientFactory.getRestClient(municipalityId, instanceType);
+		return toCaseEnvelopeList(client.getCaseListByCitizenIdentifier(legalId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(new byte[0]));
+	}
+
 	public ResponseEntity<InputStreamResource> getCasePdfByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
 
