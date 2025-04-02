@@ -1,11 +1,15 @@
 package se.sundsvall.oepintegrator.service;
 
+import static generated.se.sundsvall.party.PartyType.PRIVATE;
+import static java.util.Optional.ofNullable;
 import static org.zalando.problem.Status.BAD_REQUEST;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.oepintegrator.service.mapper.MessageMapper.toAddMessage;
+import static se.sundsvall.oepintegrator.service.mapper.MessageMapper.toAddMessageAsOwner;
 import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
@@ -15,27 +19,35 @@ import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachmentData;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
-import se.sundsvall.oepintegrator.service.mapper.MessageMapper;
+import se.sundsvall.oepintegrator.integration.party.PartyClient;
 import se.sundsvall.oepintegrator.utility.enums.InstanceType;
 
 @Service
 public class WebmessageService {
 
 	private final OpeneSoapIntegration openeSoapIntegration;
-
 	private final OpeneRestIntegration openeRestIntegration;
+	private final PartyClient partyClient;
 
-	public WebmessageService(final OpeneSoapIntegration openeSoapIntegration, final OpeneRestIntegration openeRestIntegration) {
+	public WebmessageService(final OpeneSoapIntegration openeSoapIntegration, final OpeneRestIntegration openeRestIntegration, final PartyClient partyClient) {
 		this.openeSoapIntegration = openeSoapIntegration;
 		this.openeRestIntegration = openeRestIntegration;
+		this.partyClient = partyClient;
 	}
 
 	public Integer createWebmessage(final String municipalityId, final InstanceType instanceType, final WebmessageRequest request, final List<MultipartFile> attachments) {
-		return openeSoapIntegration.addMessage(municipalityId, instanceType, MessageMapper.toAddMessage(request, retrieveFlowInstanceId(request), attachments)).getMessageID();
+
+		if (isCaseAdministratorRequest(request)) {
+			return openeSoapIntegration.addMessage(municipalityId, instanceType, toAddMessage(request, retrieveFlowInstanceId(request), attachments)).getMessageID();
+		}
+
+		final var legalId = fetchLegalId(municipalityId, request.getSender().getPartyId());
+
+		return openeSoapIntegration.addMessageAsOwner(municipalityId, instanceType, toAddMessageAsOwner(request, legalId, retrieveFlowInstanceId(request), attachments)).getMessageID();
 	}
 
 	private Integer retrieveFlowInstanceId(final WebmessageRequest webMessageRequest) {
-		return Optional.ofNullable(webMessageRequest.getExternalReferences())
+		return ofNullable(webMessageRequest.getExternalReferences())
 			.orElseThrow(() -> Problem.valueOf(BAD_REQUEST, "Flow instance id is required"))
 			.stream()
 			.filter(reference -> REFERENCE_FLOW_INSTANCE_ID.equalsIgnoreCase(reference.getKey()))
@@ -43,7 +55,6 @@ public class WebmessageService {
 			.map(Integer::parseInt)
 			.findFirst()
 			.orElseThrow(() -> Problem.valueOf(BAD_REQUEST, "Flow instance id is required"));
-
 	}
 
 	public List<Webmessage> getWebmessagesByFamilyId(final String municipalityId, final InstanceType instanceType, final String familyId, final LocalDateTime fromDateTime, final LocalDateTime toDateTime) {
@@ -56,5 +67,16 @@ public class WebmessageService {
 
 	public WebmessageAttachmentData getAttachmentById(final String municipalityId, final InstanceType instanceType, final Integer attachmentId) {
 		return openeRestIntegration.getAttachmentById(municipalityId, instanceType, attachmentId);
+	}
+
+	private boolean isCaseAdministratorRequest(WebmessageRequest request) {
+		return ofNullable(request.getSender().getAdministratorId()).isPresent();
+	}
+
+	private String fetchLegalId(final String municipalityId, final String partyId) {
+		return ofNullable(partyId)
+			.map(id -> partyClient.getLegalId(municipalityId, PRIVATE, id)
+				.orElseThrow(() -> Problem.valueOf(NOT_FOUND, "The provided partyId doesn't match any person!")))
+			.orElse(null);
 	}
 }
