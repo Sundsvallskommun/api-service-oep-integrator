@@ -32,6 +32,7 @@ class CaseIT extends AbstractAppTest {
 
 	private static final String RESPONSE_FILE = "response.json";
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{0}/{1}/cases/families/{2}";
+	private static final String PATH_GET_CASES_BY_PARTY_ID = "/{0}/{1}/cases/parties/{2}";
 	private static final String MUNICIPALITY_ID = "2281";
 	private static final String FAMILY_ID = "123";
 	private static final String STATUS = "TheStatus";
@@ -75,6 +76,19 @@ class CaseIT extends AbstractAppTest {
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_PDF_VALUE))
 			.withExpectedBinaryResponse("response/test.pdf")
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test04_getCasesByPartyId() {
+		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
+
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(format(PATH_GET_CASES_BY_PARTY_ID + "?status={3}&fromDate={4}&toDate={5}", MUNICIPALITY_ID, EXTERNAL, "e19981ad-34b2-4e14-88f5-133f61ca85aa", STATUS, "2020-01-01", "2025-12-31"))
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
 }
