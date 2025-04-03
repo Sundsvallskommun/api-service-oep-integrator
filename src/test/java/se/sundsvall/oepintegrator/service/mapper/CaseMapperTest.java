@@ -42,6 +42,17 @@ class CaseMapperTest {
 	}
 
 	@Test
+	void toCaseStatus(@Load("/mappings/case-status.xml") final String xml) {
+
+		// Act
+		final var result = CaseMapper.toCaseStatus(xml.getBytes());
+
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.getName()).isEqualTo("Inskickat");
+	}
+
+	@Test
 	void toConfirmDelivery() {
 		// Arrange
 		final var flowInstanceId = "123456";
