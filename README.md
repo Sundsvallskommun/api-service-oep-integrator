@@ -3,17 +3,15 @@
 _Serves as a integration facade for open-E Platform. Provides a way to interact with Open-E platform via REST instead of
 SOAP._
 
-### 🚧 Under Development. Readme contents will change 🚧
-
 ## Getting Started
 
 ### Prerequisites
 
 - **Java 21 or higher**
 - **Maven**
-- **MariaDB**(if applicable)
+- **MariaDB**
 - **Git**
-- **[Dependent Microservices](#dependencies)** (if applicable)
+- **[Dependent Microservices](#dependencies)**
 
 ### Installation
 
@@ -45,9 +43,9 @@ SOAP._
 
 This microservice depends on the following services:
 
-- **Service Name**
-  - **Purpose:** Brief description of what the dependent service does.
-  - **Repository:** [Link to the repository](https://github.com/Sundsvallskommun/service_name)
+- **Party**
+  - **Purpose:** For translating partyId to legalId.
+  - **Repository:** [Party](https://github.com/Sundsvallskommun/api-service-party)
   - **Setup Instructions:** Refer to its documentation for installation and configuration steps.
 
 Ensure that these services are running and properly configured before starting this microservice.
@@ -98,16 +96,24 @@ Configuration is crucial for the application to run successfully. Ensure all nec
 
   ```yaml
   integration:
-    service:
+    party:
       url: http://dependency_service_url
       oauth2:
         client-id: some-client-id
         client-secret: some-client-secret
 
-  service:
+  party:
     oauth2:
       token-url: http://dependecy_service_token_url
+
+  properties:
+    credentials:     
+        secret-key: your-super-secret-key   # Used to encrypt passwords
   ```
+
+### Configure Open-e Instances
+
+The application is able to handle multiple Open-e instances. These are not configure in the application.yml file, but in the database. The best way to do this is to use the API to create the instances. Refer to the [API Documentation](#api-documentation) for more details.
 
 ### Database Initialization
 

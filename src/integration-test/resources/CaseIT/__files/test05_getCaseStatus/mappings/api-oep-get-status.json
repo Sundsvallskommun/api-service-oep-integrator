@@ -1,0 +1,14 @@
+{
+	"name": "getCaseStatus",
+	"request": {
+		"method": "GET",
+		"urlPath": "/external-oepMock/api/instanceapi/getstatus/123456789"
+	},
+	"response": {
+		"bodyFileName": "test05_getCaseStatus/responses/get-case-status-response.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		}
+	}
+}
