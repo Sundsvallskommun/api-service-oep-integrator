@@ -52,4 +52,9 @@ public interface OpeneRestClient extends OpeneClient {
 	@GetMapping(path = "/api/instanceapi/getinstance/{flowInstanceId}/pdf")
 	ResponseEntity<InputStreamResource> getCasePdfByFlowInstanceId(@PathVariable("flowInstanceId") String flowInstanceId);
 
+	@GetMapping(path = "/api/fileuploadqueryapi/getfile/{flowInstanceId}/{queryId}/{fileId}")
+	ResponseEntity<InputStreamResource> getCaseAttachment(
+		@PathVariable(name = "flowInstanceId") String flowInstanceId,
+		@PathVariable(name = "queryId") String queryId,
+		@PathVariable(name = "fileId") String fileId);
 }
