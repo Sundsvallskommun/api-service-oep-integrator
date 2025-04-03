@@ -7,6 +7,8 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.ResponseEntity.internalServerError;
+import static org.springframework.http.ResponseEntity.ok;
 import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORMAT;
 import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
@@ -22,7 +24,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
 import org.zalando.problem.Problem;
 import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
@@ -207,7 +208,7 @@ class OpeneRestIntegrationTest {
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
 		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
-		final var responseEntity = ResponseEntity.ok()
+		final var responseEntity = ok()
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
 			.body(inputStreamResource);
 
@@ -236,7 +237,7 @@ class OpeneRestIntegrationTest {
 		final var attachmentId = 123;
 
 		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
-		final var responseEntity = ResponseEntity.internalServerError().body(inputStreamResource);
+		final var responseEntity = internalServerError().body(inputStreamResource);
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
 		when(openeRestClient.getAttachmentById(attachmentId)).thenReturn(responseEntity);
@@ -378,7 +379,7 @@ class OpeneRestIntegrationTest {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
-		final var familyId = "familyId";
+		final var flowInstanceId = "flowInstanceId";
 
 		final var headers = Map.of(
 			"Content-Type", List.of("application/pdf"),
@@ -386,15 +387,15 @@ class OpeneRestIntegrationTest {
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
 		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
-		final var responseEntity = ResponseEntity.ok()
+		final var responseEntity = ok()
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
 			.body(inputStreamResource);
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
-		when(openeRestClient.getCasePdfByFlowInstanceId(familyId)).thenReturn(responseEntity);
+		when(openeRestClient.getCasePdfByFlowInstanceId(flowInstanceId)).thenReturn(responseEntity);
 
 		// Act
-		final var result = openeRestIntegration.getCasePdfByFlowInstanceId(municipalityId, instanceType, familyId);
+		final var result = openeRestIntegration.getCasePdfByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
 
 		// Assert
 		assertThat(result).isNotNull();
@@ -402,7 +403,7 @@ class OpeneRestIntegrationTest {
 		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=case.pdf"));
 		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
 		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
-		verify(openeRestClient).getCasePdfByFlowInstanceId(familyId);
+		verify(openeRestClient).getCasePdfByFlowInstanceId(flowInstanceId);
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
 	}
@@ -412,21 +413,21 @@ class OpeneRestIntegrationTest {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
-		final var familyId = "familyId";
+		final var flowInstanceId = "flowInstanceId";
 
 		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 
-		final var responseEntity = ResponseEntity.internalServerError().body(inputStreamResource);
+		final var responseEntity = internalServerError().body(inputStreamResource);
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
-		when(openeRestClient.getCasePdfByFlowInstanceId(familyId)).thenReturn(responseEntity);
+		when(openeRestClient.getCasePdfByFlowInstanceId(flowInstanceId)).thenReturn(responseEntity);
 
 		// Act & Assert
-		assertThatThrownBy(() -> openeRestIntegration.getCasePdfByFlowInstanceId(municipalityId, instanceType, familyId))
+		assertThatThrownBy(() -> openeRestIntegration.getCasePdfByFlowInstanceId(municipalityId, instanceType, flowInstanceId))
 			.isInstanceOf(Problem.class)
 			.hasMessageStartingWith("Internal Server Error: Failed to get case PDF by flow instance ID");
 
-		verify(openeRestClient).getCasePdfByFlowInstanceId(familyId);
+		verify(openeRestClient).getCasePdfByFlowInstanceId(flowInstanceId);
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
 	}
@@ -466,10 +467,73 @@ class OpeneRestIntegrationTest {
 		// Act & Assert
 		assertThatThrownBy(() -> openeRestIntegration.getCaseStatusByFlowInstanceId(municipalityId, instanceType, flowInstanceId))
 			.isInstanceOf(Problem.class)
-			.hasMessageStartingWith("Not Found: No status found for flow instance ID: flowInstanceId");
+			.hasMessageStartingWith("Not Found: No status found for flow instance ID: 'flowInstanceId'");
 
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verify(openeRestClient).getCaseStatusByFlowInstanceId(flowInstanceId);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getCaseAttachment() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "flowInstanceId";
+		final var queryId = "queryId";
+		final var fileId = "fileId";
+
+		final var headers = Map.of(
+			"Content-Type", List.of("application/pdf"),
+			"Content-Disposition", List.of("attachment; filename=attachment.png"),
+			"Content-Length", List.of("0"),
+			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final var responseEntity = ok()
+			.headers(httpHeaders -> httpHeaders.putAll(headers))
+			.body(inputStreamResource);
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getCaseAttachment(flowInstanceId, queryId, fileId)).thenReturn(responseEntity);
+
+		// Act
+		final var result = openeRestIntegration.getCaseAttachment(municipalityId, instanceType, flowInstanceId, queryId, fileId);
+
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of("application/pdf"));
+		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=attachment.png"));
+		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
+		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		verify(openeRestClient).getCaseAttachment(flowInstanceId, queryId, fileId);
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getCaseAttachmentError() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "flowInstanceId";
+		final var queryId = "queryId";
+		final var fileId = "fileId";
+
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final var responseEntity = internalServerError().body(inputStreamResource);
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getCaseAttachment(flowInstanceId, queryId, fileId)).thenReturn(responseEntity);
+
+		// Act & Assert
+		assertThatThrownBy(() -> openeRestIntegration.getCaseAttachment(municipalityId, instanceType, flowInstanceId, queryId, fileId))
+			.isInstanceOf(Problem.class)
+			.hasMessageStartingWith("Internal Server Error: Failed to get case attachment");
+
+		verify(openeRestClient).getCaseAttachment(flowInstanceId, queryId, fileId);
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
 	}
 }
