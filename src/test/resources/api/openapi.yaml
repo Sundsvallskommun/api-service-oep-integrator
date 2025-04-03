@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "1.0"
 servers:
-  - url: http://localhost:62505
+  - url: http://localhost:63420
     description: Generated server url
 tags:
   - name: Webmessages
@@ -18,6 +18,70 @@ tags:
     description: Operations on case
 paths:
   /{municipalityId}/{instanceType}/cases/{flowInstanceId}/status:
+    get:
+      tags:
+        - Case
+      summary: Get case status
+      description: Get case status by flow instance ID
+      operationId: getCaseStatusByFlowInstanceId
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            type: string
+            enum:
+              - INTERNAL
+              - EXTERNAL
+          example: INTERNAL
+        - name: flowInstanceId
+          in: path
+          description: flow-instance id
+          required: true
+          schema:
+            type: string
+          example: 112233
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CaseStatus"
+        "404":
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
     put:
       tags:
         - Case
@@ -990,12 +1054,12 @@ components:
           type: object
           additionalProperties:
             type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
     StatusType:
       type: object
       properties:
@@ -1153,12 +1217,12 @@ components:
           type: object
           additionalProperties:
             type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
         suppressed:
           type: array
           items:
@@ -1426,6 +1490,11 @@ components:
           example: text/plain
       description: Webmessage attachment model
       example: "attachment1, attachment2"
+    CaseStatus:
+      type: object
+      properties:
+        name:
+          type: string
     CaseEnvelope:
       type: object
       properties:
