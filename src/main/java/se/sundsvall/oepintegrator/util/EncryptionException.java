@@ -1,4 +1,4 @@
-package se.sundsvall.oepintegrator.utility;
+package se.sundsvall.oepintegrator.util;
 
 public class EncryptionException extends RuntimeException {
 
@@ -11,5 +11,4 @@ public class EncryptionException extends RuntimeException {
 	public EncryptionException(final String message) {
 		super(message);
 	}
-
 }

@@ -9,7 +9,7 @@ import callback.SetStatus;
 import callback.SetStatusResponse;
 import org.springframework.stereotype.Component;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
-import se.sundsvall.oepintegrator.utility.enums.InstanceType;
+import se.sundsvall.oepintegrator.util.enums.InstanceType;
 
 /**
  * Integration class for Open-E SOAP API. This will be used to call the Open-E SOAP API like this:

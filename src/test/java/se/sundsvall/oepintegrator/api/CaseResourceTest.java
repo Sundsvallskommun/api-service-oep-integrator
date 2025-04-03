@@ -9,7 +9,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -287,6 +287,7 @@ class CaseResourceTest {
 			.exchange()
 			.expectStatus().isOk();
 
-		// TODO: verify stuff
+		verify(caseServiceMock).getCaseAttachment(eq(municipalityId), eq(instanceType), eq(flowInstanceId), eq(queryId), eq(fileId), any(HttpServletResponse.class));
+		verifyNoMoreInteractions(caseServiceMock);
 	}
 }

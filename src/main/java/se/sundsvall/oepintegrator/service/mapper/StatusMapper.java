@@ -16,7 +16,6 @@ public final class StatusMapper {
 	private StatusMapper() {}
 
 	public static SetStatus toSetStatus(final SetStatusRequest request, final String flowInstanceId) {
-
 		return new SetStatus()
 			.withFlowInstanceID(Integer.valueOf(flowInstanceId))
 			.withStatusAlias(request.getStatus())
@@ -26,7 +25,6 @@ public final class StatusMapper {
 	}
 
 	public static SetStatus toSetStatus(final SetStatusRequest request, final String externalId, final String system) {
-
 		return new SetStatus()
 			.withExternalID(toExternalID(externalId, system))
 			.withStatusAlias(request.getStatus())

@@ -2,7 +2,7 @@ package se.sundsvall.oepintegrator.api.validation.impl;
 
 import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 import static org.springframework.util.CollectionUtils.isEmpty;
-import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
+import static se.sundsvall.oepintegrator.util.Constants.REFERENCE_FLOW_INSTANCE_ID;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

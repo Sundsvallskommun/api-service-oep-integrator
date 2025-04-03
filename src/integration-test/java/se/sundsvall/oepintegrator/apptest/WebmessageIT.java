@@ -10,12 +10,13 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,10 +45,13 @@ class WebmessageIT extends AbstractAppTest {
 	@Autowired
 	private OpeneClientFactory openeClientFactory;
 
+	@BeforeEach
+	void beforeEach() {
+		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
+	}
+
 	@Test
 	void test01_createWebmessageByAdministratorId() throws FileNotFoundException {
-		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
-
 		setupCall()
 			.withHttpMethod(POST)
 			.withServicePath(format(PATH, MUNICIPALITY_ID, EXTERNAL))
@@ -62,8 +66,6 @@ class WebmessageIT extends AbstractAppTest {
 
 	@Test
 	void test02_createWebmessageByPartyId() throws FileNotFoundException {
-		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
-
 		setupCall()
 			.withHttpMethod(POST)
 			.withServicePath(format(PATH, MUNICIPALITY_ID, EXTERNAL))
@@ -77,8 +79,6 @@ class WebmessageIT extends AbstractAppTest {
 
 	@Test
 	void test03_createWebmessageByPartyIdNotFoundInParty() throws FileNotFoundException {
-		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
-
 		setupCall()
 			.withHttpMethod(POST)
 			.withServicePath(format(PATH, MUNICIPALITY_ID, EXTERNAL))
@@ -92,8 +92,6 @@ class WebmessageIT extends AbstractAppTest {
 
 	@Test
 	void test04_createWebmessageByUserId() throws FileNotFoundException {
-		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
-
 		setupCall()
 			.withHttpMethod(POST)
 			.withServicePath(format(PATH, MUNICIPALITY_ID, EXTERNAL))
@@ -107,8 +105,6 @@ class WebmessageIT extends AbstractAppTest {
 
 	@Test
 	void test05_getWebmessagesByFamilyId() {
-		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
-
 		setupCall()
 			.withHttpMethod(GET)
 			.withServicePath(format(PATH + ("/families/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "123", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
@@ -119,8 +115,6 @@ class WebmessageIT extends AbstractAppTest {
 
 	@Test
 	void test06_getWebmessagesByFamilyId_emptyResult() {
-		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
-
 		setupCall()
 			.withHttpMethod(GET)
 			.withServicePath(format(PATH + ("/families/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "123", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
@@ -131,8 +125,6 @@ class WebmessageIT extends AbstractAppTest {
 
 	@Test
 	void test07_getWebmessagesByFlowInstanceId() {
-		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
-
 		setupCall()
 			.withHttpMethod(GET)
 			.withServicePath(format(PATH + ("/flow-instances/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "102251", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
@@ -143,8 +135,6 @@ class WebmessageIT extends AbstractAppTest {
 
 	@Test
 	void test08_getWebmessagesByFlowInstanceId_emptyResult() {
-		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
-
 		setupCall()
 			.withHttpMethod(GET)
 			.withServicePath(format(PATH + ("/flow-instances/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "102255", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
@@ -155,8 +145,6 @@ class WebmessageIT extends AbstractAppTest {
 
 	@Test
 	void test09_getAttachmentById() throws IOException {
-		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
-
 		setupCall()
 			.withHttpMethod(GET)
 			.withServicePath(format(PATH + ("/attachments/{2}"), MUNICIPALITY_ID, EXTERNAL, 123))

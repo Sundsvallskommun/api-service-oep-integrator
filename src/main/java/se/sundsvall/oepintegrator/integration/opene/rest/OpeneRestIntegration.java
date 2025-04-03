@@ -6,7 +6,7 @@ import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessages;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseEnvelopeList;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseStatus;
-import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORMAT;
+import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
-import se.sundsvall.oepintegrator.utility.enums.InstanceType;
+import se.sundsvall.oepintegrator.util.enums.InstanceType;
 
 /**
  * Integration class for Open-E REST API. This will be used to call the Open-E REST API like this:

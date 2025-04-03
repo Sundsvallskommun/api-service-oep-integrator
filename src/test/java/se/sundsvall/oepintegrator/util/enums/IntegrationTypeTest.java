@@ -1,4 +1,4 @@
-package se.sundsvall.oepintegrator.utility.enums;
+package se.sundsvall.oepintegrator.util.enums;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,5 +18,4 @@ class IntegrationTypeTest {
 		assertThat(IntegrationType.SOAP).hasToString("SOAP");
 		assertThat(IntegrationType.REST).hasToString("REST");
 	}
-
 }

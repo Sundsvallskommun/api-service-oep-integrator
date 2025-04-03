@@ -5,5 +5,4 @@ package se.sundsvall.oepintegrator.integration.opene;
  * interchangeably in the OpeneClientFactory.
  */
 public interface OpeneClient {
-
 }

@@ -1,26 +1,29 @@
 package se.sundsvall.oepintegrator.apptest;
 
 import static java.text.MessageFormat.format;
-import java.util.List;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
+
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
 
 @AutoConfigureWireMock(port = 9090, files = "classpath:/SetStatusIT")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = Application.class)
+@SpringBootTest(webEnvironment = RANDOM_PORT, classes = Application.class)
 @ActiveProfiles("it")
 @Sql({
 	"/db/scripts/truncate.sql",
@@ -37,10 +40,13 @@ class SetStatusIT extends AbstractAppTest {
 	@Autowired
 	private OpeneClientFactory openeClientFactory;
 
+	@BeforeEach
+	void beforeEach() {
+		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
+	}
+
 	@Test
 	void test01_setStatusByFlowinstanceId() {
-		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
-
 		setupCall()
 			.withHttpMethod(PUT)
 			.withServicePath(format(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID, MUNICIPALITY_ID, EXTERNAL, "12345"))
@@ -54,8 +60,6 @@ class SetStatusIT extends AbstractAppTest {
 
 	@Test
 	void test02_setStatusByExternalId() {
-		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
-
 		setupCall()
 			.withHttpMethod(PUT)
 			.withServicePath(format(PATH_SET_STATUS_BY_EXTERNAL_ID, MUNICIPALITY_ID, EXTERNAL, "System", "externalId"))
@@ -66,5 +70,4 @@ class SetStatusIT extends AbstractAppTest {
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
-
 }

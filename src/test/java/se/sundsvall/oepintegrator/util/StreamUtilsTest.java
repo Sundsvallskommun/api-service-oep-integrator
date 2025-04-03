@@ -1,4 +1,4 @@
-package se.sundsvall.oepintegrator.utility;
+package se.sundsvall.oepintegrator.util;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

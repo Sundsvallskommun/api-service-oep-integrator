@@ -11,7 +11,7 @@ import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 import se.sundsvall.oepintegrator.service.mapper.InstanceMapper;
-import se.sundsvall.oepintegrator.utility.EncryptionUtility;
+import se.sundsvall.oepintegrator.util.EncryptionUtility;
 
 @Service
 public class InstanceService {

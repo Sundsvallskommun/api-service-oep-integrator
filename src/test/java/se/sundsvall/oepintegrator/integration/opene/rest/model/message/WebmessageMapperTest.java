@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
 import se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper;
-import se.sundsvall.oepintegrator.utility.enums.InstanceType;
+import se.sundsvall.oepintegrator.util.enums.InstanceType;
 
 class WebmessageMapperTest {
 

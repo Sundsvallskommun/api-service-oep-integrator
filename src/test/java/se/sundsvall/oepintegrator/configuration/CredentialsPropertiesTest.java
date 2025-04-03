@@ -19,7 +19,5 @@ class CredentialsPropertiesTest {
 	@Test
 	void testProperties() {
 		assertThat(properties.secretKey()).isEqualTo("WbVG8XC%m&9Z!7a$xyKGWzB^#kUSoUUs");
-
 	}
-
 }

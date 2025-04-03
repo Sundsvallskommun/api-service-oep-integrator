@@ -1,4 +1,4 @@
-package se.sundsvall.oepintegrator.service.util;
+package se.sundsvall.oepintegrator.util;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static org.jsoup.Jsoup.parse;

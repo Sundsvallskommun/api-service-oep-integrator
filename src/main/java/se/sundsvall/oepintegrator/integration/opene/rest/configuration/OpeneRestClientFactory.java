@@ -12,7 +12,7 @@ import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClient;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestClient;
-import se.sundsvall.oepintegrator.utility.EncryptionUtility;
+import se.sundsvall.oepintegrator.util.EncryptionUtility;
 
 @Component
 public class OpeneRestClientFactory {
@@ -40,6 +40,5 @@ public class OpeneRestClientFactory {
 				.options(new Request.Options(instanceEntity.getConnectTimeout(), SECONDS, instanceEntity.getReadTimeout(), SECONDS, true)))
 			.url(instanceEntity.getBaseUrl())
 			.build();
-
 	}
 }

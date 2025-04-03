@@ -1,8 +1,8 @@
 package se.sundsvall.oepintegrator.service.mapper;
 
 import static java.util.Optional.ofNullable;
-import static se.sundsvall.oepintegrator.service.util.XPathUtil.evaluateXPath;
-import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORMAT;
+import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
+import static se.sundsvall.oepintegrator.util.XPathUtil.evaluateXPath;
 
 import callback.ConfirmDelivery;
 import callback.ExternalID;
@@ -16,9 +16,7 @@ import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 
 public final class CaseMapper {
 
-	private CaseMapper() {
-		// Prevent instantiation
-	}
+	private CaseMapper() {}
 
 	public static List<CaseEnvelope> toCaseEnvelopeList(final byte[] xml) {
 		final var flowInstances = evaluateXPath(xml, "/FlowInstances/FlowInstance");

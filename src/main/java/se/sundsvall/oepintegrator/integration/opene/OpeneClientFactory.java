@@ -13,8 +13,8 @@ import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestClient;
 import se.sundsvall.oepintegrator.integration.opene.rest.configuration.OpeneRestClientFactory;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapClient;
 import se.sundsvall.oepintegrator.integration.opene.soap.configuration.SoapClientFactory;
-import se.sundsvall.oepintegrator.utility.enums.InstanceType;
-import se.sundsvall.oepintegrator.utility.enums.IntegrationType;
+import se.sundsvall.oepintegrator.util.enums.InstanceType;
+import se.sundsvall.oepintegrator.util.enums.IntegrationType;
 
 /**
  * Factory class for creating OpenE clients. This class is responsible for creating and managing OpenE clients.
@@ -106,5 +106,4 @@ public class OpeneClientFactory {
 			this(instanceEntity.getMunicipalityId(), instanceEntity.getInstanceType(), instanceEntity.getIntegrationType());
 		}
 	}
-
 }

@@ -1,4 +1,4 @@
-package se.sundsvall.oepintegrator.utility;
+package se.sundsvall.oepintegrator.util;
 
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
@@ -13,7 +13,6 @@ import se.sundsvall.oepintegrator.configuration.CredentialsProperties;
 public class EncryptionUtility {
 
 	private static final String ENCRYPT_ALGO = "ChaCha20-Poly1305/None/NoPadding";
-
 	private static final int NONCE_LEN = 12; // bytes
 
 	private final CredentialsProperties credentialsProperties;

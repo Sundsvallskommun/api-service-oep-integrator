@@ -13,8 +13,8 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Objects;
 import org.hibernate.annotations.UuidGenerator;
-import se.sundsvall.oepintegrator.utility.enums.InstanceType;
-import se.sundsvall.oepintegrator.utility.enums.IntegrationType;
+import se.sundsvall.oepintegrator.util.enums.InstanceType;
+import se.sundsvall.oepintegrator.util.enums.IntegrationType;
 
 @Entity
 @Table(name = "open_e_instance", indexes = {

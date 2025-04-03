@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 import callback.AddMessage;
 import callback.AddMessageAsOwner;

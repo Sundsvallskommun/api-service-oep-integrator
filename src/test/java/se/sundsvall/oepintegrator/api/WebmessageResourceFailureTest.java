@@ -6,8 +6,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 import static org.zalando.problem.Status.BAD_REQUEST;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.INTERNAL;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -253,7 +253,7 @@ class WebmessageResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getDetail()).contains("Method parameter 'instanceType': Failed to convert value of type 'java.lang.String' to required type 'se.sundsvall.oepintegrator.utility.enums.InstanceType'");
+		assertThat(response.getDetail()).contains("Method parameter 'instanceType': Failed to convert value of type 'java.lang.String' to required type 'se.sundsvall.oepintegrator.util.enums.InstanceType'");
 	}
 
 	@Test

@@ -12,8 +12,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.INTERNAL;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -139,7 +139,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("""
 			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse> \
-			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.utility.enums.InstanceType,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
+			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.util.enums.InstanceType,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
 
 		verifyNoInteractions(caseServiceMock);
 	}
@@ -239,7 +239,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("""
 			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse> \
-			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.utility.enums.InstanceType,java.lang.String,java.lang.String,\
+			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.util.enums.InstanceType,java.lang.String,java.lang.String,\
 			se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
 
 		verifyNoInteractions(caseServiceMock);

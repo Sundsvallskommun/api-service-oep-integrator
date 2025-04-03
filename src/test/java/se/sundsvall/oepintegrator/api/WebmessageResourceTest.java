@@ -12,8 +12,8 @@ import static org.springframework.http.MediaType.ALL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.MULTIPART_FORM_DATA;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
-import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.util.Constants.REFERENCE_FLOW_INSTANCE_ID;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.ZoneId;

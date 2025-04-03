@@ -37,10 +37,7 @@ paths:
         description: The instanceType where case belongs
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       - name: flowInstanceId
         in: path
@@ -101,10 +98,7 @@ paths:
         description: The instanceType where case belongs
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       - name: flowInstanceId
         in: path
@@ -172,10 +166,7 @@ paths:
         description: The instanceType where case belongs
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       - name: system
         in: path
@@ -249,10 +240,7 @@ paths:
         description: Which instanceType a message should be sent to
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       requestBody:
         content:
@@ -317,10 +305,7 @@ paths:
         description: The instanceType where case belongs
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       - name: flowInstanceId
         in: path
@@ -606,10 +591,7 @@ paths:
         description: Which instanceType a message should be sent to
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       - name: flowInstanceId
         in: path
@@ -682,10 +664,7 @@ paths:
         description: Which instanceType a message should be sent to
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       - name: familyId
         in: path
@@ -758,10 +737,7 @@ paths:
         description: Which instanceType a message should be sent to
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       - name: attachmentId
         in: path
@@ -814,10 +790,7 @@ paths:
         description: The instanceType where case belongs
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       - name: flowInstanceId
         in: path
@@ -889,10 +862,7 @@ paths:
         description: The instanceType where case belongs
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       - name: flowInstanceId
         in: path
@@ -950,10 +920,7 @@ paths:
         description: The instanceType where case belongs
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       - name: partyId
         in: path
@@ -1034,10 +1001,7 @@ paths:
         description: The instanceType where case belongs
         required: true
         schema:
-          type: string
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
       - name: familyId
         in: path
@@ -1131,9 +1095,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
     StatusType:
       type: object
@@ -1143,6 +1107,13 @@ components:
           format: int32
         reasonPhrase:
           type: string
+    InstanceType:
+      type: string
+      description: InstanceType type. INTERNAL/EXTERNAL
+      example: INTERNAL
+      enum:
+      - INTERNAL
+      - EXTERNAL
     Principal:
       required:
       - userId
@@ -1294,9 +1265,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
         suppressed:
           type: array
@@ -1426,19 +1397,9 @@ components:
           description: InstanceType ID
           example: 123e4567-e89b-12d3-a456-426614174000
         integrationType:
-          type: string
-          description: Type of integration. SOAP/REST
-          example: SOAP
-          enum:
-          - SOAP
-          - REST
+          $ref: "#/components/schemas/IntegrationType"
         instanceType:
-          type: string
-          description: InstanceType type. INTERNAL/EXTERNAL
-          example: INTERNAL
-          enum:
-          - INTERNAL
-          - EXTERNAL
+          $ref: "#/components/schemas/InstanceType"
         baseUrl:
           type: string
           description: Base URL of the instanceType
@@ -1474,6 +1435,20 @@ components:
           format: int32
           example: 60
       description: Instance model
+    IntegrationType:
+      type: string
+      description: IntegrationType model
+      example: SOAP
+      enum:
+      - SOAP
+      - REST
+    Direction:
+      type: string
+      description: Direction model
+      example: INBOUND
+      enum:
+      - INBOUND
+      - OUTBOUND
     Webmessage:
       type: object
       properties:
@@ -1483,13 +1458,7 @@ components:
           format: int32
           example: 1
         direction:
-          type: string
-          description: If the message is inbound or outbound. Inbound means coming
-            from open-E. Outbound means sent to open-E
-          example: INBOUND
-          enum:
-          - INBOUND
-          - OUTBOUND
+          $ref: "#/components/schemas/Direction"
         municipalityId:
           type: string
           description: The municipality id
@@ -1570,6 +1539,7 @@ components:
       properties:
         name:
           type: string
+      description: Case status model
     CaseEnvelope:
       type: object
       properties:

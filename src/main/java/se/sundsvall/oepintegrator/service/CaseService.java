@@ -2,7 +2,7 @@ package se.sundsvall.oepintegrator.service;
 
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toConfirmDelivery;
-import static se.sundsvall.oepintegrator.utility.StreamUtils.copyResponseEntityToHttpServletResponse;
+import static se.sundsvall.oepintegrator.util.StreamUtils.copyResponseEntityToHttpServletResponse;
 
 import generated.se.sundsvall.party.PartyType;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,7 +19,7 @@ import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 import se.sundsvall.oepintegrator.integration.party.PartyClient;
 import se.sundsvall.oepintegrator.service.mapper.StatusMapper;
-import se.sundsvall.oepintegrator.utility.enums.InstanceType;
+import se.sundsvall.oepintegrator.util.enums.InstanceType;
 
 @Service
 public class CaseService {
@@ -65,5 +65,10 @@ public class CaseService {
 
 	public CaseStatus getCaseStatusByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
 		return openeRestIntegration.getCaseStatusByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
+	}
+
+	public void getCaseAttachment(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final String queryId, final String fileId, HttpServletResponse response) {
+		final var responseEntity = openeRestIntegration.getCaseAttachment(municipalityId, instanceType, flowInstanceId, queryId, fileId);
+		copyResponseEntityToHttpServletResponse(responseEntity, response, "Unable to get case attachment");
 	}
 }
