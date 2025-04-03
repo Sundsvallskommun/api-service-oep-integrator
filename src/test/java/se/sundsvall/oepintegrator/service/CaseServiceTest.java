@@ -32,6 +32,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
@@ -242,5 +243,28 @@ class CaseServiceTest {
 		verify(partyClientMock).getLegalId(municipalityId, PartyType.PRIVATE, partyId);
 		verifyNoMoreInteractions(partyClientMock);
 		verifyNoInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getCaseStatusByFlowInstanceId() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+		final var name = "name";
+		final var expectedCaseStatus = new CaseStatus().withName(name);
+
+		when(openeRestIntegrationMock.getCaseStatusByFlowInstanceId(municipalityId, instanceType, flowInstanceId))
+			.thenReturn(expectedCaseStatus);
+
+		// Act
+		final var result = caseService.getCaseStatusByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
+
+		// Assert
+		assertThat(result).isEqualTo(expectedCaseStatus);
+		assertThat(result.getName()).isEqualTo(name);
+		verify(openeRestIntegrationMock).getCaseStatusByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock, partyClientMock);
 	}
 }
