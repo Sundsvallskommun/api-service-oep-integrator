@@ -91,9 +91,9 @@ class CaseResource {
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	ResponseEntity<SetStatusResponse> setStatus(
-		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
-		@Parameter(name = "flowInstanceId", description = "flow-instance id", example = "112233") @PathVariable final String flowInstanceId,
+		@Parameter(name = "flowInstanceId", description = "flow-instance ID", example = "112233") @PathVariable final String flowInstanceId,
 		@NotNull @ValidSetStatusRequest @RequestBody final SetStatusRequest setStatusRequest) {
 
 		return ok(caseService.setStatusByFlowinstanceId(municipalityId, instanceType, setStatusRequest, flowInstanceId));
@@ -105,10 +105,10 @@ class CaseResource {
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	ResponseEntity<SetStatusResponse> setStatus(
-		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
-		@Parameter(name = "system", description = "The system where external id exists", example = "CaseData") @PathVariable final String system,
-		@Parameter(name = "externalId", description = "Case id in specified system", example = "234") @PathVariable final String externalId,
+		@Parameter(name = "system", description = "The system where external ID exists", example = "CaseData") @PathVariable final String system,
+		@Parameter(name = "externalId", description = "Case ID in specified system", example = "234") @PathVariable final String externalId,
 		@NotNull @ValidSetStatusRequest @RequestBody final SetStatusRequest setStatusRequest) {
 
 		return ok(caseService.setStatusByExternalId(municipalityId, instanceType, setStatusRequest, system, externalId));
@@ -120,9 +120,9 @@ class CaseResource {
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	ResponseEntity<Void> confirmDelivery(
-		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
-		@Parameter(name = "flowInstanceId", description = "flow-instance id", example = "112233") @PathVariable final String flowInstanceId,
+		@Parameter(name = "flowInstanceId", description = "flow-instance ID", example = "112233") @PathVariable final String flowInstanceId,
 		@NotNull @Valid @RequestBody final ConfirmDeliveryRequest confirmDeliveryRequest) {
 		caseService.confirmDelivery(municipalityId, instanceType, flowInstanceId, confirmDeliveryRequest);
 		return noContent().build();
@@ -134,10 +134,26 @@ class CaseResource {
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	void getCasePdfByFlowInstanceId(
-		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
-		@Parameter(name = "flowInstanceId", description = "flow-instance id", example = "112233") @PathVariable final String flowInstanceId,
+		@Parameter(name = "flowInstanceId", description = "flow-instance ID", example = "112233") @PathVariable final String flowInstanceId,
 		final HttpServletResponse response) {
 		caseService.getCasePdfByFlowInstanceId(municipalityId, instanceType, flowInstanceId, response);
+	}
+
+	@GetMapping(value = "/{flowInstanceId}/queries/{queryId}/files/{fileId}", produces = ALL_VALUE)
+	@Operation(summary = "Get case attachment", description = "Get case attachment by flowInstanceId, queryId and fileId", responses = {
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true),
+		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	})
+	void getCaseAttachment(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "flowInstanceId", description = "flow-instance ID", example = "112233") @PathVariable final String flowInstanceId,
+		@Parameter(name = "queryId", description = "Query ID", example = "112233") @PathVariable final String queryId,
+		@Parameter(name = "fileId", description = "File ID", example = "112233") @PathVariable final String fileId,
+		final HttpServletResponse response) {
+
+		// TODO: Implement
 	}
 }

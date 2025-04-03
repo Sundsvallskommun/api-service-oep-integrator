@@ -252,4 +252,22 @@ class CaseResourceTest {
 		verifyNoMoreInteractions(caseServiceMock);
 	}
 
+	@Test
+	void getCaseAttachment() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+		final var queryId = "456";
+		final var fileId = "789";
+
+		// Act
+		webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/{flowInstanceId}/queries/{queryId}/files/{fileId}")
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId, "queryId", queryId, "fileId", fileId)))
+			.exchange()
+			.expectStatus().isOk();
+
+		// TODO: verify stuff
+	}
 }
