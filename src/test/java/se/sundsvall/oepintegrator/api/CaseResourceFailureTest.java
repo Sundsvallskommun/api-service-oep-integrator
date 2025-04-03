@@ -42,6 +42,7 @@ class CaseResourceFailureTest {
 	private static final String PATH_CONFIRM_DELIVERY = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/delivery";
 	private static final String PATH_GET_CASE_PDF_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/pdf";
 	private static final String PATH_GET_CASE_STATUS_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/status";
+	private static final String PATH_GET_CASE_ATTACHMENT = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/queries/{queryId}/files/{fileId}";
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -79,6 +80,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("setStatus.setStatusRequest", "must have a status or a statusId"));
+
 		verifyNoInteractions(caseServiceMock);
 	}
 
@@ -111,6 +113,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("principal.userId", "must not be blank"));
+
 		verifyNoInteractions(caseServiceMock);
 	}
 
@@ -137,6 +140,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getDetail()).isEqualTo("""
 			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse> \
 			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.utility.enums.InstanceType,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
+
 		verifyNoInteractions(caseServiceMock);
 	}
 
@@ -172,6 +176,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("setStatus.setStatusRequest", "must have a status or a statusId"));
+
 		verifyNoInteractions(caseServiceMock);
 	}
 
@@ -206,6 +211,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("principal.userId", "must not be blank"));
+
 		verifyNoInteractions(caseServiceMock);
 	}
 
@@ -235,6 +241,7 @@ class CaseResourceFailureTest {
 			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse> \
 			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.utility.enums.InstanceType,java.lang.String,java.lang.String,\
 			se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
+
 		verifyNoInteractions(caseServiceMock);
 	}
 
@@ -349,6 +356,8 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getCasePdfByFlowInstanceId.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(caseServiceMock);
 	}
 
 	@Test
@@ -427,4 +436,24 @@ class CaseResourceFailureTest {
 		verifyNoInteractions(caseServiceMock);
 	}
 
+	void getCaseAttachmentWithInvalidMunicipalityId() {
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(builder -> builder.path(PATH_GET_CASE_ATTACHMENT).build(Map.of("municipalityId", "invalidId", "instanceType", INTERNAL, "flowInstanceId", 123, "queryId", 456, "fileId", 789)))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getCaseAttachment.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(caseServiceMock);
+	}
 }
