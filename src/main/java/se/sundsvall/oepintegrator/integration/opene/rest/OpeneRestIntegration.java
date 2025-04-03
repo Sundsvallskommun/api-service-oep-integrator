@@ -2,6 +2,7 @@ package se.sundsvall.oepintegrator.integration.opene.rest;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Optional.ofNullable;
+import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessages;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseEnvelopeList;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseStatus;
@@ -35,6 +36,8 @@ import se.sundsvall.oepintegrator.utility.enums.InstanceType;
 @Component
 public class OpeneRestIntegration {
 
+	private static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
+
 	private final OpeneClientFactory clientFactory;
 
 	public OpeneRestIntegration(final OpeneClientFactory clientFactory) {
@@ -55,43 +58,43 @@ public class OpeneRestIntegration {
 
 	public ResponseEntity<InputStreamResource> getAttachmentById(final String municipalityId, final InstanceType instanceType, final Integer attachmentId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-
-		final var responseEntity = client.getAttachmentById(attachmentId);
-		validateResponse(responseEntity, "Failed to get attachment by ID");
-		return responseEntity;
+		return validateResponse(client.getAttachmentById(attachmentId), "Failed to get attachment by ID");
 	}
 
 	public List<CaseEnvelope> getCaseListByFamilyId(final String municipalityId, final InstanceType instanceType, final String familyId, final String status, final LocalDate fromDate, final LocalDate toDate) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-		return toCaseEnvelopeList(client.getCaseListByFamilyId(familyId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(new byte[0]));
+		return toCaseEnvelopeList(client.getCaseListByFamilyId(familyId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(EMPTY_BYTE_ARRAY));
 	}
 
 	public List<CaseEnvelope> getCaseListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String legalId, final String status, final LocalDate fromDate, final LocalDate toDate) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-		return toCaseEnvelopeList(client.getCaseListByCitizenIdentifier(legalId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(new byte[0]));
+		return toCaseEnvelopeList(client.getCaseListByCitizenIdentifier(legalId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(EMPTY_BYTE_ARRAY));
 	}
 
 	public CaseStatus getCaseStatusByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-		return toCaseStatus(client.getCaseStatusByFlowInstanceId(flowInstanceId).orElseThrow(() -> Problem.valueOf(Status.NOT_FOUND, "No status found for flow instance ID: " + flowInstanceId)));
+		return toCaseStatus(client.getCaseStatusByFlowInstanceId(flowInstanceId).orElseThrow(() -> Problem.valueOf(NOT_FOUND, "No status found for flow instance ID: '%s'".formatted(flowInstanceId))));
 	}
 
 	public ResponseEntity<InputStreamResource> getCasePdfByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
+		return validateResponse(client.getCasePdfByFlowInstanceId(flowInstanceId), "Failed to get case PDF by flow instance ID");
+	}
 
-		final var responseEntity = client.getCasePdfByFlowInstanceId(flowInstanceId);
-		validateResponse(responseEntity, "Failed to get case PDF by flow instance ID");
-		return responseEntity;
+	public ResponseEntity<InputStreamResource> getCaseAttachment(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final String queryId, final String fileId) {
+		final var client = clientFactory.getRestClient(municipalityId, instanceType);
+		return validateResponse(client.getCaseAttachment(flowInstanceId, queryId, fileId), "Failed to get case attachment");
 	}
 
 	private String formatLocalDate(final LocalDate localDate) {
 		return ofNullable(localDate).map(date -> date.format(ISO_LOCAL_DATE)).orElse(null);
 	}
 
-	private void validateResponse(final ResponseEntity<InputStreamResource> response, final String errorMessage) {
+	private <T> ResponseEntity<T> validateResponse(final ResponseEntity<T> response, final String errorMessage) {
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw Problem.valueOf(Status.valueOf(response.getStatusCode().value()), errorMessage);
 		}
-	}
 
+		return response;
+	}
 }

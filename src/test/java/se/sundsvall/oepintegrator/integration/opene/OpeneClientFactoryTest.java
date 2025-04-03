@@ -13,7 +13,6 @@ import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.SOAP;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.zalando.problem.Problem;
@@ -24,9 +23,6 @@ import se.sundsvall.oepintegrator.utility.EncryptionUtility;
 @SpringBootTest(classes = Application.class, webEnvironment = MOCK)
 @ActiveProfiles("junit")
 class OpeneClientFactoryTest {
-
-	@Autowired
-	private ApplicationContext context;
 
 	@MockitoBean
 	private EncryptionUtility encryptionUtilityMock;
@@ -91,7 +87,6 @@ class OpeneClientFactoryTest {
 		final var client = openEClientFactory.getSoapClient("municipalityId", EXTERNAL);
 		assertThat(client).isNotNull();
 		verify(encryptionUtilityMock).decrypt("zOHnQlCA1VbKpcHLnK+MVAiCwdp0KOPIR2MkhHwGY/ft9ltPdw==");
-
 	}
 
 	@Test
