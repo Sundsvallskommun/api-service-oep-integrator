@@ -7,6 +7,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
+import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ class CaseIT extends AbstractAppTest {
 	private static final String RESPONSE_FILE = "response.json";
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{0}/{1}/cases/families/{2}";
 	private static final String PATH_GET_CASES_BY_PARTY_ID = "/{0}/{1}/cases/parties/{2}";
+	private static final String PATH_GET_CASE_ATTACHMENT = "/{0}/{1}/cases/{2}/queries/{3}/files/{4}";
 	private static final String MUNICIPALITY_ID = "2281";
 	private static final String FAMILY_ID = "123";
 	private static final String STATUS = "TheStatus";
@@ -99,6 +101,17 @@ class CaseIT extends AbstractAppTest {
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test06_getCaseAttachment() throws IOException {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(format(PATH_GET_CASE_ATTACHMENT, MUNICIPALITY_ID, EXTERNAL, "123456789", "123", "456"))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(IMAGE_PNG_VALUE))
+			.withExpectedBinaryResponse("response/picture.png")
 			.sendRequestAndVerifyResponse();
 	}
 }
