@@ -1,0 +1,14 @@
+{
+	"request": {
+		"method": "GET",
+		"urlPathPattern": "/external-oepMock/api/fileuploadqueryapi/getfile/123456789/123/456"
+	},
+	"response": {
+		"bodyFileName": "test06_getCaseAttachment/response/picture.png",
+		"status": 200,
+		"headers": {
+			"Content-Type": "image/png"
+		}
+	},
+	"name": "getCaseAttachment"
+}
