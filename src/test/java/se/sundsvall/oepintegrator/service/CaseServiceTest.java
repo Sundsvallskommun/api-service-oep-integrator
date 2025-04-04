@@ -1,5 +1,6 @@
 package se.sundsvall.oepintegrator.service;
 
+import static generated.se.sundsvall.party.PartyType.PRIVATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -8,11 +9,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
+import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
+import static org.springframework.http.ResponseEntity.badRequest;
+import static org.springframework.http.ResponseEntity.ok;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 import callback.SetStatusResponse;
-import generated.se.sundsvall.party.PartyType;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -27,10 +32,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
@@ -57,6 +60,7 @@ class CaseServiceTest {
 
 	@Test
 	void confirmDelivery() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -73,6 +77,7 @@ class CaseServiceTest {
 
 	@Test
 	void setStatusByFlowinstanceId() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -88,12 +93,14 @@ class CaseServiceTest {
 
 		// Assert
 		assertThat(result.getEventId()).isEqualTo(eventId);
+
 		verify(openeSoapIntegrationMock).setStatus(eq(municipalityId), eq(instanceType), any());
 		verifyNoMoreInteractions(openeSoapIntegrationMock);
 	}
 
 	@Test
 	void setStatusByExternalId() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -110,12 +117,14 @@ class CaseServiceTest {
 
 		// Assert
 		assertThat(result.getEventId()).isEqualTo(eventId);
+
 		verify(openeSoapIntegrationMock).setStatus(eq(municipalityId), eq(instanceType), any());
 		verifyNoMoreInteractions(openeSoapIntegrationMock);
 	}
 
 	@Test
 	void getCasePdfByFlowInstanceId() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -123,12 +132,12 @@ class CaseServiceTest {
 
 		final var mockHttpServletResponse = new MockHttpServletResponse();
 		final var headers = Map.of(
-			"Content-Type", List.of("application/pdf"),
+			"Content-Type", List.of(APPLICATION_PDF_VALUE),
 			"Content-Disposition", List.of("attachment; filename=case.pdf"),
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
-		final var responseEntity = ResponseEntity.ok()
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final var responseEntity = ok()
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
 			.body(inputStreamResource);
 
@@ -142,6 +151,7 @@ class CaseServiceTest {
 		assertThat(mockHttpServletResponse.getHeader("Content-Disposition")).isEqualTo("attachment; filename=case.pdf");
 		assertThat(mockHttpServletResponse.getHeader("Content-Length")).isEqualTo("0");
 		assertThat(mockHttpServletResponse.getHeader("Last-Modified")).isEqualTo("Wed, 21 Oct 2015 07:28:00 GMT");
+
 		verify(openeRestIntegrationMock).getCasePdfByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
 		verifyNoMoreInteractions(openeRestIntegrationMock);
 		verifyNoInteractions(openeSoapIntegrationMock);
@@ -156,9 +166,9 @@ class CaseServiceTest {
 		final var flowInstanceId = "123";
 		final var mockHttpServletResponse = Mockito.mock(HttpServletResponse.class);
 		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
-		final var responseEntity = ResponseEntity.badRequest().body(inputStreamResource);
-		when(mockHttpServletResponse.getOutputStream()).thenThrow(new IOException());
+		final var responseEntity = badRequest().body(inputStreamResource);
 
+		when(mockHttpServletResponse.getOutputStream()).thenThrow(new IOException());
 		when(openeRestIntegrationMock.getCasePdfByFlowInstanceId(municipalityId, instanceType, flowInstanceId)).thenReturn(responseEntity);
 
 		// Act
@@ -166,10 +176,15 @@ class CaseServiceTest {
 			.isInstanceOf(Problem.class)
 			.hasFieldOrPropertyWithValue("status", INTERNAL_SERVER_ERROR)
 			.hasMessage("Internal Server Error: Unable to get case pdf");
+
+		verify(openeRestIntegrationMock).getCasePdfByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
 	}
 
 	@Test
 	void getCaseEnvelopeListByFamilyId() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -177,7 +192,6 @@ class CaseServiceTest {
 		final var status = "status";
 		final var fromDate = LocalDate.of(2023, 1, 1);
 		final var toDate = LocalDate.of(2023, 12, 31);
-
 		final var expectedCaseEnvelopeList = List.of(new CaseEnvelope());
 
 		when(openeRestIntegrationMock.getCaseListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate))
@@ -188,6 +202,7 @@ class CaseServiceTest {
 
 		// Assert
 		assertThat(result).isEqualTo(expectedCaseEnvelopeList);
+
 		verify(openeRestIntegrationMock).getCaseListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate);
 		verifyNoMoreInteractions(openeRestIntegrationMock);
 		verifyNoInteractions(openeSoapIntegrationMock, partyClientMock);
@@ -195,9 +210,11 @@ class CaseServiceTest {
 
 	@Test
 	void getCaseEnvelopeListByCitizenIdentifier() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
+		final var partyType = PRIVATE;
 		final var partyId = "partyId";
 		final var legalId = "legalId";
 		final var status = "status";
@@ -205,7 +222,7 @@ class CaseServiceTest {
 		final var toDate = LocalDate.of(2023, 12, 31);
 		final var expectedCaseEnvelopeList = List.of(new CaseEnvelope());
 
-		when(partyClientMock.getLegalId(municipalityId, PartyType.PRIVATE, partyId))
+		when(partyClientMock.getLegalId(municipalityId, partyType, partyId))
 			.thenReturn(Optional.of(legalId));
 
 		when(openeRestIntegrationMock.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate))
@@ -216,37 +233,42 @@ class CaseServiceTest {
 
 		// Assert
 		assertThat(result).isEqualTo(expectedCaseEnvelopeList);
+
 		verify(openeRestIntegrationMock).getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
-		verify(partyClientMock).getLegalId(municipalityId, PartyType.PRIVATE, partyId);
+		verify(partyClientMock).getLegalId(municipalityId, partyType, partyId);
 		verifyNoMoreInteractions(openeRestIntegrationMock, partyClientMock);
 		verifyNoInteractions(openeSoapIntegrationMock);
 	}
 
 	@Test
 	void getCaseEnvelopeListByCitizenIdentifierPartyNotFound() {
+
 		// Arrange
 		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var partyType = PRIVATE;
 		final var partyId = "partyId";
 		final var status = "status";
 		final var fromDate = LocalDate.of(2023, 1, 1);
 		final var toDate = LocalDate.of(2023, 12, 31);
 
-		when(partyClientMock.getLegalId(municipalityId, PartyType.PRIVATE, partyId))
+		when(partyClientMock.getLegalId(municipalityId, partyType, partyId))
 			.thenReturn(Optional.empty());
 
 		// Act & Assert
-		assertThatThrownBy(() -> caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, EXTERNAL, partyId, status, fromDate, toDate))
+		assertThatThrownBy(() -> caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate))
 			.isInstanceOf(Problem.class)
-			.hasFieldOrPropertyWithValue("status", Status.NOT_FOUND)
+			.hasFieldOrPropertyWithValue("status", NOT_FOUND)
 			.hasMessage("Not Found: Citizen identifier not found for partyId: %s".formatted(partyId));
 
-		verify(partyClientMock).getLegalId(municipalityId, PartyType.PRIVATE, partyId);
+		verify(partyClientMock).getLegalId(municipalityId, partyType, partyId);
 		verifyNoMoreInteractions(partyClientMock);
 		verifyNoInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
 	}
 
 	@Test
 	void getCaseStatusByFlowInstanceId() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -263,8 +285,73 @@ class CaseServiceTest {
 		// Assert
 		assertThat(result).isEqualTo(expectedCaseStatus);
 		assertThat(result.getName()).isEqualTo(name);
+
 		verify(openeRestIntegrationMock).getCaseStatusByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
 		verifyNoMoreInteractions(openeRestIntegrationMock);
 		verifyNoInteractions(openeSoapIntegrationMock, partyClientMock);
+	}
+
+	@Test
+	void getCaseAttachment() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+		final var queryId = "queryId";
+		final var fileId = "fileId";
+
+		final var mockHttpServletResponse = new MockHttpServletResponse();
+		final var headers = Map.of(
+			"Content-Type", List.of("image/png"),
+			"Content-Disposition", List.of("attachment; filename=case-attachment.png"),
+			"Content-Length", List.of("0"),
+			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final var responseEntity = ok()
+			.headers(httpHeaders -> httpHeaders.putAll(headers))
+			.body(inputStreamResource);
+
+		when(openeRestIntegrationMock.getCaseAttachment(municipalityId, instanceType, flowInstanceId, queryId, fileId)).thenReturn(responseEntity);
+
+		// Act
+		caseService.getCaseAttachment(municipalityId, instanceType, flowInstanceId, queryId, fileId, mockHttpServletResponse);
+
+		// Assert
+		assertThat(mockHttpServletResponse.getContentType()).isEqualTo(IMAGE_PNG_VALUE);
+		assertThat(mockHttpServletResponse.getHeader("Content-Disposition")).isEqualTo("attachment; filename=case-attachment.png");
+		assertThat(mockHttpServletResponse.getHeader("Content-Length")).isEqualTo("0");
+		assertThat(mockHttpServletResponse.getHeader("Last-Modified")).isEqualTo("Wed, 21 Oct 2015 07:28:00 GMT");
+
+		verify(openeRestIntegrationMock).getCaseAttachment(municipalityId, instanceType, flowInstanceId, queryId, fileId);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getCaseAttachmentThrowsException() throws IOException {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+		final var queryId = "queryId";
+		final var fileId = "fileId";
+		final var mockHttpServletResponse = Mockito.mock(HttpServletResponse.class);
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final var responseEntity = badRequest().body(inputStreamResource);
+
+		when(mockHttpServletResponse.getOutputStream()).thenThrow(new IOException());
+		when(openeRestIntegrationMock.getCaseAttachment(municipalityId, instanceType, flowInstanceId, queryId, fileId)).thenReturn(responseEntity);
+
+		// Act
+		assertThatThrownBy(() -> caseService.getCaseAttachment(municipalityId, instanceType, flowInstanceId, queryId, fileId, mockHttpServletResponse))
+			.isInstanceOf(Problem.class)
+			.hasFieldOrPropertyWithValue("status", INTERNAL_SERVER_ERROR)
+			.hasMessage("Internal Server Error: Unable to get case attachment");
+
+		verify(openeRestIntegrationMock).getCaseAttachment(municipalityId, instanceType, flowInstanceId, queryId, fileId);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
 	}
 }

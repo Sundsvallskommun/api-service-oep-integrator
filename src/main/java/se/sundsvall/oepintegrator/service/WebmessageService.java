@@ -6,8 +6,8 @@ import static org.zalando.problem.Status.BAD_REQUEST;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.oepintegrator.service.mapper.MessageMapper.toAddMessage;
 import static se.sundsvall.oepintegrator.service.mapper.MessageMapper.toAddMessageAsOwner;
-import static se.sundsvall.oepintegrator.utility.Constants.REFERENCE_FLOW_INSTANCE_ID;
-import static se.sundsvall.oepintegrator.utility.StreamUtils.copyResponseEntityToHttpServletResponse;
+import static se.sundsvall.oepintegrator.util.Constants.REFERENCE_FLOW_INSTANCE_ID;
+import static se.sundsvall.oepintegrator.util.StreamUtils.copyResponseEntityToHttpServletResponse;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
@@ -21,7 +21,7 @@ import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 import se.sundsvall.oepintegrator.integration.party.PartyClient;
-import se.sundsvall.oepintegrator.utility.enums.InstanceType;
+import se.sundsvall.oepintegrator.util.enums.InstanceType;
 
 @Service
 public class WebmessageService {

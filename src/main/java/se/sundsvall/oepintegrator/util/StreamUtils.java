@@ -1,4 +1,4 @@
-package se.sundsvall.oepintegrator.utility;
+package se.sundsvall.oepintegrator.util;
 
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
@@ -17,9 +17,7 @@ import org.zalando.problem.Problem;
 
 public final class StreamUtils {
 
-	private StreamUtils() {
-		// Prevent instantiation
-	}
+	private StreamUtils() {}
 
 	public static void copyResponseEntityToHttpServletResponse(final ResponseEntity<InputStreamResource> responseEntity, final HttpServletResponse response, final String errorMessage) {
 		try (final var inputStream = Objects.requireNonNull(responseEntity.getBody()).getInputStream();

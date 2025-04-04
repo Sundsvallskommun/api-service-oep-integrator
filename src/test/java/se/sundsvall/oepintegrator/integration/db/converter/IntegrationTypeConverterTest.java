@@ -2,8 +2,8 @@ package se.sundsvall.oepintegrator.integration.db.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.REST;
-import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.SOAP;
+import static se.sundsvall.oepintegrator.util.enums.IntegrationType.REST;
+import static se.sundsvall.oepintegrator.util.enums.IntegrationType.SOAP;
 
 import org.junit.jupiter.api.Test;
 

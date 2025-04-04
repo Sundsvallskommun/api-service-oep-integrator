@@ -1,7 +1,9 @@
 package se.sundsvall.oepintegrator.api.model.cases;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Objects;
 
+@Schema(description = "Case status model")
 public class CaseStatus {
 
 	private String name;
@@ -25,8 +27,9 @@ public class CaseStatus {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (o == null || getClass() != o.getClass())
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		final CaseStatus that = (CaseStatus) o;
 		return Objects.equals(name, that.name);
 	}

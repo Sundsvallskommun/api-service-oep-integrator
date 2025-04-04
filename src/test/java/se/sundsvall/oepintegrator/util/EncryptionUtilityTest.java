@@ -1,4 +1,4 @@
-package se.sundsvall.oepintegrator.utility;
+package se.sundsvall.oepintegrator.util;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -29,7 +29,5 @@ class EncryptionUtilityTest {
 		final var decodedResult = encryptionUtility.decrypt(encodedResult);
 
 		assertThat(decodedResult).isEqualTo(input);
-
 	}
-
 }

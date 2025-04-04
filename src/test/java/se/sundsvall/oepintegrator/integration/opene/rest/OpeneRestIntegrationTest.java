@@ -7,10 +7,13 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
+import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 import static org.springframework.http.ResponseEntity.internalServerError;
 import static org.springframework.http.ResponseEntity.ok;
-import static se.sundsvall.oepintegrator.utility.Constants.OPEN_E_DATE_TIME_FORMAT;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.api.model.webmessage.Direction.INBOUND;
+import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
@@ -38,6 +41,7 @@ class OpeneRestIntegrationTest {
 
 	@Mock
 	private OpeneRestClient openeRestClient;
+
 	@Mock
 	private OpeneClientFactory clientFactory;
 
@@ -46,6 +50,7 @@ class OpeneRestIntegrationTest {
 
 	@Test
 	void getWebmessagesByFamilyId(@Load("/mappings/messages.xml") final String xml) {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -73,6 +78,7 @@ class OpeneRestIntegrationTest {
 
 	@Test
 	void getWebmessagesByFamilyIdNullResult() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -98,6 +104,8 @@ class OpeneRestIntegrationTest {
 
 	@Test
 	void getWebmessagesByFamilyIdParsingError() {
+
+		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var familyId = "familyId";
@@ -121,6 +129,7 @@ class OpeneRestIntegrationTest {
 
 	@Test
 	void getWebmessagesByFlowInstanceId(@Load("/mappings/messages.xml") final String xml) {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -139,7 +148,7 @@ class OpeneRestIntegrationTest {
 		// Assert
 		assertThat(result).isNotNull().hasSize(1);
 		assertThat(result.getFirst().getMessage()).startsWith("Test message");
-		assertThat(result.getFirst().getDirection()).isEqualTo(Direction.INBOUND);
+		assertThat(result.getFirst().getDirection()).isEqualTo(INBOUND);
 
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verify(openeRestClient).getWebmessagesByFlowInstanceId(flowInstanceId, formattedFromDateTime, formattedToDateTime);
@@ -148,6 +157,7 @@ class OpeneRestIntegrationTest {
 
 	@Test
 	void getWebmessagesByFlowInstanceIdNullResult() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -173,6 +183,8 @@ class OpeneRestIntegrationTest {
 
 	@Test
 	void getWebmessagesByFlowInstanceIdParsingError() {
+
+		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "flowInstanceId";
@@ -201,13 +213,12 @@ class OpeneRestIntegrationTest {
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var attachmentId = 123;
-
 		final var headers = Map.of(
-			"Content-Type", List.of("application/pdf"),
+			"Content-Type", List.of(APPLICATION_PDF_VALUE),
 			"Content-Disposition", List.of("attachment; filename=case.pdf"),
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
+		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = ok()
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
 			.body(inputStreamResource);
@@ -220,10 +231,11 @@ class OpeneRestIntegrationTest {
 
 		// Assert
 		assertThat(result).isNotNull();
-		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of("application/pdf"));
+		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of(APPLICATION_PDF_VALUE));
 		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=case.pdf"));
 		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
 		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+
 		verify(openeRestClient).getAttachmentById(attachmentId);
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
@@ -231,11 +243,11 @@ class OpeneRestIntegrationTest {
 
 	@Test
 	void getAttachmentByIdThrowsException() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var attachmentId = 123;
-
 		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = internalServerError().body(inputStreamResource);
 
@@ -382,7 +394,7 @@ class OpeneRestIntegrationTest {
 		final var flowInstanceId = "flowInstanceId";
 
 		final var headers = Map.of(
-			"Content-Type", List.of("application/pdf"),
+			"Content-Type", List.of(APPLICATION_PDF_VALUE),
 			"Content-Disposition", List.of("attachment; filename=case.pdf"),
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
@@ -403,6 +415,7 @@ class OpeneRestIntegrationTest {
 		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=case.pdf"));
 		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
 		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+
 		verify(openeRestClient).getCasePdfByFlowInstanceId(flowInstanceId);
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
@@ -410,13 +423,12 @@ class OpeneRestIntegrationTest {
 
 	@Test
 	void getCasePdfByFlowInstanceIdError() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "flowInstanceId";
-
 		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
-
 		final var responseEntity = internalServerError().body(inputStreamResource);
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
@@ -434,6 +446,7 @@ class OpeneRestIntegrationTest {
 
 	@Test
 	void getCaseStatusByFlowInstanceId(@Load("/mappings/case-status.xml") final String xml) {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -456,6 +469,7 @@ class OpeneRestIntegrationTest {
 
 	@Test
 	void getCaseStatusByFlowInstanceIdNotFound() {
+
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
@@ -483,10 +497,9 @@ class OpeneRestIntegrationTest {
 		final var flowInstanceId = "flowInstanceId";
 		final var queryId = "queryId";
 		final var fileId = "fileId";
-
 		final var headers = Map.of(
-			"Content-Type", List.of("application/pdf"),
-			"Content-Disposition", List.of("attachment; filename=attachment.png"),
+			"Content-Type", List.of(IMAGE_PNG_VALUE),
+			"Content-Disposition", List.of("attachment; filename=case-attachment.png"),
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
 		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
@@ -502,10 +515,11 @@ class OpeneRestIntegrationTest {
 
 		// Assert
 		assertThat(result).isNotNull();
-		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of("application/pdf"));
-		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=attachment.png"));
+		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of(IMAGE_PNG_VALUE));
+		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=case-attachment.png"));
 		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
 		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+
 		verify(openeRestClient).getCaseAttachment(flowInstanceId, queryId, fileId);
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
@@ -520,7 +534,6 @@ class OpeneRestIntegrationTest {
 		final var flowInstanceId = "flowInstanceId";
 		final var queryId = "queryId";
 		final var fileId = "fileId";
-
 		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = internalServerError().body(inputStreamResource);
 

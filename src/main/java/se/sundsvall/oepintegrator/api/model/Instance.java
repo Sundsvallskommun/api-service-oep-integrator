@@ -5,8 +5,8 @@ import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.WRITE_ONLY;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.Objects;
-import se.sundsvall.oepintegrator.utility.enums.InstanceType;
-import se.sundsvall.oepintegrator.utility.enums.IntegrationType;
+import se.sundsvall.oepintegrator.util.enums.InstanceType;
+import se.sundsvall.oepintegrator.util.enums.IntegrationType;
 
 @Schema(description = "Instance model")
 public class Instance {
@@ -161,8 +161,9 @@ public class Instance {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (o == null || getClass() != o.getClass())
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		final Instance instance = (Instance) o;
 		return Objects.equals(id, instance.id) && integrationType == instance.integrationType && instanceType == instance.instanceType && Objects.equals(baseUrl, instance.baseUrl) && Objects.equals(username, instance.username)
 			&& Objects.equals(password, instance.password) && Objects.equals(familyIds, instance.familyIds) && Objects.equals(connectTimeout, instance.connectTimeout) && Objects.equals(readTimeout, instance.readTimeout);

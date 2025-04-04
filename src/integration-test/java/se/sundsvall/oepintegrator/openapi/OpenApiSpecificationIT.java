@@ -1,5 +1,8 @@
 package se.sundsvall.oepintegrator.openapi;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import java.util.List;
@@ -15,11 +18,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import se.sundsvall.dept44.util.ResourceUtils;
 import se.sundsvall.oepintegrator.Application;
 
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-
 @ActiveProfiles("it")
 @SpringBootTest(
-	webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+	webEnvironment = RANDOM_PORT,
 	classes = Application.class,
 	properties = {
 		"spring.main.banner-mode=off",
@@ -68,8 +69,8 @@ class OpenApiSpecificationIT {
 	/**
 	 * Attempts to convert the given YAML (no YAML-check...) to JSON.
 	 *
-	 * @param yaml the YAML to convert
-	 * @return a JSON string
+	 * @param  yaml the YAML to convert
+	 * @return      a JSON string
 	 */
 	private String toJson(final String yaml) {
 		try {

@@ -7,8 +7,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.ALL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
-import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.REST;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.IntegrationType.REST;
 
 import java.util.List;
 import java.util.Map;

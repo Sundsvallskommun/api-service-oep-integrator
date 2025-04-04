@@ -7,9 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.INTERNAL;
-import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.REST;
-import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.SOAP;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.INTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.IntegrationType.REST;
+import static se.sundsvall.oepintegrator.util.enums.IntegrationType.SOAP;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +25,7 @@ import se.sundsvall.oepintegrator.api.model.Instance;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
-import se.sundsvall.oepintegrator.utility.EncryptionUtility;
+import se.sundsvall.oepintegrator.util.EncryptionUtility;
 
 @ExtendWith(MockitoExtension.class)
 class InstanceServiceTest {

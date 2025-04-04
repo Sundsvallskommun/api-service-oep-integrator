@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 import static org.zalando.problem.Status.BAD_REQUEST;
 import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 import callback.AddMessageAsOwnerResponse;
 import callback.AddMessageResponse;

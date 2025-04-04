@@ -7,8 +7,8 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
-import static se.sundsvall.oepintegrator.utility.enums.InstanceType.EXTERNAL;
-import static se.sundsvall.oepintegrator.utility.enums.IntegrationType.REST;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.IntegrationType.REST;
 
 import java.util.List;
 import org.hamcrest.MatcherAssert;

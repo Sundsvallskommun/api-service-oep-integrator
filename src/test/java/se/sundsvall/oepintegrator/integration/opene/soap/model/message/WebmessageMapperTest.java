@@ -10,7 +10,7 @@ import org.zalando.problem.Problem;
 import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
-import se.sundsvall.oepintegrator.utility.enums.InstanceType;
+import se.sundsvall.oepintegrator.util.enums.InstanceType;
 
 @ExtendWith(ResourceLoaderExtension.class)
 class WebmessageMapperTest {

@@ -21,9 +21,7 @@ import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 
 public final class MessageMapper {
 
-	private MessageMapper() {
-		// Tp prevent instantiation
-	}
+	private MessageMapper() {}
 
 	public static AddMessage toAddMessage(final WebmessageRequest request, final Integer flowInstanceId, final List<MultipartFile> attachments) {
 

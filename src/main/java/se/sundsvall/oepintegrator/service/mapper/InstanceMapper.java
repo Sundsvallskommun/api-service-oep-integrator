@@ -7,9 +7,7 @@ import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 
 public final class InstanceMapper {
 
-	private InstanceMapper() {
-		// Prevent instantiation
-	}
+	private InstanceMapper() {}
 
 	public static List<Instance> toInstances(final List<InstanceEntity> entities) {
 		return entities.stream()

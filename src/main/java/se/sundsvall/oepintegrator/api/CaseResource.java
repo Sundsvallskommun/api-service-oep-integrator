@@ -37,7 +37,7 @@ import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 import se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse;
 import se.sundsvall.oepintegrator.api.validation.ValidSetStatusRequest;
 import se.sundsvall.oepintegrator.service.CaseService;
-import se.sundsvall.oepintegrator.utility.enums.InstanceType;
+import se.sundsvall.oepintegrator.util.enums.InstanceType;
 
 @RestController
 @Validated
@@ -166,7 +166,6 @@ class CaseResource {
 		@Parameter(name = "queryId", description = "Query ID", example = "112233") @PathVariable final String queryId,
 		@Parameter(name = "fileId", description = "File ID", example = "112233") @PathVariable final String fileId,
 		final HttpServletResponse response) {
-
-		// TODO: Implement
+		caseService.getCaseAttachment(municipalityId, instanceType, flowInstanceId, queryId, fileId, response);
 	}
 }
