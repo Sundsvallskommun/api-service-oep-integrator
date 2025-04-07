@@ -1,10 +1,10 @@
 package se.sundsvall.oepintegrator.integration.opene.soap.configuration;
 
+import static feign.Logger.Level.FULL;
 import static jakarta.xml.soap.SOAPConstants.SOAP_1_1_PROTOCOL;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import feign.Logger;
 import feign.Request;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.jaxb.JAXBContextFactory;
@@ -51,7 +51,7 @@ public class SoapClientFactory {
 				.encoder(ENCODER_BUILDER.build())
 				.decoder(DECODER_BUILDER.build())
 				.errorDecoder(new SOAPErrorDecoder())
-				.logLevel(Logger.Level.FULL)
+				.logLevel(FULL)
 				.requestInterceptor(new BasicAuthRequestInterceptor(instanceEntity.getUsername(), encryptionUtility.decrypt(instanceEntity.getPassword())))
 				.options(new Request.Options(instanceEntity.getConnectTimeout(), SECONDS, instanceEntity.getReadTimeout(), SECONDS, true)))
 			.url(instanceEntity.getBaseUrl())

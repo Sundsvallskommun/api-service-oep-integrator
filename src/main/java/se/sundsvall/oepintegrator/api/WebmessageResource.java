@@ -1,5 +1,6 @@
 package se.sundsvall.oepintegrator.api;
 
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE_TIME;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.MediaType.ALL_VALUE;
@@ -79,24 +80,20 @@ class WebmessageResource {
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "familyId", description = "Family id", example = "123") @PathVariable final String familyId,
-		@Parameter(name = "fromDateTime", description = "The start date and time for filtering web messages (optional)", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(
-			iso = DateTimeFormat.ISO.DATE_TIME) final LocalDateTime fromDateTime,
-		@Parameter(name = "toDateTime", description = "The end date and time for filtering web messages (optional).", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(
-			iso = DateTimeFormat.ISO.DATE_TIME) final LocalDateTime toDateTime) {
+		@Parameter(name = "fromDateTime", description = "The start date and time for filtering web messages (optional)", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(iso = DATE_TIME) final LocalDateTime fromDateTime,
+		@Parameter(name = "toDateTime", description = "The end date and time for filtering web messages (optional).", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(iso = DATE_TIME) final LocalDateTime toDateTime) {
 
 		return ok(webmessageService.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime));
 	}
 
-	@GetMapping(path = "/flow-instances/{flowInstanceId}", produces = APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/{flowInstanceId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get all webmessages for a given errand", responses = @ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true))
 	ResponseEntity<List<Webmessage>> getWebmessagesByFlowInstanceId(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "flowInstanceId", description = "Flow instance id", example = "123") @PathVariable final String flowInstanceId,
-		@Parameter(name = "fromDateTime", description = "The start date and time for filtering web messages (optional)", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(
-			iso = DateTimeFormat.ISO.DATE_TIME) final LocalDateTime fromDateTime,
-		@Parameter(name = "toDateTime", description = "The end date and time for filtering web messages (optional).", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(
-			iso = DateTimeFormat.ISO.DATE_TIME) final LocalDateTime toDateTime) {
+		@Parameter(name = "fromDateTime", description = "The start date and time for filtering web messages (optional)", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(iso = DATE_TIME) final LocalDateTime fromDateTime,
+		@Parameter(name = "toDateTime", description = "The end date and time for filtering web messages (optional).", example = "2024-01-31T12:00:00") @RequestParam(required = false) @DateTimeFormat(iso = DATE_TIME) final LocalDateTime toDateTime) {
 
 		return ok(webmessageService.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime));
 	}

@@ -10,17 +10,17 @@ servers:
 - url: http://localhost:8080
   description: Generated server url
 tags:
+- name: Instances
+  description: Instance configuration
 - name: Webmessages
   description: Resource for sending webmessages to OpenE
-- name: Configuration for instances
-  description: Settings for instances per municipalityId
-- name: Case
+- name: Cases
   description: Operations on case
 paths:
   /{municipalityId}/{instanceType}/cases/{flowInstanceId}/status:
     get:
       tags:
-      - Case
+      - Cases
       summary: Get case status
       description: Get case status by flow instance ID
       operationId: getCaseStatusByFlowInstanceId
@@ -81,9 +81,9 @@ paths:
                 $ref: "#/components/schemas/Problem"
     put:
       tags:
-      - Case
-      summary: Set status
-      description: Sets status of a case
+      - Cases
+      summary: Set case status
+      description: Set case status by flowInstanceId
       operationId: setStatus
       parameters:
       - name: municipalityId
@@ -111,7 +111,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SetStatusRequest"
+              $ref: "#/components/schemas/CaseStatusChangeRequest"
         required: true
       responses:
         "204":
@@ -119,7 +119,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SetStatusResponse"
+                $ref: "#/components/schemas/CaseStatusChangeResponse"
         "404":
           description: Not found
           content:
@@ -149,9 +149,9 @@ paths:
   /{municipalityId}/{instanceType}/cases/systems/{system}/{externalId}/status:
     put:
       tags:
-      - Case
-      summary: Set status
-      description: Sets status of a case
+      - Cases
+      summary: Set case status
+      description: Set case status by externalId
       operationId: setStatus_1
       parameters:
       - name: municipalityId
@@ -186,7 +186,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SetStatusRequest"
+              $ref: "#/components/schemas/CaseStatusChangeRequest"
         required: true
       responses:
         "204":
@@ -194,7 +194,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SetStatusResponse"
+                $ref: "#/components/schemas/CaseStatusChangeResponse"
         "404":
           description: Not found
           content:
@@ -288,7 +288,7 @@ paths:
   /{municipalityId}/{instanceType}/cases/{flowInstanceId}/delivery:
     post:
       tags:
-      - Case
+      - Cases
       summary: Confirm delivery
       description: Confirms delivery of a case
       operationId: confirmDelivery
@@ -349,17 +349,17 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-  /{municipalityId}/instance:
+  /{municipalityId}/instances:
     get:
       tags:
-      - Configuration for instances
+      - Instances
       summary: Get instances
       description: 'Get all instances for a municipalityId '
       operationId: getInstances
       parameters:
       - name: municipalityId
         in: path
-        description: Municipality id
+        description: Municipality ID
         required: true
         schema:
           type: string
@@ -389,14 +389,14 @@ paths:
                 - $ref: "#/components/schemas/ConstraintViolationProblem"
     post:
       tags:
-      - Configuration for instances
+      - Instances
       summary: Create instance
       description: Creates a new instance
       operationId: createInstance
       parameters:
       - name: municipalityId
         in: path
-        description: Municipality id
+        description: Municipality ID
         required: true
         schema:
           type: string
@@ -429,24 +429,24 @@ paths:
                 oneOf:
                 - $ref: "#/components/schemas/Problem"
                 - $ref: "#/components/schemas/ConstraintViolationProblem"
-  /{municipalityId}/instance/{instanceId}:
+  /{municipalityId}/instances/{instanceId}:
     get:
       tags:
-      - Configuration for instances
+      - Instances
       summary: Get instance
       description: Get an instance
       operationId: getInstance
       parameters:
       - name: municipalityId
         in: path
-        description: Municipality id
+        description: Municipality ID
         required: true
         schema:
           type: string
         example: 2281
       - name: instanceId
         in: path
-        description: instance id
+        description: instance ID
         required: true
         schema:
           type: string
@@ -480,21 +480,21 @@ paths:
                 - $ref: "#/components/schemas/ConstraintViolationProblem"
     delete:
       tags:
-      - Configuration for instances
+      - Instances
       summary: Delete instance
       description: Deletes an instance
       operationId: deleteInstance
       parameters:
       - name: municipalityId
         in: path
-        description: Municipality id
+        description: Municipality ID
         required: true
         schema:
           type: string
         example: 2281
       - name: instanceId
         in: path
-        description: instance id
+        description: instance ID
         required: true
         schema:
           type: string
@@ -524,21 +524,21 @@ paths:
                 - $ref: "#/components/schemas/ConstraintViolationProblem"
     patch:
       tags:
-      - Configuration for instances
+      - Instances
       summary: Update instance
       description: Updates an instance
       operationId: updateInstance
       parameters:
       - name: municipalityId
         in: path
-        description: Municipality id
+        description: Municipality ID
         required: true
         schema:
           type: string
         example: 2281
       - name: instanceId
         in: path
-        description: instance id
+        description: instance ID
         required: true
         schema:
           type: string
@@ -572,7 +572,7 @@ paths:
                 oneOf:
                 - $ref: "#/components/schemas/Problem"
                 - $ref: "#/components/schemas/ConstraintViolationProblem"
-  /{municipalityId}/{instanceType}/webmessages/flow-instances/{flowInstanceId}:
+  /{municipalityId}/{instanceType}/webmessages/{flowInstanceId}:
     get:
       tags:
       - Webmessages
@@ -773,7 +773,7 @@ paths:
   /{municipalityId}/{instanceType}/cases/{flowInstanceId}/queries/{queryId}/files/{fileId}:
     get:
       tags:
-      - Case
+      - Cases
       summary: Get case attachment
       description: "Get case attachment by flowInstanceId, queryId and fileId"
       operationId: getCaseAttachment
@@ -845,7 +845,7 @@ paths:
   /{municipalityId}/{instanceType}/cases/{flowInstanceId}/pdf:
     get:
       tags:
-      - Case
+      - Cases
       summary: Get case PDF
       description: Get case PDF by flow instance ID
       operationId: getCasePdfByFlowInstanceId
@@ -903,7 +903,7 @@ paths:
   /{municipalityId}/{instanceType}/cases/parties/{partyId}:
     get:
       tags:
-      - Case
+      - Cases
       summary: Get cases by citizen identifier
       description: Get a list of case envelopes by citizen identifier
       operationId: getCasesByPartyId
@@ -984,7 +984,7 @@ paths:
   /{municipalityId}/{instanceType}/cases/families/{familyId}:
     get:
       tags:
-      - Case
+      - Cases
       summary: Get cases by family ID
       description: Get a list of case envelopes by family ID
       operationId: getCasesByFamilyId
@@ -1114,6 +1114,21 @@ components:
       enum:
       - INTERNAL
       - EXTERNAL
+    CaseStatusChangeRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The status ID
+          format: int32
+          example: 123
+        name:
+          type: string
+          description: The status name
+          example: Inskickat
+        principal:
+          $ref: "#/components/schemas/Principal"
+      description: SetStatus request model
     Principal:
       required:
       - userId
@@ -1128,20 +1143,6 @@ components:
           description: The user id
           example: joh12doe
       description: Principal model
-    SetStatusRequest:
-      type: object
-      properties:
-        status:
-          type: string
-          description: The status
-        statusId:
-          type: integer
-          description: Id of status
-          format: int32
-          example: 123
-        principal:
-          $ref: "#/components/schemas/Principal"
-      description: SetStatus request model
     ConstraintViolationProblem:
       type: object
       properties:
@@ -1309,7 +1310,7 @@ components:
           type: string
         message:
           type: string
-    SetStatusResponse:
+    CaseStatusChangeResponse:
       type: object
       properties:
         eventId:
@@ -1395,6 +1396,7 @@ components:
         id:
           type: string
           description: InstanceType ID
+          readOnly: true
           example: 123e4567-e89b-12d3-a456-426614174000
         integrationType:
           $ref: "#/components/schemas/IntegrationType"
@@ -1537,8 +1539,15 @@ components:
     CaseStatus:
       type: object
       properties:
+        id:
+          type: integer
+          description: The status ID
+          format: int32
+          example: 123
         name:
           type: string
+          description: The status name
+          example: Inskickat
       description: Case status model
     CaseEnvelope:
       type: object

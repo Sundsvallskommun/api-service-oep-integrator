@@ -8,7 +8,7 @@ import static se.sundsvall.oepintegrator.util.enums.IntegrationType.SOAP;
 
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.oepintegrator.api.model.Instance;
+import se.sundsvall.oepintegrator.api.model.instance.Instance;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 
 class InstanceMapperTest {

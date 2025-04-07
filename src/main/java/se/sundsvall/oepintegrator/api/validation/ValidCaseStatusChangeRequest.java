@@ -7,15 +7,15 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import se.sundsvall.oepintegrator.api.validation.impl.ValidSetStatusRequestConstraintValidator;
+import se.sundsvall.oepintegrator.api.validation.impl.ValidCaseStatusChangeRequestConstraintValidator;
 
 @Documented
 @Target({
 	ElementType.FIELD, ElementType.CONSTRUCTOR, ElementType.PARAMETER, ElementType.TYPE_USE
 })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ValidSetStatusRequestConstraintValidator.class)
-public @interface ValidSetStatusRequest {
+@Constraint(validatedBy = ValidCaseStatusChangeRequestConstraintValidator.class)
+public @interface ValidCaseStatusChangeRequest {
 
 	String message() default "must have a status or a statusId";
 

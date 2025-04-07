@@ -5,7 +5,7 @@ import static java.util.Optional.ofNullable;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessages;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseEnvelopeList;
-import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseStatus;
+import static se.sundsvall.oepintegrator.service.mapper.CaseStatusMapper.toCaseStatus;
 import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
 
 import java.time.LocalDate;

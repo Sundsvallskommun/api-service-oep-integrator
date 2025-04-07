@@ -15,9 +15,6 @@ public class IntegrationTypeConverter implements AttributeConverter<IntegrationT
 
 	@Override
 	public IntegrationType convertToEntityAttribute(final String dbData) {
-		if (dbData == null) {
-			return null;
-		}
-		return IntegrationType.valueOf(dbData);
+		return Optional.ofNullable(dbData).map(IntegrationType::valueOf).orElse(null);
 	}
 }

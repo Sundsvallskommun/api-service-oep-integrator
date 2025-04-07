@@ -1,0 +1,13 @@
+{
+	"integrationType": "REST",
+	"instanceType": "EXTERNAL",
+	"baseUrl": "https://new-example.com",
+	"username": "new-user123",
+	"password": "new-pass123",
+	"familyIds": [
+		"new-family1",
+		"new-family2"
+	],
+	"connectTimeout": 777,
+	"readTimeout": 888
+}

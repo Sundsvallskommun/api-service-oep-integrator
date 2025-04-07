@@ -22,10 +22,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeResponse;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
-import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
-import se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse;
 import se.sundsvall.oepintegrator.service.CaseService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
@@ -46,15 +46,15 @@ class CaseResourceTest {
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
-		final var status = "status";
+		final var statusName = "statusName";
 		final var userId = "userId";
 		final var name = "name";
 
 		final var principal = Principal.create().withUserId(userId).withName(name);
-		final var request = SetStatusRequest.create()
-			.withStatus(status)
+		final var request = CaseStatusChangeRequest.create()
+			.withName(statusName)
 			.withPrincipal(principal);
-		final var response = new SetStatusResponse().withEventId(1);
+		final var response = new CaseStatusChangeResponse().withEventId(1);
 
 		// Mock
 		when(caseServiceMock.setStatusByFlowinstanceId(municipalityId, instanceType, request, flowInstanceId)).thenReturn(response);
@@ -67,7 +67,7 @@ class CaseResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBody(SetStatusResponse.class)
+			.expectBody(CaseStatusChangeResponse.class)
 			.returnResult()
 			.getResponseBody();
 
@@ -82,12 +82,12 @@ class CaseResourceTest {
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
-		final var status = "status";
-		final var request = SetStatusRequest.create()
-			.withStatus(status);
+		final var statusName = "statusName";
+		final var request = CaseStatusChangeRequest.create()
+			.withName(statusName);
 
 		// Mock
-		when(caseServiceMock.setStatusByFlowinstanceId(municipalityId, instanceType, request, flowInstanceId)).thenReturn(new SetStatusResponse().withEventId(1));
+		when(caseServiceMock.setStatusByFlowinstanceId(municipalityId, instanceType, request, flowInstanceId)).thenReturn(new CaseStatusChangeResponse().withEventId(1));
 
 		// Act
 		webTestClient.put()
@@ -97,7 +97,7 @@ class CaseResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBody(SetStatusResponse.class)
+			.expectBody(CaseStatusChangeResponse.class)
 			.returnResult()
 			.getResponseBody();
 
@@ -113,17 +113,17 @@ class CaseResourceTest {
 		final var instanceType = EXTERNAL;
 		final var externalId = "externalId";
 		final var system = "system";
-		final var status = "status";
+		final var statusName = "statusName";
 		final var userId = "userId";
 		final var name = "name";
 
 		final var principal = Principal.create().withUserId(userId).withName(name);
-		final var request = SetStatusRequest.create()
-			.withStatus(status)
+		final var request = CaseStatusChangeRequest.create()
+			.withName(statusName)
 			.withPrincipal(principal);
 
 		// Mock
-		when(caseServiceMock.setStatusByExternalId(municipalityId, instanceType, request, system, externalId)).thenReturn(new SetStatusResponse().withEventId(1));
+		when(caseServiceMock.setStatusByExternalId(municipalityId, instanceType, request, system, externalId)).thenReturn(new CaseStatusChangeResponse().withEventId(1));
 
 		// Act
 		webTestClient.put()
@@ -134,7 +134,7 @@ class CaseResourceTest {
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBody(SetStatusResponse.class)
+			.expectBody(CaseStatusChangeResponse.class)
 			.returnResult()
 			.getResponseBody();
 

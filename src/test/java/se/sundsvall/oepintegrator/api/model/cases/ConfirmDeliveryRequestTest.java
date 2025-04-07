@@ -55,5 +55,4 @@ class ConfirmDeliveryRequestTest {
 		assertThat(new ConfirmDeliveryRequest()).hasAllNullFieldsOrPropertiesExcept("delivered")
 			.satisfies(confirmDeliveryRequest -> assertThat(confirmDeliveryRequest.isDelivered()).isFalse());
 	}
-
 }

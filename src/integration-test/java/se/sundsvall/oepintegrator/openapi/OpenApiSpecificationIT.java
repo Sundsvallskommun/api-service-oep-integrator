@@ -1,12 +1,12 @@
 package se.sundsvall.oepintegrator.openapi;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import java.util.List;
-import net.javacrumbs.jsonunit.core.Option;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,8 +28,6 @@ import se.sundsvall.oepintegrator.Application;
 	})
 class OpenApiSpecificationIT {
 
-	private static final YAMLMapper YAML_MAPPER = new YAMLMapper();
-
 	@Value("${openapi.name}")
 	private String openApiName;
 
@@ -47,10 +45,10 @@ class OpenApiSpecificationIT {
 		final String existingOpenApiSpecification = ResourceUtils.asString(openApiResource);
 		final String currentOpenApiSpecification = getCurrentOpenApiSpecification();
 
-		assertThatJson(toJson(existingOpenApiSpecification))
-			.withOptions(List.of(Option.IGNORING_ARRAY_ORDER))
+		assertThatJson(toJson(currentOpenApiSpecification))
+			.withOptions(List.of(IGNORING_ARRAY_ORDER))
 			.whenIgnoringPaths("servers")
-			.isEqualTo(toJson(currentOpenApiSpecification));
+			.isEqualTo(toJson(existingOpenApiSpecification));
 	}
 
 	/**
@@ -74,7 +72,7 @@ class OpenApiSpecificationIT {
 	 */
 	private String toJson(final String yaml) {
 		try {
-			return YAML_MAPPER.readTree(yaml).toString();
+			return new YAMLMapper().readTree(yaml).toString();
 		} catch (final JsonProcessingException e) {
 			throw new IllegalStateException("Unable to convert YAML to JSON", e);
 		}

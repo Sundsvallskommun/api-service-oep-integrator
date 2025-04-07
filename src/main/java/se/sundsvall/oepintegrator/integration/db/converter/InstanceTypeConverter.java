@@ -15,9 +15,6 @@ public class InstanceTypeConverter implements AttributeConverter<InstanceType, S
 
 	@Override
 	public InstanceType convertToEntityAttribute(final String dbData) {
-		if (dbData == null) {
-			return null;
-		}
-		return InstanceType.valueOf(dbData);
+		return Optional.ofNullable(dbData).map(InstanceType::valueOf).orElse(null);
 	}
 }

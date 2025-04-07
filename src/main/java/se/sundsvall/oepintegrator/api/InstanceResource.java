@@ -34,17 +34,17 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
-import se.sundsvall.oepintegrator.api.model.Instance;
+import se.sundsvall.oepintegrator.api.model.instance.Instance;
 import se.sundsvall.oepintegrator.service.InstanceService;
 
 @RestController
 @Validated
-@RequestMapping("/{municipalityId}/instance")
+@RequestMapping("/{municipalityId}/instances")
 @ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
 	Problem.class, ConstraintViolationProblem.class
 })))
-@Tag(name = "Configuration for instances", description = "Settings for instances per municipalityId")
+@Tag(name = "Instances", description = "Instance configuration")
 class InstanceResource {
 
 	private final InstanceService service;
@@ -56,7 +56,7 @@ class InstanceResource {
 	@GetMapping(produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get instances", description = "Get all instances for a municipalityId ", responses = @ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true))
 	ResponseEntity<List<Instance>> getInstances(
-		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId) {
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId) {
 
 		return ok(service.getInstances(municipalityId));
 	}
@@ -67,8 +67,8 @@ class InstanceResource {
 		@ApiResponse(responseCode = "404", description = "Instance not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	ResponseEntity<Instance> getInstance(
-		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "instanceId", description = "instance id", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId) {
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceId", description = "instance ID", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId) {
 
 		return ok(service.getInstance(municipalityId, instanceId));
 	}
@@ -78,10 +78,10 @@ class InstanceResource {
 		@ApiResponse(responseCode = "201", headers = @Header(name = LOCATION, schema = @Schema(type = "string")), description = "Successful operation", useReturnTypeSchema = true),
 	})
 	ResponseEntity<Void> createInstance(
-		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Valid @NotNull @RequestBody final Instance instance) {
 
-		return created(fromPath("/{municipalityId}/instance/{instanceId}")
+		return created(fromPath("/{municipalityId}/instances/{instanceId}")
 			.buildAndExpand(municipalityId, service.createInstance(municipalityId, instance)).toUri())
 			.header(CONTENT_TYPE, ALL_VALUE)
 			.build();
@@ -91,11 +91,10 @@ class InstanceResource {
 	@Operation(summary = "Update instance", description = "Updates an instance", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Instance not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-
 	})
 	ResponseEntity<Void> updateInstance(
-		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "instanceId", description = "instance id", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId,
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceId", description = "instance ID", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId,
 		@Valid @NotNull @RequestBody final Instance instance) {
 
 		service.updateInstance(municipalityId, instanceId, instance);
@@ -110,8 +109,8 @@ class InstanceResource {
 		@ApiResponse(responseCode = "404", description = "Instance not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
 	ResponseEntity<Void> deleteInstance(
-		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "instanceId", description = "instance id", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId) {
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceId", description = "instance ID", example = "123e4567-e89b-12d3-a456-426614174000") @ValidUuid @PathVariable final String instanceId) {
 
 		service.deleteInstance(municipalityId, instanceId);
 		return noContent()

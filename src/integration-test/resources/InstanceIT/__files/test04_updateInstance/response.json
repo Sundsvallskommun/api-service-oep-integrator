@@ -1,0 +1,13 @@
+{
+	"id": "b97977a2-fe12-4397-bc83-be5ce61e950e",
+	"integrationType": "REST",
+	"instanceType": "EXTERNAL",
+	"baseUrl": "https://new-example.com",
+	"username": "new-user123",
+	"familyIds": [
+		"new-family1",
+		"new-family2"
+	],
+	"connectTimeout": 777,
+	"readTimeout": 888
+}

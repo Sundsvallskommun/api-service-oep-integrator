@@ -1,0 +1,50 @@
+[
+	{
+		"id": "035e448c-f836-4af4-b93b-cdcc29e54d53",
+		"integrationType": "REST",
+		"instanceType": "EXTERNAL",
+		"baseUrl": "http://localhost:9090/external-oepMock",
+		"username": "admin",
+		"familyIds": [
+			"123"
+		],
+		"connectTimeout": 5,
+		"readTimeout": 60
+	},
+	{
+		"id": "0a12ddc7-535a-41b1-91df-afe60d3ce041",
+		"integrationType": "SOAP",
+		"instanceType": "EXTERNAL",
+		"baseUrl": "http://localhost:9090/external-oepMock",
+		"username": "admin",
+		"familyIds": [
+			"123"
+		],
+		"connectTimeout": 5,
+		"readTimeout": 60
+	},
+	{
+		"id": "8afe77f1-4908-4595-9d15-45119b73efc2",
+		"integrationType": "REST",
+		"instanceType": "INTERNAL",
+		"baseUrl": "http://localhost:9090/internal-oepMock",
+		"username": "admin",
+		"familyIds": [
+			"123"
+		],
+		"connectTimeout": 5,
+		"readTimeout": 60
+	},
+	{
+		"id": "b97977a2-fe12-4397-bc83-be5ce61e950e",
+		"integrationType": "SOAP",
+		"instanceType": "INTERNAL",
+		"baseUrl": "http://localhost:9090/internal-oepMock",
+		"username": "admin",
+		"familyIds": [
+			"123"
+		],
+		"connectTimeout": 5,
+		"readTimeout": 60
+	}
+]

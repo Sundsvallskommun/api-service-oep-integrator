@@ -12,13 +12,13 @@ import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeResponse;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
-import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
-import se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 import se.sundsvall.oepintegrator.integration.party.PartyClient;
-import se.sundsvall.oepintegrator.service.mapper.StatusMapper;
+import se.sundsvall.oepintegrator.service.mapper.CaseStatusMapper;
 import se.sundsvall.oepintegrator.util.enums.InstanceType;
 
 @Service
@@ -43,12 +43,12 @@ public class CaseService {
 		openeSoapIntegration.confirmDelivery(municipalityId, instanceType, toConfirmDelivery(flowInstanceId, request));
 	}
 
-	public SetStatusResponse setStatusByFlowinstanceId(final String municipalityId, final InstanceType instanceType, final SetStatusRequest request, final String flowInstanceId) {
-		return new SetStatusResponse().withEventId(openeSoapIntegration.setStatus(municipalityId, instanceType, StatusMapper.toSetStatus(request, flowInstanceId)).getEventID());
+	public CaseStatusChangeResponse setStatusByFlowinstanceId(final String municipalityId, final InstanceType instanceType, final CaseStatusChangeRequest request, final String flowInstanceId) {
+		return new CaseStatusChangeResponse().withEventId(openeSoapIntegration.setStatus(municipalityId, instanceType, CaseStatusMapper.toSetStatus(request, flowInstanceId)).getEventID());
 	}
 
-	public SetStatusResponse setStatusByExternalId(final String municipalityId, final InstanceType instanceType, final SetStatusRequest request, final String externalId, final String system) {
-		return new SetStatusResponse().withEventId(openeSoapIntegration.setStatus(municipalityId, instanceType, StatusMapper.toSetStatus(request, externalId, system)).getEventID());
+	public CaseStatusChangeResponse setStatusByExternalId(final String municipalityId, final InstanceType instanceType, final CaseStatusChangeRequest request, final String externalId, final String system) {
+		return new CaseStatusChangeResponse().withEventId(openeSoapIntegration.setStatus(municipalityId, instanceType, CaseStatusMapper.toSetStatus(request, externalId, system)).getEventID());
 	}
 
 	public List<CaseEnvelope> getCaseEnvelopeListByFamilyId(final String municipalityId, final InstanceType instanceType, final String familyId, final String status, final LocalDate fromDate, final LocalDate toDate) {

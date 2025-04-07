@@ -11,11 +11,11 @@ import static org.hamcrest.CoreMatchers.allOf;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 
-class SetStatusResponseTest {
+class CaseStatusChangeRequestTest {
 
 	@Test
 	void testBean() {
-		MatcherAssert.assertThat(SetStatusResponse.class, allOf(
+		MatcherAssert.assertThat(CaseStatusChangeRequest.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanHashCode(),
@@ -26,21 +26,26 @@ class SetStatusResponseTest {
 	@Test
 	void builder() {
 		// Arrange
-		final var eventId = 123;
+		final var id = 123;
+		final var name = "name";
+		final var principal = Principal.create().withUserId("userId").withName("name");
 
 		// Act
-		final var bean = SetStatusResponse.create()
-			.withEventId(eventId);
+		final var bean = CaseStatusChangeRequest.create()
+			.withId(id)
+			.withName(name)
+			.withPrincipal(principal);
 
 		// Assert
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
-		assertThat(bean.getEventId()).isEqualTo(eventId);
+		assertThat(bean.getId()).isEqualTo(id);
+		assertThat(bean.getName()).isEqualTo(name);
+		assertThat(bean.getPrincipal()).isEqualTo(principal);
 	}
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(SetStatusResponse.create()).hasAllNullFieldsOrProperties();
-		assertThat(new SetStatusResponse()).hasAllNullFieldsOrProperties();
+		assertThat(CaseStatusChangeRequest.create()).hasAllNullFieldsOrProperties();
+		assertThat(new CaseStatusChangeRequest()).hasAllNullFieldsOrProperties();
 	}
-
 }

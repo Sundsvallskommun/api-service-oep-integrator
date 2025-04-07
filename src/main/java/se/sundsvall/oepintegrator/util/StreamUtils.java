@@ -1,5 +1,6 @@
 package se.sundsvall.oepintegrator.util;
 
+import static java.util.Collections.emptyList;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -8,7 +9,6 @@ import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import org.springframework.core.io.InputStreamResource;
@@ -25,7 +25,7 @@ public final class StreamUtils {
 
 			final var headerSet = Set.of(LAST_MODIFIED, CONTENT_TYPE, CONTENT_DISPOSITION, CONTENT_LENGTH);
 			headerSet.forEach(header -> responseEntity.getHeaders()
-				.getOrDefault(header, List.of())
+				.getOrDefault(header, emptyList())
 				.stream()
 				.findFirst().ifPresent(value -> response.setHeader(header, value)));
 
