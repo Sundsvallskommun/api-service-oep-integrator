@@ -153,7 +153,7 @@ class WebmessageResourceTest {
 		when(webmessageService.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime)).thenReturn(List.of(webmessage));
 		// Act
 		final var result = webTestClient.get()
-			.uri(builder -> builder.path(PATH + "/{flowInstanceId}")
+			.uri(builder -> builder.path(PATH + "/cases/{flowInstanceId}")
 				.queryParam("fromDateTime", fromDateTime)
 				.queryParam("toDateTime", toDateTime)
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
@@ -183,7 +183,7 @@ class WebmessageResourceTest {
 		when(webmessageService.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, null, null)).thenReturn(List.of(webmessage));
 		// Act
 		final var result = webTestClient.get()
-			.uri(builder -> builder.path(PATH + "/{flowInstanceId}")
+			.uri(builder -> builder.path(PATH + "/cases/{flowInstanceId}")
 				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
 			.accept(APPLICATION_JSON)
 			.exchange()

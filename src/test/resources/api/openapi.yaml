@@ -572,12 +572,12 @@ paths:
                 oneOf:
                 - $ref: "#/components/schemas/Problem"
                 - $ref: "#/components/schemas/ConstraintViolationProblem"
-  /{municipalityId}/{instanceType}/webmessages/{flowInstanceId}:
+  /{municipalityId}/{instanceType}/webmessages/families/{familyId}:
     get:
       tags:
       - Webmessages
-      summary: Get all webmessages for a given errand
-      operationId: getWebmessagesByFlowInstanceId
+      summary: Get all webmessages for a familyId
+      operationId: getWebmessagesByFamilyId
       parameters:
       - name: municipalityId
         in: path
@@ -593,9 +593,9 @@ paths:
         schema:
           $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
-      - name: flowInstanceId
+      - name: familyId
         in: path
-        description: Flow instance id
+        description: Family id
         required: true
         schema:
           type: string
@@ -645,12 +645,12 @@ paths:
                 oneOf:
                 - $ref: "#/components/schemas/Problem"
                 - $ref: "#/components/schemas/ConstraintViolationProblem"
-  /{municipalityId}/{instanceType}/webmessages/families/{familyId}:
+  /{municipalityId}/{instanceType}/webmessages/cases/{flowInstanceId}:
     get:
       tags:
       - Webmessages
-      summary: Get all webmessages for a familyId
-      operationId: getWebmessagesByFamilyId
+      summary: Get all webmessages for a given case (errand)
+      operationId: getWebmessagesByFlowInstanceId
       parameters:
       - name: municipalityId
         in: path
@@ -666,9 +666,9 @@ paths:
         schema:
           $ref: "#/components/schemas/InstanceType"
         example: INTERNAL
-      - name: familyId
+      - name: flowInstanceId
         in: path
-        description: Family id
+        description: Flow instance id
         required: true
         schema:
           type: string
@@ -1102,11 +1102,11 @@ components:
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     InstanceType:
       type: string
       description: InstanceType type. INTERNAL/EXTERNAL

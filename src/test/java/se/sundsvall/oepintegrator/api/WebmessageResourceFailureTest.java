@@ -389,7 +389,7 @@ class WebmessageResourceFailureTest {
 	void getWebmessagesByFlowInstanceIdWithInvalidMunicipalityId() {
 
 		final var response = webTestClient.get()
-			.uri(PATH + ("/{flowInstanceId}"), "invalidId", INTERNAL, 123)
+			.uri(PATH + ("/cases/{flowInstanceId}"), "invalidId", INTERNAL, 123)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)

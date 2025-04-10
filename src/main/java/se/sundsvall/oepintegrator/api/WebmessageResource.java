@@ -86,8 +86,8 @@ class WebmessageResource {
 		return ok(webmessageService.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime));
 	}
 
-	@GetMapping(path = "/{flowInstanceId}", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get all webmessages for a given errand", responses = @ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true))
+	@GetMapping(path = "/cases/{flowInstanceId}", produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get all webmessages for a given case (errand)", responses = @ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true))
 	ResponseEntity<List<Webmessage>> getWebmessagesByFlowInstanceId(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "Which instanceType a message should be sent to", example = "INTERNAL") @PathVariable final InstanceType instanceType,
