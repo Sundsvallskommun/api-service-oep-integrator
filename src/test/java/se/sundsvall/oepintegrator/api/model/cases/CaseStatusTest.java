@@ -25,16 +25,20 @@ class CaseStatusTest {
 
 	@Test
 	void builder() {
+
 		// Arrange
+		final var id = 123;
 		final var name = "name";
 
 		// Act
 		final var bean = CaseStatus.create()
+			.withId(id)
 			.withName(name);
 
 		// Assert
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
-
+		assertThat(bean.getId()).isEqualTo(id);
+		assertThat(bean.getName()).isEqualTo(name);
 	}
 
 	@Test

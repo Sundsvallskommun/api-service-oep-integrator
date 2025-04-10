@@ -21,7 +21,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.zalando.problem.Problem;
-import se.sundsvall.oepintegrator.api.model.Instance;
+import se.sundsvall.oepintegrator.api.model.instance.Instance;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
@@ -219,6 +219,5 @@ class InstanceServiceTest {
 		verify(instanceRepositoryMock).findByMunicipalityIdAndId(municipalityId, instanceId);
 		verifyNoMoreInteractions(instanceRepositoryMock);
 		verifyNoInteractions(encryptionUtilityMock, clientFactoryMock);
-
 	}
 }

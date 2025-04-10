@@ -3,6 +3,8 @@ package se.sundsvall.oepintegrator.util;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Base64.Decoder;
+import java.util.Base64.Encoder;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -11,6 +13,9 @@ import se.sundsvall.oepintegrator.configuration.CredentialsProperties;
 
 @Component
 public class EncryptionUtility {
+
+	private static final Encoder BASE64_ENCODER = Base64.getEncoder();
+	private static final Decoder BASE64_DECODER = Base64.getDecoder();
 
 	private static final String ENCRYPT_ALGO = "ChaCha20-Poly1305/None/NoPadding";
 	private static final int NONCE_LEN = 12; // bytes
@@ -49,12 +54,12 @@ public class EncryptionUtility {
 		System.arraycopy(messageCipher, 0, cipherText, NONCE_LEN,
 			messageCipher.length);
 
-		return Base64.getEncoder().encodeToString(cipherText);
+		return BASE64_ENCODER.encodeToString(cipherText);
 	}
 
 	public String decrypt(final String base64Input) {
 
-		final var input = Base64.getDecoder().decode(base64Input);
+		final var input = BASE64_DECODER.decode(base64Input);
 
 		final var key = getSecretKeySpec();
 
@@ -75,7 +80,5 @@ public class EncryptionUtility {
 		} catch (final GeneralSecurityException e) {
 			throw new EncryptionException("Something went wrong decrypting input", e);
 		}
-
 	}
-
 }

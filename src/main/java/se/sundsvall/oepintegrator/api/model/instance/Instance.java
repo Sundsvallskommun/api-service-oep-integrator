@@ -1,5 +1,6 @@
-package se.sundsvall.oepintegrator.api.model;
+package se.sundsvall.oepintegrator.api.model.instance;
 
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
 import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.WRITE_ONLY;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,7 +12,7 @@ import se.sundsvall.oepintegrator.util.enums.IntegrationType;
 @Schema(description = "Instance model")
 public class Instance {
 
-	@Schema(description = "InstanceType ID", example = "123e4567-e89b-12d3-a456-426614174000")
+	@Schema(description = "InstanceType ID", accessMode = READ_ONLY, example = "123e4567-e89b-12d3-a456-426614174000")
 	private String id;
 
 	@Schema(description = "Type of integration. SOAP/REST", example = "SOAP")

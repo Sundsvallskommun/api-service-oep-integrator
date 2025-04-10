@@ -72,8 +72,9 @@ public class WebmessageRequest {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (o == null || getClass() != o.getClass())
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		final WebmessageRequest that = (WebmessageRequest) o;
 		return Objects.equals(sender, that.sender) && Objects.equals(message, that.message) && Objects.equals(externalReferences, that.externalReferences);
 	}

@@ -1,4 +1,4 @@
-package se.sundsvall.oepintegrator.api.model;
+package se.sundsvall.oepintegrator.api.model.instance;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
@@ -70,5 +70,4 @@ class InstanceTest {
 		assertThat(Instance.create()).hasAllNullFieldsOrProperties();
 		assertThat(new Instance()).hasAllNullFieldsOrProperties();
 	}
-
 }

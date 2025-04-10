@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
-import se.sundsvall.oepintegrator.api.model.Instance;
+import se.sundsvall.oepintegrator.api.model.instance.Instance;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
@@ -72,5 +72,4 @@ public class InstanceService {
 		return instanceRepository.findByMunicipalityIdAndId(municipalityId, instanceId).orElseThrow(
 			() -> Problem.valueOf(NOT_FOUND, ENTITY_NOT_FOUND.formatted(instanceId, municipalityId)));
 	}
-
 }

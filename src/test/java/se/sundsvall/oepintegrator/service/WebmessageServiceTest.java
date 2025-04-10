@@ -204,7 +204,8 @@ class WebmessageServiceTest {
 		assertThat(result).isNotNull().hasSize(2);
 		assertThat(result.getFirst().getMessageId()).isEqualTo("2");
 		verify(openeRestIntegrationMock).getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDate, toDate);
-		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
 	}
 
 	@Test
@@ -227,7 +228,8 @@ class WebmessageServiceTest {
 		assertThat(result).isNotNull().hasSize(2);
 		assertThat(result.getFirst().getMessageId()).isEqualTo("2");
 		verify(openeRestIntegrationMock).getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDate, toDate);
-		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
 	}
 
 	@Test
@@ -259,7 +261,8 @@ class WebmessageServiceTest {
 		assertThat(mockHttpServletResponse.getHeader("Content-Length")).isEqualTo("0");
 		assertThat(mockHttpServletResponse.getHeader("Last-Modified")).isEqualTo("Wed, 21 Oct 2015 07:28:00 GMT");
 		verify(openeRestIntegrationMock).getAttachmentById(municipalityId, instanceType, attachmentId);
-		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
 	}
 
 	@Test
@@ -281,6 +284,7 @@ class WebmessageServiceTest {
 			.hasFieldOrPropertyWithValue("status", INTERNAL_SERVER_ERROR)
 			.hasMessage("Internal Server Error: Unable to get attachment by ID");
 
-		verifyNoMoreInteractions(openeRestIntegrationMock, openeSoapIntegrationMock);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
 	}
 }

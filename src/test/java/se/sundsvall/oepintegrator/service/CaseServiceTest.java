@@ -36,9 +36,9 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
-import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 import se.sundsvall.oepintegrator.integration.party.PartyClient;
@@ -83,7 +83,7 @@ class CaseServiceTest {
 		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
 		final var eventId = 1234;
-		final var request = new SetStatusRequest().withStatus("status").withPrincipal(new Principal().withName("name").withUserId("userId"));
+		final var request = new CaseStatusChangeRequest().withName("statusName").withPrincipal(new Principal().withName("name").withUserId("userId"));
 		final var response = new SetStatusResponse().withEventID(eventId);
 
 		when(openeSoapIntegrationMock.setStatus(eq(municipalityId), eq(instanceType), any())).thenReturn(response);
@@ -107,7 +107,7 @@ class CaseServiceTest {
 		final var externalId = "externalId";
 		final var system = "system";
 		final var eventId = 1234;
-		final var request = new SetStatusRequest().withStatus("status").withPrincipal(new Principal().withName("name").withUserId("userId"));
+		final var request = new CaseStatusChangeRequest().withName("statusName").withPrincipal(new Principal().withName("name").withUserId("userId"));
 		final var response = new SetStatusResponse().withEventID(eventId);
 
 		when(openeSoapIntegrationMock.setStatus(eq(municipalityId), eq(instanceType), any())).thenReturn(response);

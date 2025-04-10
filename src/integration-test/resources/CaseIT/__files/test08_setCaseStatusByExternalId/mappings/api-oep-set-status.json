@@ -9,7 +9,7 @@
 		"urlPath": "/external-oepMock/api/callback"
 	},
 	"response": {
-		"bodyFileName": "test02_setStatusByExternalId/response/setStatusResponse.xml",
+		"bodyFileName": "test08_setCaseStatusByExternalId/response/setStatusResponse.xml",
 		"status": 200,
 		"headers": {
 			"Content-Type": "text/xml;charset=ISO-8859-1"

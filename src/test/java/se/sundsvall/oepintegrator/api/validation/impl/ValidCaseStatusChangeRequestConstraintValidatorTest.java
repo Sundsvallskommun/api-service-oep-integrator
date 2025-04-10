@@ -8,34 +8,34 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
 
 @ExtendWith(MockitoExtension.class)
-class ValidSetStatusRequestConstraintValidatorTest {
+class ValidCaseStatusChangeRequestConstraintValidatorTest {
 
 	@Mock
 	private ConstraintValidatorContext constraintValidatorContextMock;
 
 	@InjectMocks
-	private ValidSetStatusRequestConstraintValidator validator;
+	private ValidCaseStatusChangeRequestConstraintValidator validator;
 
 	@Test
-	void validSetStatusRequest() {
-		final var setStatusRequest = new SetStatusRequest().withStatus("status");
+	void validCaseStatusChangeRequest() {
+		final var setStatusRequest = new CaseStatusChangeRequest().withName("name");
 
 		assertThat(validator.isValid(setStatusRequest, constraintValidatorContextMock)).isTrue();
 	}
 
 	@Test
-	void validSetStatusRequestWithStatusId() {
-		final var setStatusRequest = new SetStatusRequest().withStatusId(123);
+	void validCaseStatusChangeRequestWithStatusId() {
+		final var setStatusRequest = new CaseStatusChangeRequest().withId(123);
 
 		assertThat(validator.isValid(setStatusRequest, constraintValidatorContextMock)).isTrue();
 	}
 
 	@Test
-	void invalidSetStatusRequest() {
-		final var setStatusRequest = new SetStatusRequest();
+	void invalidCaseStatusChangeRequest() {
+		final var setStatusRequest = new CaseStatusChangeRequest();
 
 		assertThat(validator.isValid(setStatusRequest, constraintValidatorContextMock)).isFalse();
 	}

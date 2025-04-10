@@ -2,7 +2,7 @@ package se.sundsvall.oepintegrator.service.mapper;
 
 import java.util.List;
 import java.util.Optional;
-import se.sundsvall.oepintegrator.api.model.Instance;
+import se.sundsvall.oepintegrator.api.model.instance.Instance;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 
 public final class InstanceMapper {
@@ -28,7 +28,7 @@ public final class InstanceMapper {
 	}
 
 	public static InstanceEntity fromInstance(final String municipalityId, final Instance instance, final String encryptedPassword) {
-		return new InstanceEntity()
+		return InstanceEntity.create()
 			.withMunicipalityId(municipalityId)
 			.withIntegrationType(instance.getIntegrationType())
 			.withInstanceType(instance.getInstanceType())
@@ -49,7 +49,7 @@ public final class InstanceMapper {
 		Optional.ofNullable(instance.getConnectTimeout()).ifPresent(entity::setConnectTimeout);
 		Optional.ofNullable(instance.getReadTimeout()).ifPresent(entity::setReadTimeout);
 		Optional.ofNullable(encryptedPassword).ifPresent(entity::setPassword);
+
 		return entity;
 	}
-
 }

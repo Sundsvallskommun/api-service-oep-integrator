@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import org.jsoup.select.Elements;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
-import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 
 public final class CaseMapper {
@@ -28,15 +27,6 @@ public final class CaseMapper {
 			.toList();
 	}
 
-	public static CaseStatus toCaseStatus(final byte[] xml) {
-		return CaseStatus.create()
-			.withName(evaluateXPath(xml, "/Status/name").text());
-	}
-
-	private static LocalDateTime parseLocalDateTime(final String value) {
-		return ofNullable(value).map(dateStr -> LocalDateTime.parse(value, OPEN_E_DATE_TIME_FORMAT)).orElse(null);
-	}
-
 	public static ConfirmDelivery toConfirmDelivery(final String flowInstanceId, final ConfirmDeliveryRequest request) {
 		return new ConfirmDelivery()
 			.withLogMessage(request.getLogMessage())
@@ -45,5 +35,9 @@ public final class CaseMapper {
 				.withSystem(request.getSystem())
 				.withID(request.getCaseId()))
 			.withFlowInstanceID(Integer.parseInt(flowInstanceId));
+	}
+
+	private static LocalDateTime parseLocalDateTime(final String value) {
+		return ofNullable(value).map(dateStr -> LocalDateTime.parse(value, OPEN_E_DATE_TIME_FORMAT)).orElse(null);
 	}
 }

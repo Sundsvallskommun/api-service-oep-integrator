@@ -1,8 +1,8 @@
 package se.sundsvall.oepintegrator.integration.opene.rest.configuration;
 
+import static feign.Logger.Level.FULL;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import feign.Logger;
 import feign.Request;
 import feign.auth.BasicAuthRequestInterceptor;
 import org.springframework.cloud.openfeign.FeignClientBuilder;
@@ -35,7 +35,7 @@ public class OpeneRestClientFactory {
 			.customize(builder -> builder
 				.errorDecoder(new ProblemErrorDecoder(clientName))
 				.requestInterceptor(new BasicAuthRequestInterceptor(instanceEntity.getUsername(), encryptionUtility.decrypt(instanceEntity.getPassword())))
-				.logLevel(Logger.Level.FULL)
+				.logLevel(FULL)
 				.dismiss404()
 				.options(new Request.Options(instanceEntity.getConnectTimeout(), SECONDS, instanceEntity.getReadTimeout(), SECONDS, true)))
 			.url(instanceEntity.getBaseUrl())

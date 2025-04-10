@@ -26,9 +26,9 @@ import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
 import se.sundsvall.oepintegrator.Application;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
-import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
 import se.sundsvall.oepintegrator.service.CaseService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
@@ -51,7 +51,7 @@ class CaseResourceFailureTest {
 	private CaseService caseServiceMock;
 
 	@Test
-	void setStatusWithFlowInstanceIdNoStatusOrStatusId() {
+	void setCaseStatusWithFlowInstanceIdNoStatusOrStatusId() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var flowInstanceId = "123";
@@ -59,7 +59,7 @@ class CaseResourceFailureTest {
 		final var name = "name";
 
 		final var principal = Principal.create().withUserId(userId).withName(name);
-		final var request = SetStatusRequest.create()
+		final var request = CaseStatusChangeRequest.create()
 			.withPrincipal(principal);
 
 		// Act
@@ -85,14 +85,14 @@ class CaseResourceFailureTest {
 	}
 
 	@Test
-	void setStatusWithFlowInstanceIdNoUserId() {
+	void setCaseStatusWithFlowInstanceIdNoUserId() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var flowInstanceId = "123";
 		final var name = "name";
 
 		final var principal = Principal.create().withName(name);
-		final var request = SetStatusRequest.create()
+		final var request = CaseStatusChangeRequest.create()
 			.withPrincipal(principal);
 
 		// Act
@@ -118,7 +118,7 @@ class CaseResourceFailureTest {
 	}
 
 	@Test
-	void setStatusWithFlowInstanceIdNoRequest() {
+	void setCaseStatusWithFlowInstanceIdNoRequest() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var flowInstanceId = "123";
@@ -138,14 +138,14 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("""
-			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse> \
-			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.util.enums.InstanceType,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
+			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeResponse> \
+			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.util.enums.InstanceType,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest)""");
 
 		verifyNoInteractions(caseServiceMock);
 	}
 
 	@Test
-	void setStatusWithExternalIdNoStatusOrStatusId() {
+	void setCaseStatusWithExternalIdNoStatusOrStatusId() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var externalId = "externalId";
@@ -154,7 +154,7 @@ class CaseResourceFailureTest {
 		final var name = "name";
 
 		final var principal = Principal.create().withUserId(userId).withName(name);
-		final var request = SetStatusRequest.create()
+		final var request = CaseStatusChangeRequest.create()
 			.withPrincipal(principal);
 
 		// Act
@@ -181,7 +181,7 @@ class CaseResourceFailureTest {
 	}
 
 	@Test
-	void setStatusWithExternalIdNoUserId() {
+	void setCaseStatusWithExternalIdNoUserId() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var externalId = "externalId";
@@ -189,7 +189,7 @@ class CaseResourceFailureTest {
 		final var name = "name";
 
 		final var principal = Principal.create().withName(name);
-		final var request = SetStatusRequest.create()
+		final var request = CaseStatusChangeRequest.create()
 			.withPrincipal(principal);
 
 		// Act
@@ -216,7 +216,7 @@ class CaseResourceFailureTest {
 	}
 
 	@Test
-	void setStatusWithExternalIdNoRequest() {
+	void setCaseStatusWithExternalIdNoRequest() {
 		// Arrange
 		final var municipalityId = "2281";
 		final var externalId = "externalId";
@@ -238,9 +238,9 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo("""
-			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse> \
+			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeResponse> \
 			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.util.enums.InstanceType,java.lang.String,java.lang.String,\
-			se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest)""");
+			se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest)""");
 
 		verifyNoInteractions(caseServiceMock);
 	}

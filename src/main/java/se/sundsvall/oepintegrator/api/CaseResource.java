@@ -32,10 +32,10 @@ import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeResponse;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
-import se.sundsvall.oepintegrator.api.model.cases.SetStatusRequest;
-import se.sundsvall.oepintegrator.api.model.cases.SetStatusResponse;
-import se.sundsvall.oepintegrator.api.validation.ValidSetStatusRequest;
+import se.sundsvall.oepintegrator.api.validation.ValidCaseStatusChangeRequest;
 import se.sundsvall.oepintegrator.service.CaseService;
 import se.sundsvall.oepintegrator.util.enums.InstanceType;
 
@@ -47,7 +47,7 @@ import se.sundsvall.oepintegrator.util.enums.InstanceType;
 })))
 @ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 @ApiResponse(responseCode = "502", description = "Bad gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-@Tag(name = "Case", description = "Operations on case")
+@Tag(name = "Cases", description = "Operations on case")
 class CaseResource {
 
 	private final CaseService caseService;
@@ -87,30 +87,30 @@ class CaseResource {
 	}
 
 	@PutMapping(value = "/{flowInstanceId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Set status", description = "Sets status of a case", responses = {
+	@Operation(summary = "Set case status", description = "Set case status by flowInstanceId", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
-	ResponseEntity<SetStatusResponse> setStatus(
+	ResponseEntity<CaseStatusChangeResponse> setStatus(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "flowInstanceId", description = "flow-instance ID", example = "112233") @PathVariable final String flowInstanceId,
-		@NotNull @ValidSetStatusRequest @RequestBody final SetStatusRequest setStatusRequest) {
+		@NotNull @ValidCaseStatusChangeRequest @RequestBody final CaseStatusChangeRequest setStatusRequest) {
 
 		return ok(caseService.setStatusByFlowinstanceId(municipalityId, instanceType, setStatusRequest, flowInstanceId));
 	}
 
 	@PutMapping(value = "/systems/{system}/{externalId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Set status", description = "Sets status of a case", responses = {
+	@Operation(summary = "Set case status", description = "Set case status by externalId", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
 		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	})
-	ResponseEntity<SetStatusResponse> setStatus(
+	ResponseEntity<CaseStatusChangeResponse> setStatus(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
 		@Parameter(name = "system", description = "The system where external ID exists", example = "CaseData") @PathVariable final String system,
 		@Parameter(name = "externalId", description = "Case ID in specified system", example = "234") @PathVariable final String externalId,
-		@NotNull @ValidSetStatusRequest @RequestBody final SetStatusRequest setStatusRequest) {
+		@NotNull @ValidCaseStatusChangeRequest @RequestBody final CaseStatusChangeRequest setStatusRequest) {
 
 		return ok(caseService.setStatusByExternalId(municipalityId, instanceType, setStatusRequest, system, externalId));
 	}

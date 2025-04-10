@@ -20,14 +20,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.oepintegrator.Application;
-import se.sundsvall.oepintegrator.api.model.Instance;
+import se.sundsvall.oepintegrator.api.model.instance.Instance;
 import se.sundsvall.oepintegrator.service.InstanceService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
 class InstanceResourceTest {
 
-	private static final String PATH = "/{municipalityId}/instance";
+	private static final String PATH = "/{municipalityId}/instances";
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -153,7 +153,7 @@ class InstanceResourceTest {
 			.exchange()
 			.expectStatus().isCreated()
 			.expectHeader().contentType(ALL)
-			.expectHeader().location("/" + municipalityId + "/instance/" + instanceId)
+			.expectHeader().location("/" + municipalityId + "/instances/" + instanceId)
 			.expectBody().isEmpty();
 
 		// Assert

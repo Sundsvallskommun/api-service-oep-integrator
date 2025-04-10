@@ -4,7 +4,9 @@ import static java.text.MessageFormat.format;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.PUT;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
@@ -33,10 +35,13 @@ import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 })
 class CaseIT extends AbstractAppTest {
 
+	private static final String REQUEST_FILE = "request.json";
 	private static final String RESPONSE_FILE = "response.json";
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{0}/{1}/cases/families/{2}";
 	private static final String PATH_GET_CASES_BY_PARTY_ID = "/{0}/{1}/cases/parties/{2}";
 	private static final String PATH_GET_CASE_ATTACHMENT = "/{0}/{1}/cases/{2}/queries/{3}/files/{4}";
+	private static final String PATH_SET_STATUS_BY_FLOW_INSTANCE_ID = "/{0}/{1}/cases/{2}/status";
+	private static final String PATH_SET_STATUS_BY_EXTERNAL_ID = "/{0}/{1}/cases/systems/{2}/{3}/status";
 	private static final String MUNICIPALITY_ID = "2281";
 	private static final String FAMILY_ID = "123";
 	private static final String STATUS = "TheStatus";
@@ -112,6 +117,32 @@ class CaseIT extends AbstractAppTest {
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(IMAGE_PNG_VALUE))
 			.withExpectedBinaryResponse("response/picture.png")
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test07_setCaseStatusByFlowinstanceId() {
+		setupCall()
+			.withHttpMethod(PUT)
+			.withServicePath(format(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID, MUNICIPALITY_ID, EXTERNAL, "12345"))
+			.withContentType(APPLICATION_JSON)
+			.withRequest(REQUEST_FILE)
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test08_setCaseStatusByExternalId() {
+		setupCall()
+			.withHttpMethod(PUT)
+			.withServicePath(format(PATH_SET_STATUS_BY_EXTERNAL_ID, MUNICIPALITY_ID, EXTERNAL, "System", "externalId"))
+			.withContentType(APPLICATION_JSON)
+			.withRequest(REQUEST_FILE)
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
 }

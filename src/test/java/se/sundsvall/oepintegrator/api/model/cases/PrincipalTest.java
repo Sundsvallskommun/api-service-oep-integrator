@@ -42,7 +42,7 @@ class PrincipalTest {
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(SetStatusRequest.create()).hasAllNullFieldsOrPropertiesExcept("statusId");
-		assertThat(new SetStatusRequest()).hasAllNullFieldsOrPropertiesExcept("statusId");
+		assertThat(CaseStatusChangeRequest.create()).hasAllNullFieldsOrPropertiesExcept("statusId");
+		assertThat(new CaseStatusChangeRequest()).hasAllNullFieldsOrPropertiesExcept("statusId");
 	}
 }

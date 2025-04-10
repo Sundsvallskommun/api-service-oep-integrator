@@ -24,7 +24,6 @@ public final class MessageMapper {
 	private MessageMapper() {}
 
 	public static AddMessage toAddMessage(final WebmessageRequest request, final Integer flowInstanceId, final List<MultipartFile> attachments) {
-
 		final IntegrationMessage integrationMessage;
 		try {
 			integrationMessage = new IntegrationMessage()
@@ -41,11 +40,9 @@ public final class MessageMapper {
 			.withPrincipal(Optional.ofNullable(request.getSender().getUserId())
 				.map(value -> new Principal().withUserID(value))
 				.orElse(null));
-
 	}
 
 	public static AddMessageAsOwner toAddMessageAsOwner(final WebmessageRequest request, final String legalId, final Integer flowInstanceId, final List<MultipartFile> attachments) {
-
 		final IntegrationMessage integrationMessage;
 		try {
 			integrationMessage = new IntegrationMessage()
@@ -71,7 +68,6 @@ public final class MessageMapper {
 	}
 
 	static Attachment toAttachment(final MultipartFile attachment) {
-
 		try {
 			return new Attachment()
 				.withEncodedData(attachment.getBytes())

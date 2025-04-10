@@ -127,7 +127,7 @@ class WebmessageIT extends AbstractAppTest {
 	void test07_getWebmessagesByFlowInstanceId() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/flow-instances/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "102251", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
+			.withServicePath(format(PATH + ("/cases/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "102251", LocalDateTime.now().minusDays(7), LocalDateTime.now()))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
@@ -137,7 +137,7 @@ class WebmessageIT extends AbstractAppTest {
 	void test08_getWebmessagesByFlowInstanceId_emptyResult() {
 		setupCall()
 			.withHttpMethod(GET)
-			.withServicePath(format(PATH + ("/flow-instances/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "102255", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
+			.withServicePath(format(PATH + ("/cases/{2}?fromDateTime={3}&toDateTime={4}"), MUNICIPALITY_ID, EXTERNAL, "102255", LocalDateTime.now().plusDays(1), LocalDateTime.now().plusDays(2)))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
