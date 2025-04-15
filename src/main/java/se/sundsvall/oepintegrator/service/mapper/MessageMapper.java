@@ -37,7 +37,7 @@ public final class MessageMapper {
 		return new AddMessage()
 			.withFlowInstanceID(flowInstanceId)
 			.withMessage(integrationMessage)
-			.withPrincipal(Optional.ofNullable(request.getSender().getUserId())
+			.withPrincipal(Optional.ofNullable(request.getSender().getAdministratorId())
 				.map(value -> new Principal().withUserID(value))
 				.orElse(null));
 	}

@@ -20,7 +20,7 @@ class MessageMapperTest {
 	@Test
 	void toAddMessage() {
 		// Arrange
-		final var sender = Sender.create().withUserId("userId");
+		final var sender = Sender.create().withAdministratorId("administratorId");
 		final var message = "message";
 		final List<MultipartFile> attachments = List.of(new MockMultipartFile("attachment", "file.txt", "text/plain", "some content".getBytes()));
 		final var request = WebmessageRequest.create()
@@ -38,7 +38,7 @@ class MessageMapperTest {
 		assertThat(result.getMessage().getMessage()).isEqualTo(message);
 		assertThat(result.getMessage().getAttachments()).hasSize(1);
 		assertThat(result.getPrincipal()).isNotNull();
-		assertThat(result.getPrincipal().getUserID()).isEqualTo(sender.getUserId());
+		assertThat(result.getPrincipal().getUserID()).isEqualTo(sender.getAdministratorId());
 	}
 
 	@Test
@@ -65,7 +65,7 @@ class MessageMapperTest {
 		// Act & Assert
 		assertThatThrownBy(() -> MessageMapper.toAddMessage(request, flowInstanceId, attachments))
 			.isInstanceOf(NullPointerException.class)
-			.hasMessage("Cannot invoke \"se.sundsvall.oepintegrator.api.model.webmessage.Sender.getUserId()\" because the return value of \"se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest.getSender()\" is null");
+			.hasMessage("Cannot invoke \"se.sundsvall.oepintegrator.api.model.webmessage.Sender.getAdministratorId()\" because the return value of \"se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest.getSender()\" is null");
 
 	}
 
