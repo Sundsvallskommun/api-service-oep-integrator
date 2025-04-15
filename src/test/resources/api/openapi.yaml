@@ -928,7 +928,7 @@ paths:
         required: true
         schema:
           type: string
-        example: 123
+        example: 5d68eb00-d8da-49a0-a6b5-8d395be34a5e
       - name: fromDate
         in: query
         description: Filter cases on fromDate
@@ -1095,18 +1095,18 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
     StatusType:
       type: object
       properties:
-        reasonPhrase:
-          type: string
         statusCode:
           type: integer
           format: int32
+        reasonPhrase:
+          type: string
     InstanceType:
       type: string
       description: InstanceType type. INTERNAL/EXTERNAL
@@ -1266,9 +1266,9 @@ components:
             type: object
         status:
           $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
         title:
+          type: string
+        detail:
           type: string
         suppressed:
           type: array

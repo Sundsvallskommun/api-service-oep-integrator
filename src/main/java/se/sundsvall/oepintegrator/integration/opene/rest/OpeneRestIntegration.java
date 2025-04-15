@@ -46,13 +46,13 @@ public class OpeneRestIntegration {
 
 	public List<Webmessage> getWebmessagesByFamilyId(final String municipalityId, final InstanceType instanceType, final String familyId, final LocalDateTime fromDateTime, final LocalDateTime toDateTime) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-		final var messages = client.getWebmessagesByFamilyId(familyId, fromDateTime.format(OPEN_E_DATE_TIME_FORMAT), toDateTime.format(OPEN_E_DATE_TIME_FORMAT));
+		final var messages = client.getWebmessagesByFamilyId(familyId, formatLocalDateTime(fromDateTime), formatLocalDateTime(toDateTime));
 		return toWebmessages(municipalityId, messages, familyId, instanceType);
 	}
 
 	public List<Webmessage> getWebmessagesByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final LocalDateTime fromDateTime, final LocalDateTime toDateTime) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-		final var messages = client.getWebmessagesByFlowInstanceId(flowInstanceId, fromDateTime.format(OPEN_E_DATE_TIME_FORMAT), toDateTime.format(OPEN_E_DATE_TIME_FORMAT));
+		final var messages = client.getWebmessagesByFlowInstanceId(flowInstanceId, formatLocalDateTime(fromDateTime), formatLocalDateTime(toDateTime));
 		return toWebmessages(municipalityId, messages, instanceType);
 	}
 
@@ -88,6 +88,10 @@ public class OpeneRestIntegration {
 
 	private String formatLocalDate(final LocalDate localDate) {
 		return ofNullable(localDate).map(date -> date.format(ISO_LOCAL_DATE)).orElse(null);
+	}
+
+	private String formatLocalDateTime(final LocalDateTime localDateTime) {
+		return ofNullable(localDateTime).map(date -> date.format(OPEN_E_DATE_TIME_FORMAT)).orElse(null);
 	}
 
 	private <T> ResponseEntity<T> validateResponse(final ResponseEntity<T> response, final String errorMessage) {
