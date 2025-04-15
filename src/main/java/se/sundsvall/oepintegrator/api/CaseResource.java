@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
+import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
@@ -78,7 +79,7 @@ class CaseResource {
 	ResponseEntity<List<CaseEnvelope>> getCasesByPartyId(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
-		@Parameter(name = "partyId", description = "The party ID", example = "123") @PathVariable final String partyId,
+		@Parameter(name = "partyId", description = "The party ID", example = "5d68eb00-d8da-49a0-a6b5-8d395be34a5e") @ValidUuid @PathVariable final String partyId,
 		@Parameter(name = "fromDate", description = "Filter cases on fromDate", example = "2024-01-01") @RequestParam(value = "fromDate", required = false) final LocalDate fromDate,
 		@Parameter(name = "toDate", description = "Filter cases on toDate", example = "2024-01-31") @RequestParam(value = "toDate", required = false) final LocalDate toDate,
 		@Parameter(name = "status", description = "Filter by status", example = "Preliminär") @RequestParam(value = "status", required = false) final String status) {

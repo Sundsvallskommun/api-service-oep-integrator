@@ -1,6 +1,7 @@
 package se.sundsvall.oepintegrator.api;
 
 import static java.time.LocalDate.now;
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -183,7 +184,7 @@ class CaseResourceTest {
 		// Arrange
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
-		final var partyId = "partyId";
+		final var partyId = randomUUID().toString();
 		final var status = "status";
 		final var fromDate = now();
 		final var toDate = now();

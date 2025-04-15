@@ -1,5 +1,6 @@
 package se.sundsvall.oepintegrator.api;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.ArgumentMatchers.any;
@@ -272,7 +273,7 @@ class CaseResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.get()
-			.uri(PATH_GET_CASES_BY_PARTY_ID, "invalidId", INTERNAL, 123)
+			.uri(PATH_GET_CASES_BY_PARTY_ID, "invalidId", INTERNAL, randomUUID().toString())
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -285,6 +286,30 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getCasesByPartyId.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(caseServiceMock);
+	}
+
+	@Test
+	void getCasesByPartyIdWithInvalidPartyId() {
+		// Arrange
+		final var municipalityId = "2281";
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(PATH_GET_CASES_BY_PARTY_ID, municipalityId, INTERNAL, 123)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getCasesByPartyId.partyId", "not a valid UUID"));
 
 		verifyNoInteractions(caseServiceMock);
 	}
