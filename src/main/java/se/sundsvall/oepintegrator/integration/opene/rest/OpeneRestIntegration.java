@@ -90,7 +90,7 @@ public class OpeneRestIntegration {
 		return ofNullable(localDate).map(date -> date.format(ISO_LOCAL_DATE)).orElse(null);
 	}
 
-	private String formatLocalDateTime(final LocalDateTime localDateTime) {
+	String formatLocalDateTime(final LocalDateTime localDateTime) {
 		return ofNullable(localDateTime).map(date -> date.format(OPEN_E_DATE_TIME_FORMAT)).orElse(null);
 	}
 
