@@ -1139,6 +1139,7 @@ components:
           description: The name
           example: John Doe
         userId:
+          minLength: 1
           type: string
           description: The user id
           example: joh12doe
@@ -1358,6 +1359,7 @@ components:
         sender:
           $ref: "#/components/schemas/Sender"
         message:
+          minLength: 1
           type: string
           description: The message
           example: This is a message
@@ -1367,12 +1369,10 @@ components:
             $ref: "#/components/schemas/ExternalReference"
       description: Webmessage request model
     ConfirmDeliveryRequest:
-      required:
-      - caseId
-      - system
       type: object
       properties:
         caseId:
+          minLength: 1
           type: string
           description: The case id in the system that delivered the case. From Open-E
             Platforms perspective this is the 'external case id
@@ -1386,6 +1386,7 @@ components:
           description: Any log message
           example: The case was delivered successfully
         system:
+          minLength: 1
           type: string
           description: The system that delivered the case
           example: ByggR
