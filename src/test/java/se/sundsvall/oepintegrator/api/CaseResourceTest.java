@@ -13,6 +13,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 import jakarta.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import se.sundsvall.oepintegrator.Application;
+import se.sundsvall.oepintegrator.api.model.cases.Case;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
+import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeResponse;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
@@ -289,6 +292,46 @@ class CaseResourceTest {
 			.expectStatus().isOk();
 
 		verify(caseServiceMock).getCaseAttachment(eq(municipalityId), eq(instanceType), eq(flowInstanceId), eq(queryId), eq(fileId), any(HttpServletResponse.class));
+		verifyNoMoreInteractions(caseServiceMock);
+	}
+
+	@Test
+	void getCaseByFlowInstanceId() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+		final var familyId = "familyId";
+		final var version = 1;
+		final var flowId = "flowId";
+		final var title = "title";
+		final var status = CaseStatus.create();
+		final var created = LocalDateTime.now();
+		final var payload = "payload";
+
+		when(caseServiceMock.getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId)).thenReturn(Case.create()
+			.withFlowInstanceId(flowInstanceId)
+			.withFamilyId(familyId)
+			.withVersion(version)
+			.withFlowId(flowId)
+			.withTitle(title)
+			.withStatus(status)
+			.withCreated(created)
+			.withPayload(payload));
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/{flowInstanceId}").build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "flowInstanceId", flowInstanceId)))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(Case.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull().hasNoNullFieldsOrProperties();
+		verify(caseServiceMock).getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
 		verifyNoMoreInteractions(caseServiceMock);
 	}
 }

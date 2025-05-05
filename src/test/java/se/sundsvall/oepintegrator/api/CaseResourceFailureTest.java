@@ -44,6 +44,7 @@ class CaseResourceFailureTest {
 	private static final String PATH_GET_CASE_PDF_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/pdf";
 	private static final String PATH_GET_CASE_STATUS_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/status";
 	private static final String PATH_GET_CASE_ATTACHMENT = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/queries/{queryId}/files/{fileId}";
+	private static final String PATH_GET_CASE = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}";
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -461,6 +462,7 @@ class CaseResourceFailureTest {
 		verifyNoInteractions(caseServiceMock);
 	}
 
+	@Test
 	void getCaseAttachmentWithInvalidMunicipalityId() {
 
 		// Act
@@ -481,4 +483,54 @@ class CaseResourceFailureTest {
 
 		verifyNoInteractions(caseServiceMock);
 	}
+
+	@Test
+	void getCaseWithInvalidMunicipalityId() {
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(builder -> builder.path(PATH_GET_CASE).build(Map.of("municipalityId", "invalidId", "instanceType", INTERNAL, "flowInstanceId", 123)))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getCaseByFlowInstanceId.municipalityId", "not a valid municipality ID"));
+		verifyNoInteractions(caseServiceMock);
+	}
+
+	@Test
+	void getCaseNotFound() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var flowInstanceId = "123";
+
+		doThrow(Problem.valueOf(NOT_FOUND, "Case with flow instance ID '123' not found"))
+			.when(caseServiceMock).getCaseByFlowInstanceId(municipalityId, INTERNAL, flowInstanceId);
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(builder -> builder.path(PATH_GET_CASE).build(Map.of("municipalityId", municipalityId, "instanceType", INTERNAL, "flowInstanceId", flowInstanceId)))
+			.exchange()
+			.expectStatus().isNotFound()
+			.expectBody(Problem.class)
+			.returnResult().getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Not Found");
+		assertThat(response.getStatus()).isEqualTo(NOT_FOUND);
+		assertThat(response.getDetail()).isEqualTo("Case with flow instance ID '123' not found");
+
+		verify(caseServiceMock).getCaseByFlowInstanceId(municipalityId, INTERNAL, flowInstanceId);
+		verifyNoMoreInteractions(caseServiceMock);
+	}
+
 }
