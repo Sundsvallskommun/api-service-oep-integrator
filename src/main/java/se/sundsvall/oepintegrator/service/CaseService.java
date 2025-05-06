@@ -75,6 +75,6 @@ public class CaseService {
 	}
 
 	public Case getCaseByFlowInstanceId(@ValidMunicipalityId final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
-		return null;
+		return openeRestIntegration.getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
 	}
 }

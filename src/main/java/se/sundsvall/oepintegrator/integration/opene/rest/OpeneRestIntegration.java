@@ -4,6 +4,7 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Optional.ofNullable;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessages;
+import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCase;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseEnvelopeList;
 import static se.sundsvall.oepintegrator.service.mapper.CaseStatusMapper.toCaseStatus;
 import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
+import se.sundsvall.oepintegrator.api.model.cases.Case;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
@@ -84,6 +86,11 @@ public class OpeneRestIntegration {
 	public ResponseEntity<InputStreamResource> getCaseAttachment(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final String queryId, final String fileId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
 		return validateResponse(client.getCaseAttachment(flowInstanceId, queryId, fileId), "Failed to get case attachment");
+	}
+
+	public Case getCaseByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
+		final var client = clientFactory.getRestClient(municipalityId, instanceType);
+		return toCase(client.getCaseXmlByFlowInstanceId(flowInstanceId).orElseThrow(() -> Problem.valueOf(NOT_FOUND, "No case found for flow instance ID: '%s'".formatted(flowInstanceId))));
 	}
 
 	private String formatLocalDate(final LocalDate localDate) {

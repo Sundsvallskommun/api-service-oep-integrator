@@ -145,4 +145,15 @@ class CaseIT extends AbstractAppTest {
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
+
+	@Test
+	void test09_getCaseXml() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(format("/{0}/{1}/cases/{2}", MUNICIPALITY_ID, EXTERNAL, "123456789"))
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
 }
