@@ -57,4 +57,7 @@ public interface OpeneRestClient extends OpeneClient {
 		@PathVariable(name = "flowInstanceId") String flowInstanceId,
 		@PathVariable(name = "queryId") String queryId,
 		@PathVariable(name = "fileId") String fileId);
+
+	@GetMapping(path = "/api/instanceapi/getinstance/{flowInstanceId}/xml")
+	Optional<byte[]> getCaseXmlByFlowInstanceId(@PathVariable("flowInstanceId") String flowInstanceId);
 }
