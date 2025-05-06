@@ -1,0 +1,14 @@
+{
+	"request": {
+		"method": "GET",
+		"urlPath": "/external-oepMock/api/instanceapi/getinstance/123456789/xml"
+	},
+	"response": {
+		"bodyFileName": "test09_getCaseXml/response/case.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		}
+	},
+	"name": "api-oep-get-case-xml"
+}

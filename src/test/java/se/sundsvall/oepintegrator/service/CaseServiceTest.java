@@ -34,6 +34,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.zalando.problem.Problem;
+import se.sundsvall.oepintegrator.api.model.cases.Case;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
@@ -351,6 +352,49 @@ class CaseServiceTest {
 			.hasMessage("Internal Server Error: Unable to get case attachment");
 
 		verify(openeRestIntegrationMock).getCaseAttachment(municipalityId, instanceType, flowInstanceId, queryId, fileId);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getCaseByFlowInstanceId() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+		final var expectedCase = new Case();
+
+		when(openeRestIntegrationMock.getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId)).thenReturn(expectedCase);
+
+		// Act
+		final var result = caseService.getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
+
+		// Assert
+		assertThat(result).isEqualTo(expectedCase);
+
+		verify(openeRestIntegrationMock).getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getCaseByFlowInstanceIdThrowsException() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+
+		when(openeRestIntegrationMock.getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId)).thenThrow(Problem.valueOf(INTERNAL_SERVER_ERROR, "Unable to get case by flow instance ID"));
+
+		// Act & Assert
+		assertThatThrownBy(() -> caseService.getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId))
+			.isInstanceOf(Problem.class)
+			.hasFieldOrPropertyWithValue("status", INTERNAL_SERVER_ERROR)
+			.hasMessage("Internal Server Error: Unable to get case by flow instance ID");
+
+		verify(openeRestIntegrationMock).getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
 		verifyNoMoreInteractions(openeRestIntegrationMock);
 		verifyNoInteractions(openeSoapIntegrationMock);
 	}
