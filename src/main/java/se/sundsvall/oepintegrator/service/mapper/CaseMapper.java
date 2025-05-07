@@ -3,6 +3,7 @@ package se.sundsvall.oepintegrator.service.mapper;
 import static java.util.Optional.ofNullable;
 import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
 import static se.sundsvall.oepintegrator.util.XPathUtil.evaluateXPath;
+import static se.sundsvall.oepintegrator.util.XPathUtil.parseXmlDocument;
 
 import callback.ConfirmDelivery;
 import callback.ExternalID;
@@ -56,6 +57,6 @@ public final class CaseMapper {
 				.withId(Integer.valueOf(evaluateXPath(xml, "/FlowInstance/Header/Status/ID").text()))
 				.withName(evaluateXPath(xml, "/FlowInstance/Header/Status/Name").text()))
 			.withCreated(LocalDateTime.parse(evaluateXPath(xml, "/FlowInstance/Header/Posted").text()))
-			.withPayload("\"" + evaluateXPath(xml, "/FlowInstance/Values").toString() + "\"");
+			.withPayload(parseXmlDocument(xml).toString());
 	}
 }

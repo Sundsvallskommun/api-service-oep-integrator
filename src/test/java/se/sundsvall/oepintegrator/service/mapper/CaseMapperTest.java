@@ -197,8 +197,7 @@ class CaseMapperTest {
 						<Datum_till><![CDATA[2024-12-20]]></Datum_till>
 					</sickNotePeriodRow2>
 				</Values>
-			</FlowInstance>
-			""";
+			</FlowInstance>""";
 
 		// Act
 		final var result = CaseMapper.toCase(xml.getBytes(StandardCharsets.ISO_8859_1));
@@ -213,83 +212,6 @@ class CaseMapperTest {
 		assertThat(result.getStatus().getName()).isEqualTo("Preliminär");
 		assertThat(result.getStatus().getId()).isEqualTo(17453);
 		assertThat(result.getCreated()).isEqualTo(LocalDateTime.parse("2024-12-05T21:41:45"));
-		assertThat(result.getPayload().trim()).isEqualTo("""
-			"<Values>
-					<applicant>
-						<QueryID>66864</QueryID>
-						<Name><![CDATA[Anmälare]]></Name>
-						<firstname><![CDATA[Namn]]></firstname>
-						<lastname><![CDATA[Efternamn]]></lastname>
-						<username><![CDATA[nam99eft]]></username>
-						<email><![CDATA[namn.efternamn@sundsvall.se]]></email>
-						<phone><![CDATA[060-192306]]></phone>
-						<title><![CDATA[Enhetschef]]></title>
-						<organization><![CDATA[VOF MYN Ledning]]></organization>
-					</applicant>
-					<administrativeUnit>
-						<QueryID>66866</QueryID>
-						<Name><![CDATA[I vilken förvaltning/verksamhet arbetar medarbetaren?]]></Name>
-						<Value>vof</Value>
-					</administrativeUnit>
-					<employmentType>
-						<QueryID>66867</QueryID>
-						<Name><![CDATA[Gäller det sjukfrånvaro för en]]></Name>
-						<Value>Månadsavlönad</Value>
-					</employmentType>
-					<employeeData>
-						<QueryID>66875</QueryID>
-						<Name><![CDATA[Vilken anställd gäller det?]]></Name>
-						<firstname><![CDATA[Namn]]></firstname>
-						<lastname><![CDATA[Efternamn]]></lastname>
-						<username><![CDATA[nam00eft]]></username>
-						<citizenIdentifier><![CDATA[************]]></citizenIdentifier>
-						<title><![CDATA[Biståndshandläggare]]></title>
-						<organization><![CDATA[VOF MYN LSS Biståndshandl.]]></organization>
-						<formOfEmployment><![CDATA[Tillsvidare                   ]]></formOfEmployment>
-					</employeeData>
-					<employeeTitle>
-						<QueryID>66879</QueryID>
-						<Name><![CDATA[Medarbetarens befattningar]]></Name>
-						<Value>Biståndshandläggare</Value>
-					</employeeTitle>
-					<absentNewOld>
-						<QueryID>66895</QueryID>
-						<Name><![CDATA[Sjukfrånvaro avser]]></Name>
-						<Value>Ny sjukfrånvaro</Value>
-					</absentNewOld>
-					<absentDateFrom>
-						<QueryID>66896</QueryID>
-						<Name><![CDATA[Datum första sjukdag]]></Name>
-						<StartDate>2024-11-30</StartDate>
-					</absentDateFrom>
-					<sickNotePeriod>
-						<QueryID>66897</QueryID>
-						<Name><![CDATA[Antal sjukskrivningsperioder i sjukintyget:]]></Name>
-						<Value>2</Value>
-					</sickNotePeriod>
-					<sickNotePercentRow1>
-						<QueryID>66900</QueryID>
-						<Name><![CDATA[Omfattning på sjukfrånvaro enligt läkarintyg]]></Name>
-						<Value>100%</Value>
-					</sickNotePercentRow1>
-					<sickNotePeriodRow1>
-						<QueryID>66901</QueryID>
-						<Name><![CDATA[Sjukskrivningsperioden from tom]]></Name>
-						<Datum_fran><![CDATA[2024-11-30]]></Datum_fran>
-						<Datum_till><![CDATA[2024-12-08]]></Datum_till>
-					</sickNotePeriodRow1>
-					<sickNotePercentRow2>
-						<QueryID>66909</QueryID>
-						<Name><![CDATA[Omfattning på sjukfrånvaro enligt läkarintyg]]></Name>
-						<Value>50%</Value>
-					</sickNotePercentRow2>
-					<sickNotePeriodRow2>
-						<QueryID>66910</QueryID>
-						<Name><![CDATA[Sjukskrivningsperioden from tom]]></Name>
-						<Datum_fran><![CDATA[2024-12-09]]></Datum_fran>
-						<Datum_till><![CDATA[2024-12-20]]></Datum_till>
-					</sickNotePeriodRow2>
-				</Values>"
-			""".trim());
+		assertThat(result.getPayload().trim()).isEqualTo(xml);
 	}
 }
