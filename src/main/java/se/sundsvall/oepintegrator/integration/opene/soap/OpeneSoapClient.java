@@ -18,17 +18,17 @@ import se.sundsvall.oepintegrator.integration.opene.OpeneClient;
 @CircuitBreaker(name = "open-e-soap")
 public interface OpeneSoapClient extends OpeneClient {
 
-	String TEXT_XML_CHARSET_ISO_8859_1 = "text/xml; charset=ISO-8859-1";
+	String TEXT_XML_UTF_8 = "text/xml; charset=UTF-8";
 
-	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
+	@PostMapping(path = "/api/callback", consumes = TEXT_XML_UTF_8, produces = TEXT_XML_UTF_8)
 	void confirmDelivery(@RequestBody ConfirmDelivery confirmDelivery);
 
-	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
+	@PostMapping(path = "/api/callback", consumes = TEXT_XML_UTF_8, produces = TEXT_XML_UTF_8)
 	AddMessageResponse addMessage(@RequestBody final AddMessage addMessage);
 
-	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
+	@PostMapping(path = "/api/callback", consumes = TEXT_XML_UTF_8, produces = TEXT_XML_UTF_8)
 	AddMessageAsOwnerResponse addMessageAsOwner(@RequestBody final AddMessageAsOwner addMessageAsOwner);
 
-	@PostMapping(path = "/api/callback", consumes = TEXT_XML_CHARSET_ISO_8859_1, produces = TEXT_XML_CHARSET_ISO_8859_1)
+	@PostMapping(path = "/api/callback", consumes = TEXT_XML_UTF_8, produces = TEXT_XML_UTF_8)
 	SetStatusResponse setStatus(@RequestBody SetStatus setStatus);
 }

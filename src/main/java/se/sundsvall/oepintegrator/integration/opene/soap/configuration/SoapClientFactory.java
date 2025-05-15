@@ -2,7 +2,7 @@ package se.sundsvall.oepintegrator.integration.opene.soap.configuration;
 
 import static feign.Logger.Level.FULL;
 import static jakarta.xml.soap.SOAPConstants.SOAP_1_1_PROTOCOL;
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import feign.Request;
@@ -23,10 +23,10 @@ import se.sundsvall.oepintegrator.util.EncryptionUtility;
 public class SoapClientFactory {
 
 	private static final JAXBContextFactory JAXB_FACTORY = new JAXBContextFactory.Builder()
-		.withMarshallerJAXBEncoding(ISO_8859_1.toString())
+		.withMarshallerJAXBEncoding(UTF_8.toString())
 		.build();
 	private static final SOAPEncoder.Builder ENCODER_BUILDER = new SOAPEncoder.Builder()
-		.withCharsetEncoding(ISO_8859_1)
+		.withCharsetEncoding(UTF_8)
 		.withFormattedOutput(false)
 		.withJAXBContextFactory(JAXB_FACTORY)
 		.withSOAPProtocol(SOAP_1_1_PROTOCOL)
