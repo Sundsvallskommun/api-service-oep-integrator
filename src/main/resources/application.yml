@@ -15,7 +15,3 @@ spring:
           party:
             authorization-grant-type: client_credentials
             provider: party
-turkraft:
-  springfilter:
-    offsetdatetimeformatter:
-      pattern: yyyy-MM-dd'T'HH:mm:ss.SSSXXX

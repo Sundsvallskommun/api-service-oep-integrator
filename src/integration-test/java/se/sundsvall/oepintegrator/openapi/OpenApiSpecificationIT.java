@@ -1,11 +1,14 @@
 package se.sundsvall.oepintegrator.openapi;
 
+import static java.nio.file.Files.writeString;
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static net.javacrumbs.jsonunit.core.Option.IGNORING_ARRAY_ORDER;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +44,11 @@ class OpenApiSpecificationIT {
 	private TestRestTemplate restTemplate;
 
 	@Test
-	void compareOpenApiSpecifications() {
+	void compareOpenApiSpecifications() throws IOException {
 		final String existingOpenApiSpecification = ResourceUtils.asString(openApiResource);
 		final String currentOpenApiSpecification = getCurrentOpenApiSpecification();
+
+		writeString(Path.of("target/api.yaml"), currentOpenApiSpecification);
 
 		assertThatJson(toJson(currentOpenApiSpecification))
 			.withOptions(List.of(IGNORING_ARRAY_ORDER))
