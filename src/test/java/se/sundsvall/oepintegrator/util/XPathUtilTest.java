@@ -31,13 +31,15 @@ class XPathUtilTest {
 	}
 
 	@Test
-	void evaluateXpathFromXml() {
-		assertThat(XPathUtil.evaluateXPath(xml, "//menu")).hasSize(1);
+	void evaluateXpathFromDocument() {
+		final var document = XPathUtil.parseXmlDocument(xml);
+		assertThat(XPathUtil.evaluateXPath(document, "//menu")).hasSize(1);
 	}
 
 	@Test
 	void evaluateXpathFromElement() {
-		final var elements = XPathUtil.evaluateXPath(xml, "//menu");
+		final var document = XPathUtil.parseXmlDocument(xml);
+		final var elements = XPathUtil.evaluateXPath(document, "//menu");
 
 		assertThat(XPathUtil.evaluateXPath(elements.first(), "//dish")).hasSize(2);
 	}

@@ -10,6 +10,7 @@ import callback.ExternalID;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import se.sundsvall.oepintegrator.api.model.cases.Case;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
@@ -21,7 +22,8 @@ public final class CaseMapper {
 	private CaseMapper() {}
 
 	public static List<CaseEnvelope> toCaseEnvelopeList(final byte[] xml) {
-		final var flowInstances = evaluateXPath(xml, "/FlowInstances/FlowInstance");
+		final Document doc = parseXmlDocument(xml);
+		final var flowInstances = evaluateXPath(doc, "/FlowInstances/FlowInstance");
 		return Optional.ofNullable(flowInstances).orElse(new Elements()).stream()
 			.map(element -> CaseEnvelope.create()
 				.withFlowInstanceId(evaluateXPath(element, "/flowInstanceID").text())
@@ -46,17 +48,18 @@ public final class CaseMapper {
 
 	public static Case toCase(final byte[] xml) {
 
+		final Document doc = parseXmlDocument(xml);
 		return Case.create()
-			.withFlowInstanceId(evaluateXPath(xml, "/FlowInstance/Header/Flow/FamilyID").text())
-			.withFamilyId(evaluateXPath(xml, "/FlowInstance/Header/Flow/FamilyID").text())
-			.withFlowInstanceId(evaluateXPath(xml, "/FlowInstance/Header/FlowInstanceID").text())
-			.withVersion(Integer.valueOf(evaluateXPath(xml, "/FlowInstance/Header/Flow/Version").text()))
-			.withFlowId(evaluateXPath(xml, "/FlowInstance/Header/Flow/FlowID").text())
-			.withTitle(evaluateXPath(xml, "/FlowInstance/Header/Flow/Name").text())
+			.withFlowInstanceId(evaluateXPath(doc, "/FlowInstance/Header/Flow/FamilyID").text())
+			.withFamilyId(evaluateXPath(doc, "/FlowInstance/Header/Flow/FamilyID").text())
+			.withFlowInstanceId(evaluateXPath(doc, "/FlowInstance/Header/FlowInstanceID").text())
+			.withVersion(Integer.valueOf(evaluateXPath(doc, "/FlowInstance/Header/Flow/Version").text()))
+			.withFlowId(evaluateXPath(doc, "/FlowInstance/Header/Flow/FlowID").text())
+			.withTitle(evaluateXPath(doc, "/FlowInstance/Header/Flow/Name").text())
 			.withStatus(CaseStatus.create()
-				.withId(Integer.valueOf(evaluateXPath(xml, "/FlowInstance/Header/Status/ID").text()))
-				.withName(evaluateXPath(xml, "/FlowInstance/Header/Status/Name").text()))
-			.withCreated(LocalDateTime.parse(evaluateXPath(xml, "/FlowInstance/Header/Posted").text()))
-			.withPayload(parseXmlDocument(xml).toString());
+				.withId(Integer.valueOf(evaluateXPath(doc, "/FlowInstance/Header/Status/ID").text()))
+				.withName(evaluateXPath(doc, "/FlowInstance/Header/Status/Name").text()))
+			.withCreated(java.time.LocalDateTime.parse(evaluateXPath(doc, "/FlowInstance/Header/Posted").text()))
+			.withPayload(doc.toString());
 	}
 }
