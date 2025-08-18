@@ -17,8 +17,8 @@ public final class XPathUtil {
 		return parse(new String(xml, ISO_8859_1), xmlParser());
 	}
 
-	public static Elements evaluateXPath(final byte[] xml, final String expression) {
-		return compile(expression).evaluate(parseXmlDocument(xml)).getElements();
+	public static Elements evaluateXPath(final Document doc, final String expression) {
+		return compile(expression).evaluate(doc).getElements();
 	}
 
 	public static Elements evaluateXPath(final Element element, final String expression) {

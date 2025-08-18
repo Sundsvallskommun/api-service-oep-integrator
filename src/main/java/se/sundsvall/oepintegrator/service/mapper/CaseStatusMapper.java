@@ -1,6 +1,7 @@
 package se.sundsvall.oepintegrator.service.mapper;
 
 import static se.sundsvall.oepintegrator.util.XPathUtil.evaluateXPath;
+import static se.sundsvall.oepintegrator.util.XPathUtil.parseXmlDocument;
 
 import callback.ExternalID;
 import callback.Principal;
@@ -8,6 +9,7 @@ import callback.SetStatus;
 import jakarta.xml.bind.JAXBElement;
 import java.util.Optional;
 import javax.xml.namespace.QName;
+import org.jsoup.nodes.Document;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
 
@@ -36,9 +38,10 @@ public final class CaseStatusMapper {
 	}
 
 	public static CaseStatus toCaseStatus(final byte[] xml) {
+		final Document doc = parseXmlDocument(xml);
 		return CaseStatus.create()
-			.withId(Optional.ofNullable(evaluateXPath(xml, "/Status/statusID").text()).map(Integer::valueOf).orElse(null))
-			.withName(evaluateXPath(xml, "/Status/name").text());
+			.withId(Optional.ofNullable(evaluateXPath(doc, "/Status/statusID").text()).map(Integer::valueOf).orElse(null))
+			.withName(evaluateXPath(doc, "/Status/name").text());
 	}
 
 	private static Principal toPrincipal(final se.sundsvall.oepintegrator.api.model.cases.Principal principal) {
