@@ -15,3 +15,8 @@ spring:
           party:
             authorization-grant-type: client_credentials
             provider: party
+logbook:
+  body-filters:
+    x-path:
+      - key: '//EncodedData[string-length(text()) > 0]'
+        value: '[base64]'
