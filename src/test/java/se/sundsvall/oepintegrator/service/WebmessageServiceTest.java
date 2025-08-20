@@ -179,7 +179,7 @@ class WebmessageServiceTest {
 		assertThatThrownBy(() -> webmessageService.createWebmessage(municipalityId, instanceType, request, files))
 			.isInstanceOf(Problem.class)
 			.hasFieldOrPropertyWithValue("status", BAD_REQUEST)
-			.hasMessage("Bad Request: MetadataFlow instance id is required");
+			.hasMessage("Bad Request: Flow instance id is required");
 
 		verifyNoInteractions(openeRestIntegrationMock, openeSoapIntegrationMock, partyClientMock);
 	}
