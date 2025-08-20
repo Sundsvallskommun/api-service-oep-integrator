@@ -1,51 +1,51 @@
 openapi: 3.0.1
 info:
   title: api-oep-integrator
-  contact: {}
+  contact: { }
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "1.1"
+  version: "1.2"
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:58939
+    description: Generated server url
 tags:
-- name: Instances
-  description: Instance configuration
-- name: Webmessages
-  description: Resource for sending webmessages to OpenE
-- name: Cases
-  description: Operations on case
+  - name: Instances
+    description: Instance configuration
+  - name: Webmessages
+    description: Resource for sending webmessages to OpenE
+  - name: Cases
+    description: Operations on case
 paths:
   /{municipalityId}/{instanceType}/cases/{flowInstanceId}/status:
     get:
       tags:
-      - Cases
+        - Cases
       summary: Get case status
       description: Get case status by flow instance ID
       operationId: getCaseStatusByFlowInstanceId
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: The instanceType where case belongs
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: flowInstanceId
-        in: path
-        description: flow-instance id
-        required: true
-        schema:
-          type: string
-        example: 112233
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: flowInstanceId
+          in: path
+          description: flow-instance id
+          required: true
+          schema:
+            type: string
+          example: 112233
       responses:
         "200":
           description: Successful operation
@@ -65,8 +65,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
@@ -81,32 +81,32 @@ paths:
                 $ref: "#/components/schemas/Problem"
     put:
       tags:
-      - Cases
+        - Cases
       summary: Set case status
       description: Set case status by flowInstanceId
       operationId: setStatus
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: The instanceType where case belongs
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: flowInstanceId
-        in: path
-        description: flow-instance ID
-        required: true
-        schema:
-          type: string
-        example: 112233
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: flowInstanceId
+          in: path
+          description: flow-instance ID
+          required: true
+          schema:
+            type: string
+          example: 112233
       requestBody:
         content:
           application/json:
@@ -132,8 +132,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
@@ -149,39 +149,39 @@ paths:
   /{municipalityId}/{instanceType}/cases/systems/{system}/{externalId}/status:
     put:
       tags:
-      - Cases
+        - Cases
       summary: Set case status
       description: Set case status by externalId
       operationId: setStatus_1
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: The instanceType where case belongs
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: system
-        in: path
-        description: The system where external ID exists
-        required: true
-        schema:
-          type: string
-        example: CaseData
-      - name: externalId
-        in: path
-        description: Case ID in specified system
-        required: true
-        schema:
-          type: string
-        example: 234
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: system
+          in: path
+          description: The system where external ID exists
+          required: true
+          schema:
+            type: string
+          example: CaseData
+        - name: externalId
+          in: path
+          description: Case ID in specified system
+          required: true
+          schema:
+            type: string
+          example: 234
       requestBody:
         content:
           application/json:
@@ -207,8 +207,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
@@ -224,30 +224,30 @@ paths:
   /{municipalityId}/{instanceType}/webmessages:
     post:
       tags:
-      - Webmessages
+        - Webmessages
       summary: Create webmessage
       operationId: createWebmessage
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: Which instanceType a message should be sent to
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: Which instanceType a message should be sent to
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
       requestBody:
         content:
           multipart/form-data:
             schema:
               required:
-              - request
+                - request
               type: object
               properties:
                 request:
@@ -283,37 +283,37 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
   /{municipalityId}/{instanceType}/cases/{flowInstanceId}/delivery:
     post:
       tags:
-      - Cases
+        - Cases
       summary: Confirm delivery
       description: Confirms delivery of a case
       operationId: confirmDelivery
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: The instanceType where case belongs
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: flowInstanceId
-        in: path
-        description: flow-instance ID
-        required: true
-        schema:
-          type: string
-        example: 112233
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: flowInstanceId
+          in: path
+          description: flow-instance ID
+          required: true
+          schema:
+            type: string
+          example: 112233
       requestBody:
         content:
           application/json:
@@ -335,8 +335,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
@@ -352,18 +352,18 @@ paths:
   /{municipalityId}/instances:
     get:
       tags:
-      - Instances
+        - Instances
       summary: Get instances
       description: 'Get all instances for a municipalityId '
       operationId: getInstances
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
       responses:
         "200":
           description: Successful operation
@@ -385,22 +385,22 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
     post:
       tags:
-      - Instances
+        - Instances
       summary: Create instance
       description: Creates a new instance
       operationId: createInstance
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
       requestBody:
         content:
           application/json:
@@ -427,30 +427,30 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
   /{municipalityId}/instances/{instanceId}:
     get:
       tags:
-      - Instances
+        - Instances
       summary: Get instance
       description: Get an instance
       operationId: getInstance
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceId
-        in: path
-        description: instance ID
-        required: true
-        schema:
-          type: string
-        example: 123e4567-e89b-12d3-a456-426614174000
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceId
+          in: path
+          description: instance ID
+          required: true
+          schema:
+            type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
       responses:
         "200":
           description: Successful operation
@@ -476,29 +476,29 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
     delete:
       tags:
-      - Instances
+        - Instances
       summary: Delete instance
       description: Deletes an instance
       operationId: deleteInstance
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceId
-        in: path
-        description: instance ID
-        required: true
-        schema:
-          type: string
-        example: 123e4567-e89b-12d3-a456-426614174000
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceId
+          in: path
+          description: instance ID
+          required: true
+          schema:
+            type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
       responses:
         "204":
           description: Successful operation
@@ -520,29 +520,29 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
     patch:
       tags:
-      - Instances
+        - Instances
       summary: Update instance
       description: Updates an instance
       operationId: updateInstance
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceId
-        in: path
-        description: instance ID
-        required: true
-        schema:
-          type: string
-        example: 123e4567-e89b-12d3-a456-426614174000
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceId
+          in: path
+          description: instance ID
+          required: true
+          schema:
+            type: string
+          example: 123e4567-e89b-12d3-a456-426614174000
       requestBody:
         content:
           application/json:
@@ -570,52 +570,52 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
   /{municipalityId}/{instanceType}/webmessages/families/{familyId}:
     get:
       tags:
-      - Webmessages
+        - Webmessages
       summary: Get all webmessages for a familyId
       operationId: getWebmessagesByFamilyId
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: Which instanceType a message should be sent to
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: familyId
-        in: path
-        description: Family id
-        required: true
-        schema:
-          type: string
-        example: 123
-      - name: fromDateTime
-        in: query
-        description: The start date and time for filtering web messages (optional)
-        required: false
-        schema:
-          type: string
-          format: date-time
-        example: 2024-01-31T12:00:00
-      - name: toDateTime
-        in: query
-        description: The end date and time for filtering web messages (optional).
-        required: false
-        schema:
-          type: string
-          format: date-time
-        example: 2024-01-31T12:00:00
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: Which instanceType a message should be sent to
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: familyId
+          in: path
+          description: Family id
+          required: true
+          schema:
+            type: string
+          example: 123
+        - name: fromDateTime
+          in: query
+          description: The start date and time for filtering web messages (optional)
+          required: false
+          schema:
+            type: string
+            format: date-time
+          example: 2024-01-31T12:00:00
+        - name: toDateTime
+          in: query
+          description: The end date and time for filtering web messages (optional).
+          required: false
+          schema:
+            type: string
+            format: date-time
+          example: 2024-01-31T12:00:00
       responses:
         "200":
           description: Successful operation
@@ -643,52 +643,52 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
   /{municipalityId}/{instanceType}/webmessages/cases/{flowInstanceId}:
     get:
       tags:
-      - Webmessages
+        - Webmessages
       summary: Get all webmessages for a given case (errand)
       operationId: getWebmessagesByFlowInstanceId
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: Which instanceType a message should be sent to
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: flowInstanceId
-        in: path
-        description: Flow instance id
-        required: true
-        schema:
-          type: string
-        example: 123
-      - name: fromDateTime
-        in: query
-        description: The start date and time for filtering web messages (optional)
-        required: false
-        schema:
-          type: string
-          format: date-time
-        example: 2024-01-31T12:00:00
-      - name: toDateTime
-        in: query
-        description: The end date and time for filtering web messages (optional).
-        required: false
-        schema:
-          type: string
-          format: date-time
-        example: 2024-01-31T12:00:00
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: Which instanceType a message should be sent to
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: flowInstanceId
+          in: path
+          description: MetadataFlow instance id
+          required: true
+          schema:
+            type: string
+          example: 123
+        - name: fromDateTime
+          in: query
+          description: The start date and time for filtering web messages (optional)
+          required: false
+          schema:
+            type: string
+            format: date-time
+          example: 2024-01-31T12:00:00
+        - name: toDateTime
+          in: query
+          description: The end date and time for filtering web messages (optional).
+          required: false
+          schema:
+            type: string
+            format: date-time
+          example: 2024-01-31T12:00:00
       responses:
         "200":
           description: Successful operation
@@ -716,37 +716,37 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
   /{municipalityId}/{instanceType}/webmessages/attachments/{attachmentId}:
     get:
       tags:
-      - Webmessages
+        - Webmessages
       summary: Get attachment by id
       operationId: getAttachmentById
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality id
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: Which instanceType a message should be sent to
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: attachmentId
-        in: path
-        description: Attachment id
-        required: true
-        schema:
-          type: integer
-          format: int32
-        example: 123
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: Which instanceType a message should be sent to
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: attachmentId
+          in: path
+          description: Attachment id
+          required: true
+          schema:
+            type: integer
+            format: int32
+          example: 123
       responses:
         "200":
           description: Successful operation
@@ -768,37 +768,37 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
   /{municipalityId}/{instanceType}/cases/{flowInstanceId}:
     get:
       tags:
-      - Cases
+        - Cases
       summary: Get case
       description: Get case by flow instance ID
       operationId: getCaseByFlowInstanceId
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: The instanceType where case belongs
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: flowInstanceId
-        in: path
-        description: flow-instance ID
-        required: true
-        schema:
-          type: string
-        example: 112233
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: flowInstanceId
+          in: path
+          description: flow-instance ID
+          required: true
+          schema:
+            type: string
+          example: 112233
       responses:
         "200":
           description: Successful operation
@@ -818,8 +818,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
@@ -835,46 +835,46 @@ paths:
   /{municipalityId}/{instanceType}/cases/{flowInstanceId}/queries/{queryId}/files/{fileId}:
     get:
       tags:
-      - Cases
+        - Cases
       summary: Get case attachment
       description: "Get case attachment by flowInstanceId, queryId and fileId"
       operationId: getCaseAttachment
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: The instanceType where case belongs
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: flowInstanceId
-        in: path
-        description: flow-instance ID
-        required: true
-        schema:
-          type: string
-        example: 112233
-      - name: queryId
-        in: path
-        description: Query ID
-        required: true
-        schema:
-          type: string
-        example: 112233
-      - name: fileId
-        in: path
-        description: File ID
-        required: true
-        schema:
-          type: string
-        example: 112233
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: flowInstanceId
+          in: path
+          description: flow-instance ID
+          required: true
+          schema:
+            type: string
+          example: 112233
+        - name: queryId
+          in: path
+          description: Query ID
+          required: true
+          schema:
+            type: string
+          example: 112233
+        - name: fileId
+          in: path
+          description: File ID
+          required: true
+          schema:
+            type: string
+          example: 112233
       responses:
         "200":
           description: Successful operation
@@ -890,8 +890,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
@@ -907,32 +907,32 @@ paths:
   /{municipalityId}/{instanceType}/cases/{flowInstanceId}/pdf:
     get:
       tags:
-      - Cases
+        - Cases
       summary: Get case PDF
       description: Get case PDF by flow instance ID
       operationId: getCasePdfByFlowInstanceId
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: The instanceType where case belongs
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: flowInstanceId
-        in: path
-        description: flow-instance ID
-        required: true
-        schema:
-          type: string
-        example: 112233
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: flowInstanceId
+          in: path
+          description: flow-instance ID
+          required: true
+          schema:
+            type: string
+          example: 112233
       responses:
         "200":
           description: Successful operation
@@ -948,8 +948,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
@@ -965,55 +965,55 @@ paths:
   /{municipalityId}/{instanceType}/cases/parties/{partyId}:
     get:
       tags:
-      - Cases
+        - Cases
       summary: Get cases by citizen identifier
       description: Get a list of case envelopes by citizen identifier
       operationId: getCasesByPartyId
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: The instanceType where case belongs
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: partyId
-        in: path
-        description: The party ID
-        required: true
-        schema:
-          type: string
-        example: 5d68eb00-d8da-49a0-a6b5-8d395be34a5e
-      - name: fromDate
-        in: query
-        description: Filter cases on fromDate
-        required: false
-        schema:
-          type: string
-          format: date
-        example: 2024-01-01
-      - name: toDate
-        in: query
-        description: Filter cases on toDate
-        required: false
-        schema:
-          type: string
-          format: date
-        example: 2024-01-31
-      - name: status
-        in: query
-        description: Filter by status
-        required: false
-        schema:
-          type: string
-        example: Preliminär
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: partyId
+          in: path
+          description: The party ID
+          required: true
+          schema:
+            type: string
+          example: 5d68eb00-d8da-49a0-a6b5-8d395be34a5e
+        - name: fromDate
+          in: query
+          description: Filter cases on fromDate
+          required: false
+          schema:
+            type: string
+            format: date
+          example: 2024-01-01
+        - name: toDate
+          in: query
+          description: Filter cases on toDate
+          required: false
+          schema:
+            type: string
+            format: date
+          example: 2024-01-31
+        - name: status
+          in: query
+          description: Filter by status
+          required: false
+          schema:
+            type: string
+          example: Preliminär
       responses:
         "200":
           description: Successful operation
@@ -1029,8 +1029,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
@@ -1046,55 +1046,55 @@ paths:
   /{municipalityId}/{instanceType}/cases/families/{familyId}:
     get:
       tags:
-      - Cases
+        - Cases
       summary: Get cases by family ID
       description: Get a list of case envelopes by family ID
       operationId: getCasesByFamilyId
       parameters:
-      - name: municipalityId
-        in: path
-        description: Municipality ID
-        required: true
-        schema:
-          type: string
-        example: 2281
-      - name: instanceType
-        in: path
-        description: The instanceType where case belongs
-        required: true
-        schema:
-          $ref: "#/components/schemas/InstanceType"
-        example: INTERNAL
-      - name: familyId
-        in: path
-        description: The family ID
-        required: true
-        schema:
-          type: string
-        example: 123
-      - name: fromDate
-        in: query
-        description: Filter cases on fromDate
-        required: false
-        schema:
-          type: string
-          format: date
-        example: 2024-01-01
-      - name: toDate
-        in: query
-        description: Filter cases on toDate
-        required: false
-        schema:
-          type: string
-          format: date
-        example: 2024-01-31
-      - name: status
-        in: query
-        description: Filter by status
-        required: false
-        schema:
-          type: string
-        example: Preliminär
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: instanceType
+          in: path
+          description: The instanceType where case belongs
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstanceType"
+          example: INTERNAL
+        - name: familyId
+          in: path
+          description: The family ID
+          required: true
+          schema:
+            type: string
+          example: 123
+        - name: fromDate
+          in: query
+          description: Filter cases on fromDate
+          required: false
+          schema:
+            type: string
+            format: date
+          example: 2024-01-01
+        - name: toDate
+          in: query
+          description: Filter cases on toDate
+          required: false
+          schema:
+            type: string
+            format: date
+          example: 2024-01-31
+        - name: status
+          in: query
+          description: Filter by status
+          required: false
+          schema:
+            type: string
+          example: Preliminär
       responses:
         "200":
           description: Successful operation
@@ -1110,8 +1110,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                - $ref: "#/components/schemas/Problem"
-                - $ref: "#/components/schemas/ConstraintViolationProblem"
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
         "500":
           description: Internal Server error
           content:
@@ -1127,7 +1127,7 @@ paths:
   /api-docs:
     get:
       tags:
-      - API
+        - API
       summary: OpenAPI
       operationId: getApiDocs
       responses:
@@ -1145,6 +1145,12 @@ components:
     Problem:
       type: object
       properties:
+        title:
+          type: string
+        detail:
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri
@@ -1155,27 +1161,21 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     InstanceType:
       type: string
       description: InstanceType type. INTERNAL/EXTERNAL
       example: INTERNAL
       enum:
-      - INTERNAL
-      - EXTERNAL
+        - INTERNAL
+        - EXTERNAL
     CaseStatusChangeRequest:
       type: object
       properties:
@@ -1193,7 +1193,7 @@ components:
       description: SetStatus request model
     Principal:
       required:
-      - userId
+        - userId
       type: object
       properties:
         name:
@@ -1246,6 +1246,8 @@ components:
           type: string
         message:
           type: string
+        detail:
+          type: string
         instance:
           type: string
           format: uri
@@ -1253,8 +1255,6 @@ components:
           type: object
           additionalProperties:
             type: object
-        detail:
-          type: string
         suppressed:
           type: array
           items:
@@ -1317,6 +1317,12 @@ components:
                 type: boolean
         message:
           type: string
+        title:
+          type: string
+        detail:
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri
@@ -1327,12 +1333,6 @@ components:
           type: object
           additionalProperties:
             type: object
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
         suppressed:
           type: array
           items:
@@ -1414,8 +1414,8 @@ components:
         \ meaning that only one of them can be set at a time."
     WebmessageRequest:
       required:
-      - message
-      - sender
+        - message
+        - sender
       type: object
       properties:
         sender:
@@ -1432,8 +1432,8 @@ components:
       description: Webmessage request model
     ConfirmDeliveryRequest:
       required:
-      - caseId
-      - system
+        - caseId
+        - system
       type: object
       properties:
         caseId:
@@ -1486,8 +1486,8 @@ components:
           type: array
           description: List with family IDs
           example:
-          - family1
-          - family2
+            - family1
+            - family2
           items:
             type: string
             description: List with family IDs
@@ -1508,15 +1508,15 @@ components:
       description: IntegrationType model
       example: SOAP
       enum:
-      - SOAP
-      - REST
+        - SOAP
+        - REST
     Direction:
       type: string
       description: Direction model
       example: INBOUND
       enum:
-      - INBOUND
-      - OUTBOUND
+        - INBOUND
+        - OUTBOUND
     Webmessage:
       type: object
       properties:
@@ -1667,5 +1667,9 @@ components:
           type: string
           description: The case status change date
           format: date-time
+        displayName:
+          type: string
+          description: The display name for the family the case belongs to
+          example: Kompiskortet
       description: Case envelope model
-  securitySchemes: {}
+  securitySchemes: { }

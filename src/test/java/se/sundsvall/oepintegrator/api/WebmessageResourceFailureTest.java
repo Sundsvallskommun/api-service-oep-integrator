@@ -303,7 +303,7 @@ class WebmessageResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getDetail()).contains("Flow instance id is required");
+		assertThat(response.getDetail()).contains("MetadataFlow instance id is required");
 
 		verify(webmessageService).createWebmessage(eq("2281"), eq(EXTERNAL), eq(request), any());
 	}
