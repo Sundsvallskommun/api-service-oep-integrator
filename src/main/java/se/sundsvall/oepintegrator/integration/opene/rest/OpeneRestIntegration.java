@@ -1,6 +1,7 @@
 package se.sundsvall.oepintegrator.integration.opene.rest;
 
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessages;
@@ -12,6 +13,8 @@ import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -22,6 +25,8 @@ import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
+import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataFlow;
+import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataRoot;
 import se.sundsvall.oepintegrator.util.enums.InstanceType;
 
 /**
@@ -65,7 +70,9 @@ public class OpeneRestIntegration {
 
 	public List<CaseEnvelope> getCaseListByFamilyId(final String municipalityId, final InstanceType instanceType, final String familyId, final String status, final LocalDate fromDate, final LocalDate toDate) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-		return toCaseEnvelopeList(client.getCaseListByFamilyId(familyId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(EMPTY_BYTE_ARRAY));
+		final var envelopeList = toCaseEnvelopeList(client.getCaseListByFamilyId(familyId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(EMPTY_BYTE_ARRAY));
+		envelopeList.forEach(caseEnvelope -> caseEnvelope.setFamilyId(familyId));
+		return envelopeList;
 	}
 
 	public List<CaseEnvelope> getCaseListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String legalId, final String status, final LocalDate fromDate, final LocalDate toDate) {
@@ -91,6 +98,14 @@ public class OpeneRestIntegration {
 	public Case getCaseByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
 		return toCase(client.getCaseXmlByFlowInstanceId(flowInstanceId).orElseThrow(() -> Problem.valueOf(NOT_FOUND, "No case found for flow instance ID: '%s'".formatted(flowInstanceId))));
+	}
+
+	@Cacheable(value = "metadata")
+	public List<MetadataFlow> getMetadata(final String municipalityId, final InstanceType instanceType) {
+		final var client = clientFactory.getRestClient(municipalityId, instanceType);
+		return Optional.ofNullable(client.getMetadata())
+			.map(MetadataRoot::metadataFlows)
+			.orElse(emptyList());
 	}
 
 	private String formatLocalDate(final LocalDate localDate) {

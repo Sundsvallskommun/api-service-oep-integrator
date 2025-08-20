@@ -18,6 +18,7 @@ import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeResponse;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
+import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataFlow;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 import se.sundsvall.oepintegrator.integration.party.PartyClient;
 import se.sundsvall.oepintegrator.service.mapper.CaseStatusMapper;
@@ -62,7 +63,11 @@ public class CaseService {
 		final var legalId = partyClient.getLegalId(municipalityId, PartyType.PRIVATE, partyId)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, "Citizen identifier not found for partyId: %s".formatted(partyId)));
 
-		return openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
+		final var envelopeList = openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
+		envelopeList.forEach(caseEnvelope -> caseEnvelope.setDisplayName(getDisplayName(municipalityId, instanceType, caseEnvelope.getFamilyId())));
+
+		return envelopeList;
+
 	}
 
 	public CaseStatus getCaseStatusByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
@@ -77,4 +82,14 @@ public class CaseService {
 	public Case getCaseByFlowInstanceId(@ValidMunicipalityId final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
 		return openeRestIntegration.getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
 	}
+
+	private String getDisplayName(final String municipalityId, final InstanceType instanceType, final String flowFamilyId) {
+		return openeRestIntegration.getMetadata(municipalityId, instanceType)
+			.stream()
+			.filter(metadataFlow -> flowFamilyId.equalsIgnoreCase(metadataFlow.flowFamilyId()))
+			.findFirst()
+			.map(MetadataFlow::displayName)
+			.orElse(null);
+	}
+
 }

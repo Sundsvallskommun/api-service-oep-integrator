@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClient;
+import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataRoot;
 
 /**
  * Interface for OpenE REST clients. This contains the methods for calling the Open-E REST API.
@@ -60,4 +61,7 @@ public interface OpeneRestClient extends OpeneClient {
 
 	@GetMapping(path = "/api/instanceapi/getinstance/{flowInstanceId}/xml")
 	Optional<byte[]> getCaseXmlByFlowInstanceId(@PathVariable("flowInstanceId") String flowInstanceId);
+
+	@GetMapping(path = "/api/v1/getflows/json", produces = TEXT_XML_CHARSET_ISO_8859_1)
+	MetadataRoot getMetadata();
 }

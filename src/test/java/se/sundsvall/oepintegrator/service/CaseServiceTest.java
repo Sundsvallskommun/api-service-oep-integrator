@@ -41,6 +41,7 @@ import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
+import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataFlow;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 import se.sundsvall.oepintegrator.integration.party.PartyClient;
 
@@ -221,22 +222,27 @@ class CaseServiceTest {
 		final var status = "status";
 		final var fromDate = LocalDate.of(2023, 1, 1);
 		final var toDate = LocalDate.of(2023, 12, 31);
-		final var expectedCaseEnvelopeList = List.of(new CaseEnvelope());
+		final var familyId = "familyId";
+		final var displayName = "displayName";
+		final var expectedCaseEnvelope = new CaseEnvelope().withFamilyId(familyId).withDisplayName(displayName);
 
 		when(partyClientMock.getLegalId(municipalityId, partyType, partyId))
 			.thenReturn(Optional.of(legalId));
 
 		when(openeRestIntegrationMock.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate))
-			.thenReturn(expectedCaseEnvelopeList);
+			.thenReturn(List.of(new CaseEnvelope().withFamilyId(familyId)));
+
+		when(openeRestIntegrationMock.getMetadata(municipalityId, instanceType)).thenReturn(List.of(new MetadataFlow(familyId, displayName)));
 
 		// Act
 		final var result = caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate);
 
 		// Assert
-		assertThat(result).isEqualTo(expectedCaseEnvelopeList);
+		assertThat(result.getFirst()).isEqualTo(expectedCaseEnvelope);
 
 		verify(openeRestIntegrationMock).getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
 		verify(partyClientMock).getLegalId(municipalityId, partyType, partyId);
+		verify(openeRestIntegrationMock).getMetadata(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestIntegrationMock, partyClientMock);
 		verifyNoInteractions(openeSoapIntegrationMock);
 	}

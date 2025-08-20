@@ -16,6 +16,12 @@ public class CaseEnvelope {
 	@Schema(description = "The case status change date", example = "2023-11-16T12:01")
 	private LocalDateTime statusUpdated;
 
+	@Schema(description = "The familyId", example = "832", hidden = true)
+	private String familyId;
+
+	@Schema(description = "The display name for the family the case belongs to", example = "Kompiskortet")
+	private String displayName;
+
 	public static CaseEnvelope create() {
 		return new CaseEnvelope();
 	}
@@ -24,11 +30,11 @@ public class CaseEnvelope {
 		return flowInstanceId;
 	}
 
-	public void setFlowInstanceId(String flowInstanceId) {
+	public void setFlowInstanceId(final String flowInstanceId) {
 		this.flowInstanceId = flowInstanceId;
 	}
 
-	public CaseEnvelope withFlowInstanceId(String flowInstanceId) {
+	public CaseEnvelope withFlowInstanceId(final String flowInstanceId) {
 		this.flowInstanceId = flowInstanceId;
 		return this;
 	}
@@ -37,11 +43,11 @@ public class CaseEnvelope {
 		return created;
 	}
 
-	public void setCreated(LocalDateTime created) {
+	public void setCreated(final LocalDateTime created) {
 		this.created = created;
 	}
 
-	public CaseEnvelope withCreated(LocalDateTime created) {
+	public CaseEnvelope withCreated(final LocalDateTime created) {
 		this.created = created;
 		return this;
 	}
@@ -50,37 +56,63 @@ public class CaseEnvelope {
 		return statusUpdated;
 	}
 
-	public void setStatusUpdated(LocalDateTime statusUpdated) {
+	public void setStatusUpdated(final LocalDateTime statusUpdated) {
 		this.statusUpdated = statusUpdated;
 	}
 
-	public CaseEnvelope withStatusUpdated(LocalDateTime statusUpdated) {
+	public CaseEnvelope withStatusUpdated(final LocalDateTime statusUpdated) {
 		this.statusUpdated = statusUpdated;
 		return this;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(flowInstanceId, created, statusUpdated);
+	public String getFamilyId() {
+		return familyId;
+	}
+
+	public void setFamilyId(final String familyId) {
+		this.familyId = familyId;
+	}
+
+	public CaseEnvelope withFamilyId(final String familyId) {
+		this.familyId = familyId;
+		return this;
+	}
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+	public void setDisplayName(final String displayName) {
+		this.displayName = displayName;
+	}
+
+	public CaseEnvelope withDisplayName(final String displayName) {
+		this.displayName = displayName;
+		return this;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
+	public boolean equals(final Object o) {
+		if (o == null || getClass() != o.getClass())
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		CaseEnvelope other = (CaseEnvelope) obj;
-		return Objects.equals(flowInstanceId, other.flowInstanceId) && Objects.equals(created, other.created) && Objects.equals(statusUpdated, other.statusUpdated);
+		final CaseEnvelope that = (CaseEnvelope) o;
+		return Objects.equals(flowInstanceId, that.flowInstanceId) && Objects.equals(created, that.created) && Objects.equals(statusUpdated, that.statusUpdated) && Objects.equals(familyId, that.familyId)
+			&& Objects.equals(displayName, that.displayName);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(flowInstanceId, created, statusUpdated, familyId, displayName);
 	}
 
 	@Override
 	public String toString() {
-		return "CaseEnvelope [flowInstanceId=" + flowInstanceId + ", created=" + created + ", statusUpdated=" + statusUpdated + "]";
+		return "CaseEnvelope{" +
+			"flowInstanceId='" + flowInstanceId + '\'' +
+			", created=" + created +
+			", statusUpdated=" + statusUpdated +
+			", familyId='" + familyId + '\'' +
+			", displayName='" + displayName + '\'' +
+			'}';
 	}
 }

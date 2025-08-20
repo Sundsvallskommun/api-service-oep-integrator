@@ -28,7 +28,8 @@ public final class CaseMapper {
 			.map(element -> CaseEnvelope.create()
 				.withFlowInstanceId(evaluateXPath(element, "/flowInstanceID").text())
 				.withCreated(parseLocalDateTime(evaluateXPath(element, "/added").text()))
-				.withStatusUpdated(parseLocalDateTime(evaluateXPath(element, "/lastStatusChange").text())))
+				.withStatusUpdated(parseLocalDateTime(evaluateXPath(element, "/lastStatusChange").text()))
+				.withFamilyId(evaluateXPath(element, "/flowFamilyID").text()))
 			.toList();
 	}
 

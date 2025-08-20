@@ -40,18 +40,24 @@ class CaseEnvelopeTest {
 		final var flowInstanceId = "flowInstanceId";
 		final var created = now();
 		final var statusUpdated = now();
+		final var familyId = "familyId";
+		final var displayName = "displayName";
 
 		// Act
 		final var bean = CaseEnvelope.create()
 			.withFlowInstanceId(flowInstanceId)
 			.withCreated(created)
-			.withStatusUpdated(statusUpdated);
+			.withStatusUpdated(statusUpdated)
+			.withFamilyId(familyId)
+			.withDisplayName(displayName);
 
 		// Assert
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(bean.getFlowInstanceId()).isEqualTo(flowInstanceId);
 		assertThat(bean.getCreated()).isEqualTo(created);
 		assertThat(bean.getStatusUpdated()).isEqualTo(statusUpdated);
+		assertThat(bean.getFamilyId()).isEqualTo(familyId);
+		assertThat(bean.getDisplayName()).isEqualTo(displayName);
 	}
 
 	@Test
