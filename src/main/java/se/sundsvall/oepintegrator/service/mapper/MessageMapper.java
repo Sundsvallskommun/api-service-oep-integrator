@@ -17,6 +17,7 @@ import java.util.Optional;
 import javax.xml.datatype.DatatypeConfigurationException;
 import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
+import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
 
 public final class MessageMapper {
@@ -37,9 +38,11 @@ public final class MessageMapper {
 		return new AddMessage()
 			.withFlowInstanceID(flowInstanceId)
 			.withMessage(integrationMessage)
-			.withPrincipal(Optional.ofNullable(request.getSender().getAdministratorId())
+			.withPrincipal(Optional.ofNullable(request.getSender())
+				.map(Sender::getAdministratorId)
 				.map(value -> new Principal().withUserID(value))
 				.orElse(null));
+
 	}
 
 	public static AddMessageAsOwner toAddMessageAsOwner(final WebmessageRequest request, final String legalId, final Integer flowInstanceId, final List<MultipartFile> attachments) {

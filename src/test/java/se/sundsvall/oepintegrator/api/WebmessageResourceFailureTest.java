@@ -44,35 +44,6 @@ class WebmessageResourceFailureTest {
 	private WebTestClient webTestClient;
 
 	@Test
-	void createWebmessageWithNullSender() {
-		final WebmessageRequest request = WebmessageRequest.create()
-			.withMessage("This is a message")
-			.withExternalReferences(List.of(ExternalReference.create().withKey("flowInstanceId").withValue("123")));
-
-		final var multipartBodyBuilder = new MultipartBodyBuilder();
-		multipartBodyBuilder.part("request", request, APPLICATION_JSON);
-		final var body = multipartBodyBuilder.build();
-
-		final var response = webTestClient.post()
-			.uri(PATH, "2281", EXTERNAL)
-			.contentType(MULTIPART_FORM_DATA)
-			.body(BodyInserters.fromMultipartData(body))
-			.exchange()
-			.expectStatus().isBadRequest()
-			.expectBody(ConstraintViolationProblem.class)
-			.returnResult().getResponseBody();
-
-		assertThat(response).isNotNull();
-		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
-		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
-			.containsExactly(tuple("sender", "must not be null"));
-
-		verifyNoInteractions(webmessageService);
-	}
-
-	@Test
 	void createWebmessageWithAllSenderAttributesNull() {
 		final WebmessageRequest request = WebmessageRequest.create()
 			.withMessage("This is a message")

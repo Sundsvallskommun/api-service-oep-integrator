@@ -72,8 +72,10 @@ public class WebmessageService {
 
 	}
 
-	private boolean isCaseAdministratorRequest(WebmessageRequest request) {
-		return ofNullable(request.getSender().getAdministratorId()).isPresent();
+	private boolean isCaseAdministratorRequest(final WebmessageRequest request) {
+		return ofNullable(request.getSender())
+			.map(sender -> ofNullable(sender.getAdministratorId()).isPresent())
+			.orElse(true);
 	}
 
 	private String fetchLegalId(final String municipalityId, final String partyId) {

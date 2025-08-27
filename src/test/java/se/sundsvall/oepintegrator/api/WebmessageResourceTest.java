@@ -85,6 +85,43 @@ class WebmessageResourceTest {
 	}
 
 	@Test
+	void createWebmessageWithNullSender() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var message = "message";
+		final var request = WebmessageRequest.create()
+			.withExternalReferences(List.of(ExternalReference.create().withKey(REFERENCE_FLOW_INSTANCE_ID).withValue("123")))
+			.withMessage(message);
+
+		final var multipartBodyBuilder = new MultipartBodyBuilder();
+		multipartBodyBuilder.part("files", "file").filename("file.txt").contentType(TEXT_PLAIN);
+		multipartBodyBuilder.part("files", "file").filename("file2.txt").contentType(TEXT_PLAIN);
+		multipartBodyBuilder.part("request", request, APPLICATION_JSON);
+		final var body = multipartBodyBuilder.build();
+
+		final var messageId = 1234;
+
+		when(webmessageService.createWebmessage(eq(municipalityId), eq(instanceType), eq(request), any())).thenReturn(messageId);
+
+		// Act
+		webTestClient.post()
+			.uri(builder -> builder.path(PATH).build(Map.of("municipalityId", municipalityId, "instanceType", instanceType)))
+			.contentType(MULTIPART_FORM_DATA)
+			.body(BodyInserters.fromMultipartData(body))
+			.exchange()
+			.expectStatus().isCreated()
+			.expectHeader().contentType(ALL)
+			.expectHeader().location("/" + municipalityId + "/webmessages/" + messageId)
+			.expectBody().isEmpty();
+
+		// Assert
+		verify(webmessageService).createWebmessage(eq(municipalityId), eq(instanceType), eq(request), any());
+		verifyNoMoreInteractions(webmessageService);
+	}
+
+	@Test
 	void getWebmessagesByFamilyId() {
 		// Arrange
 		final var municipalityId = "2281";

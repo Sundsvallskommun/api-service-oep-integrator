@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Objects;
 import se.sundsvall.oepintegrator.api.validation.ValidExternalReferences;
@@ -15,8 +14,7 @@ import se.sundsvall.oepintegrator.api.validation.ValidExternalReferences;
 public class WebmessageRequest {
 
 	@Valid
-	@NotNull
-	@Schema(description = "The sender", requiredMode = REQUIRED)
+	@Schema(description = "The sender")
 	private Sender sender;
 
 	@Schema(description = "The message", example = "This is a message", requiredMode = REQUIRED)

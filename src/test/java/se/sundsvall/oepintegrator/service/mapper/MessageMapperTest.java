@@ -62,11 +62,16 @@ class MessageMapperTest {
 			.withMessage(message);
 		final var flowInstanceId = 123;
 
-		// Act & Assert
-		assertThatThrownBy(() -> MessageMapper.toAddMessage(request, flowInstanceId, attachments))
-			.isInstanceOf(NullPointerException.class)
-			.hasMessage("Cannot invoke \"se.sundsvall.oepintegrator.api.model.webmessage.Sender.getAdministratorId()\" because the return value of \"se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest.getSender()\" is null");
+		// Act
+		final var result = MessageMapper.toAddMessage(request, flowInstanceId, attachments);
 
+		// Assert
+		assertThat(result).isNotNull().hasNoNullFieldsOrPropertiesExcept("principal", "externalID");
+		assertThat(result.getFlowInstanceID()).isEqualTo(flowInstanceId);
+		assertThat(result.getMessage()).isNotNull();
+		assertThat(result.getMessage().getMessage()).isEqualTo(message);
+		assertThat(result.getMessage().getAttachments()).hasSize(1);
+		assertThat(result.getPrincipal()).isNull();
 	}
 
 	@Test
