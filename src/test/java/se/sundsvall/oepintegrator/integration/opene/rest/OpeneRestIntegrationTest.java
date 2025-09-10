@@ -33,6 +33,8 @@ import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
+import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataFlow;
+import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataRoot;
 
 @ExtendWith({
 	MockitoExtension.class, ResourceLoaderExtension.class
@@ -547,6 +549,104 @@ class OpeneRestIntegrationTest {
 
 		verify(openeRestClient).getCaseAttachment(flowInstanceId, queryId, fileId);
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getRestrictedMetadata() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+
+		final var flows = List.of(
+			new MetadataFlow("FAM-1", "Name 1"),
+			new MetadataFlow("FAM-2", "Name 2"));
+		final var root = new MetadataRoot(flows);
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getRestrictedMetadata()).thenReturn(root);
+
+		// Act
+		final var result = openeRestIntegration.getRestrictedMetadata(municipalityId, instanceType);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(2);
+		assertThat(result.get(0).flowFamilyId()).isEqualTo("FAM-1");
+		assertThat(result.get(0).displayName()).isEqualTo("Name 1");
+		assertThat(result.get(1).flowFamilyId()).isEqualTo("FAM-2");
+		assertThat(result.get(1).displayName()).isEqualTo("Name 2");
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getRestrictedMetadata();
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getRestrictedMetadataReturnsEmptyListWhenNull() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getRestrictedMetadata()).thenReturn(null);
+
+		// Act
+		final var result = openeRestIntegration.getRestrictedMetadata(municipalityId, instanceType);
+
+		// Assert
+		assertThat(result).isNotNull().isEmpty();
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getRestrictedMetadata();
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getMetadata() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+
+		final var flows = List.of(
+			new MetadataFlow("FAM-A", "Display A"),
+			new MetadataFlow("FAM-B", "Display B"));
+		final var root = new MetadataRoot(flows);
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getMetadata()).thenReturn(root);
+
+		// Act
+		final var result = openeRestIntegration.getMetadata(municipalityId, instanceType);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(2);
+		assertThat(result.get(0).flowFamilyId()).isEqualTo("FAM-A");
+		assertThat(result.get(0).displayName()).isEqualTo("Display A");
+		assertThat(result.get(1).flowFamilyId()).isEqualTo("FAM-B");
+		assertThat(result.get(1).displayName()).isEqualTo("Display B");
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getMetadata();
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getMetadataReturnsEmptyListWhenNull() {
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getMetadata()).thenReturn(null);
+
+		// Act
+		final var result = openeRestIntegration.getMetadata(municipalityId, instanceType);
+
+		// Assert
+		assertThat(result).isNotNull().isEmpty();
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getMetadata();
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
 	}
 }

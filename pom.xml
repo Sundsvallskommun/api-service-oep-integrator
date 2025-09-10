@@ -154,7 +154,8 @@
 				<artifactId>dept44-formatting-plugin</artifactId>
 				<configuration>
 					<jsonExcludes>
-						<include>src/integration-test/resources/CaseIT/__files/test04_getCasesByPartyId/responses/api-oep-get-flows.json</include>
+						<include>src/integration-test/resources/CaseIT/__files/test04_getCasesByPartyId/responses/api-oep-get-restricted-flows.json</include>
+						<include>src/integration-test/resources/CaseIT/__files/test10_getCasesByPartyIdNoRestrictedFlowData/responses/api-oep-get-flows.json</include>
 					</jsonExcludes>
 				</configuration>
 			</plugin>

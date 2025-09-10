@@ -6,14 +6,14 @@
 			}
 		},
 		"method": "GET",
-		"urlPath": "/external-oepMock/api/v1/getflows/json"
+		"urlPath": "/external-oepMock/api/restrictedflowinfo/getflows/json"
 	},
 	"response": {
-		"bodyFileName": "test04_getCasesByPartyId/responses/api-oep-get-flows.json",
+		"bodyFileName": "test04_getCasesByPartyId/responses/api-oep-get-restricted-flows.json",
 		"status": 200,
 		"headers": {
 			"Content-Type": "application/json;charset=ISO-8859-1"
 		}
 	},
-	"name": "api-oep-get-flows"
+	"name": "api-oep-get-restricted-flows"
 }

@@ -1,0 +1,19 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Basic YWRtaW46cGFzczEyMw=="
+			}
+		},
+		"method": "GET",
+		"urlPath": "/external-oepMock/api/v1/getflows/json"
+	},
+	"response": {
+		"bodyFileName": "test10_getCasesByPartyIdNoRestrictedFlowData/responses/api-oep-get-flows.json",
+		"status": 200,
+		"headers": {
+			"Content-Type": "application/json;charset=ISO-8859-1"
+		}
+	},
+	"name": "api-oep-get-flows"
+}

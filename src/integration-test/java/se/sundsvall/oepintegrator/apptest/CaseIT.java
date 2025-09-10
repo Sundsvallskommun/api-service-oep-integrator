@@ -156,4 +156,15 @@ class CaseIT extends AbstractAppTest {
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
+
+	@Test
+	void test10_getCasesByPartyIdNoRestrictedFlowData() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(format(PATH_GET_CASES_BY_PARTY_ID + "?status={3}&fromDate={4}&toDate={5}", MUNICIPALITY_ID, EXTERNAL, "e19981ad-34b2-4e14-88f5-133f61ca85aa", STATUS, "2020-01-01", "2025-12-31"))
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
 }
