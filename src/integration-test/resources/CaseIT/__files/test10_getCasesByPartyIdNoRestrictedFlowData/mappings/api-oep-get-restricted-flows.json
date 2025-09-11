@@ -1,15 +1,19 @@
 {
-	"request": {
-		"headers": {
-			"Authorization": {
-				"equalTo": "Basic YWRtaW46cGFzczEyMw=="
-			}
-		},
-		"method": "GET",
-		"urlPath": "/external-oepMock/api/restrictedflowinfo/getflows/json"
+  "request": {
+	"headers": {
+	  "Authorization": {
+		"equalTo": "Basic YWRtaW46cGFzczEyMw=="
+	  }
 	},
-	"response": {
-		"status": 404
-	},
-	"name": "api-oep-get-restricted-flows"
+	"method": "GET",
+	"urlPath": "/external-oepMock/api/restrictedflowinfo/getflows/json"
+  },
+  "response": {
+	"bodyFileName": "test10_getCasesByPartyIdNoRestrictedFlowData/responses/api-oep-get-restricted-flows.html",
+	"status": 404,
+	"headers": {
+	  "Content-Type": "text/html;charset=ISO-8859-1"
+	}
+  },
+  "name": "api-oep-get-restricted-flows"
 }
