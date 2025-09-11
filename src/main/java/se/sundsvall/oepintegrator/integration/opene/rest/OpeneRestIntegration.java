@@ -103,17 +103,25 @@ public class OpeneRestIntegration {
 	@Cacheable(value = "metadata")
 	public List<MetadataFlow> getMetadata(final String municipalityId, final InstanceType instanceType) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-		return Optional.ofNullable(client.getMetadata())
-			.map(MetadataRoot::metadataFlows)
-			.orElse(emptyList());
+		try {
+			return Optional.ofNullable(client.getMetadata())
+				.map(MetadataRoot::metadataFlows)
+				.orElse(emptyList());
+		} catch (final Exception e) {
+			return emptyList();
+		}
 	}
 
 	@Cacheable(value = "restricted-metadata")
 	public List<MetadataFlow> getRestrictedMetadata(final String municipalityId, final InstanceType instanceType) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-		return Optional.ofNullable(client.getRestrictedMetadata())
-			.map(MetadataRoot::metadataFlows)
-			.orElse(emptyList());
+		try {
+			return Optional.ofNullable(client.getRestrictedMetadata())
+				.map(MetadataRoot::metadataFlows)
+				.orElse(emptyList());
+		} catch (final Exception e) {
+			return emptyList();
+		}
 	}
 
 	private String formatLocalDate(final LocalDate localDate) {
