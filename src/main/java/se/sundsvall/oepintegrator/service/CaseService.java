@@ -83,13 +83,18 @@ public class CaseService {
 		return openeRestIntegration.getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
 	}
 
-	private String getDisplayName(final String municipalityId, final InstanceType instanceType, final String flowFamilyId) {
-		return openeRestIntegration.getMetadata(municipalityId, instanceType)
+	String getDisplayName(final String municipalityId, final InstanceType instanceType, final String flowFamilyId) {
+		return openeRestIntegration.getRestrictedMetadata(municipalityId, instanceType)
 			.stream()
 			.filter(metadataFlow -> flowFamilyId.equalsIgnoreCase(metadataFlow.flowFamilyId()))
 			.findFirst()
 			.map(MetadataFlow::displayName)
-			.orElse(null);
+			.orElseGet(() -> openeRestIntegration.getMetadata(municipalityId, instanceType)
+				.stream()
+				.filter(metadataFlow -> flowFamilyId.equalsIgnoreCase(metadataFlow.flowFamilyId()))
+				.findFirst()
+				.map(MetadataFlow::displayName)
+				.orElse(null));
 	}
 
 }

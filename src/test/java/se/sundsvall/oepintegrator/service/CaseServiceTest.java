@@ -232,7 +232,7 @@ class CaseServiceTest {
 		when(openeRestIntegrationMock.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate))
 			.thenReturn(List.of(new CaseEnvelope().withFamilyId(familyId)));
 
-		when(openeRestIntegrationMock.getMetadata(municipalityId, instanceType)).thenReturn(List.of(new MetadataFlow(familyId, displayName)));
+		when(openeRestIntegrationMock.getRestrictedMetadata(municipalityId, instanceType)).thenReturn(List.of(new MetadataFlow(familyId, displayName)));
 
 		// Act
 		final var result = caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate);
@@ -242,7 +242,7 @@ class CaseServiceTest {
 
 		verify(openeRestIntegrationMock).getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
 		verify(partyClientMock).getLegalId(municipalityId, partyType, partyId);
-		verify(openeRestIntegrationMock).getMetadata(municipalityId, instanceType);
+		verify(openeRestIntegrationMock).getRestrictedMetadata(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestIntegrationMock, partyClientMock);
 		verifyNoInteractions(openeSoapIntegrationMock);
 	}
@@ -403,5 +403,89 @@ class CaseServiceTest {
 		verify(openeRestIntegrationMock).getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
 		verifyNoMoreInteractions(openeRestIntegrationMock);
 		verifyNoInteractions(openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getDisplayNameReturnsFromRestrictedMetadataWhenMatchIgnoringCase() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowFamilyId = "FAM-123";
+		final var flowFamilyIdDifferentCase = "fam-123";
+		final var displayName = "Restricted Display Name";
+
+		when(openeRestIntegrationMock.getRestrictedMetadata(municipalityId, instanceType))
+			.thenReturn(List.of(
+				new MetadataFlow(flowFamilyId, displayName),
+				new MetadataFlow("OTHER", "Other Name")));
+
+		// Act
+		final var result = caseService.getDisplayName(municipalityId, instanceType, flowFamilyIdDifferentCase);
+
+		// Assert
+		assertThat(result).isEqualTo(displayName);
+
+		verify(openeRestIntegrationMock).getRestrictedMetadata(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock, partyClientMock);
+	}
+
+	@Test
+	void getDisplayNameReturnsFromOpenMetadataWhenNoMatchInRestricted() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowFamilyId = "FAM-456";
+		final var displayName = "Open Metadata Display Name";
+
+		when(openeRestIntegrationMock.getRestrictedMetadata(municipalityId, instanceType))
+			.thenReturn(List.of(
+				new MetadataFlow("OTHER", "Other Name")));
+
+		when(openeRestIntegrationMock.getMetadata(municipalityId, instanceType))
+			.thenReturn(List.of(
+				new MetadataFlow(flowFamilyId, displayName),
+				new MetadataFlow("ANOTHER", "Another Name")));
+
+		// Act
+		final var result = caseService.getDisplayName(municipalityId, instanceType, flowFamilyId);
+
+		// Assert
+		assertThat(result).isEqualTo(displayName);
+
+		verify(openeRestIntegrationMock).getRestrictedMetadata(municipalityId, instanceType);
+		verify(openeRestIntegrationMock).getMetadata(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock, partyClientMock);
+	}
+
+	@Test
+	void getDisplayNameReturnsNullWhenNoMatchInEitherList() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowFamilyId = "FAM-789";
+
+		when(openeRestIntegrationMock.getRestrictedMetadata(municipalityId, instanceType))
+			.thenReturn(List.of(
+				new MetadataFlow("OTHER", "Other Name")));
+
+		when(openeRestIntegrationMock.getMetadata(municipalityId, instanceType))
+			.thenReturn(List.of(
+				new MetadataFlow("ANOTHER", "Another Name")));
+
+		// Act
+		final var result = caseService.getDisplayName(municipalityId, instanceType, flowFamilyId);
+
+		// Assert
+		assertThat(result).isNull();
+
+		verify(openeRestIntegrationMock).getRestrictedMetadata(municipalityId, instanceType);
+		verify(openeRestIntegrationMock).getMetadata(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeRestIntegrationMock);
+		verifyNoInteractions(openeSoapIntegrationMock, partyClientMock);
 	}
 }

@@ -64,4 +64,7 @@ public interface OpeneRestClient extends OpeneClient {
 
 	@GetMapping(path = "/api/v1/getflows/json", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	MetadataRoot getMetadata();
+
+	@GetMapping(path = "/api/restrictedflowinfo/getflows/json", produces = TEXT_XML_CHARSET_ISO_8859_1)
+	MetadataRoot getRestrictedMetadata();
 }

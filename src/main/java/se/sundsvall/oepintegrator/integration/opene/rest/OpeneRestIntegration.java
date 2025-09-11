@@ -108,6 +108,14 @@ public class OpeneRestIntegration {
 			.orElse(emptyList());
 	}
 
+	@Cacheable(value = "restricted-metadata")
+	public List<MetadataFlow> getRestrictedMetadata(final String municipalityId, final InstanceType instanceType) {
+		final var client = clientFactory.getRestClient(municipalityId, instanceType);
+		return Optional.ofNullable(client.getRestrictedMetadata())
+			.map(MetadataRoot::metadataFlows)
+			.orElse(emptyList());
+	}
+
 	private String formatLocalDate(final LocalDate localDate) {
 		return ofNullable(localDate).map(date -> date.format(ISO_LOCAL_DATE)).orElse(null);
 	}
