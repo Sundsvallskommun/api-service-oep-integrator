@@ -20,3 +20,9 @@ logbook:
     x-path:
       - key: '//EncodedData[string-length(text()) > 0]'
         value: '[base64]'
+        
+resilience4j:
+  circuitbreaker:
+    instances:
+      open-e-rest:
+        ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
