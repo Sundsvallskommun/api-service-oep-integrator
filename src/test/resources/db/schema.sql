@@ -1,4 +1,12 @@
 
+    create table black_list (
+        municipality_id varchar(8),
+        family_id varchar(255),
+        id varchar(255) not null,
+        instance_type varchar(255),
+        primary key (id)
+    ) engine=InnoDB;
+
     create table family_ids (
         family_id varchar(255),
         instance_id varchar(255) not null
@@ -16,6 +24,18 @@
         username varchar(255),
         primary key (id)
     ) engine=InnoDB;
+
+    create index idx_municipality_id 
+       on black_list (municipality_id);
+
+    create index idx_instance_type 
+       on black_list (instance_type);
+
+    create index idx_family_id 
+       on black_list (family_id);
+
+    create index idx_municipality_id_instance_type 
+       on black_list (municipality_id, instance_type);
 
     create index idx_municipality_id 
        on open_e_instance (municipality_id);
