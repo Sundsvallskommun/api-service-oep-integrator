@@ -74,7 +74,7 @@ public class CaseService {
 		final var legalId = partyClient.getLegalId(municipalityId, PRIVATE, partyId)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, "Citizen identifier not found for partyId: %s".formatted(partyId)));
 
-		var blackListedFamilyIds = blackListRepository.findByMunicipalityIdAndInstanceType(municipalityId, instanceType).stream()
+		final var blackListedFamilyIds = blackListRepository.findByMunicipalityIdAndInstanceType(municipalityId, instanceType).stream()
 			.map(BlackListEntity::getFamilyId)
 			.collect(toSet());
 
