@@ -81,5 +81,4 @@ class InstanceEntityTest {
 				assertThat(instanceEntity.getReadTimeout()).isZero();
 			});
 	}
-
 }
