@@ -1,10 +1,12 @@
 package se.sundsvall.oepintegrator.service;
 
+import static generated.se.sundsvall.party.PartyType.PRIVATE;
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.toSet;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toConfirmDelivery;
 import static se.sundsvall.oepintegrator.util.StreamUtils.copyResponseEntityToHttpServletResponse;
 
-import generated.se.sundsvall.party.PartyType;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +19,8 @@ import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeResponse;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
+import se.sundsvall.oepintegrator.integration.db.BlackListRepository;
+import se.sundsvall.oepintegrator.integration.db.model.BlackListEntity;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataFlow;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
@@ -30,11 +34,18 @@ public class CaseService {
 	private final OpeneSoapIntegration openeSoapIntegration;
 	private final OpeneRestIntegration openeRestIntegration;
 	private final PartyClient partyClient;
+	private final BlackListRepository blackListRepository;
 
-	public CaseService(final OpeneSoapIntegration openeSoapIntegration, final OpeneRestIntegration openeRestIntegration, final PartyClient partyClient) {
+	public CaseService(
+		final OpeneSoapIntegration openeSoapIntegration,
+		final OpeneRestIntegration openeRestIntegration,
+		final PartyClient partyClient,
+		final BlackListRepository blackListRepository) {
+
 		this.openeSoapIntegration = openeSoapIntegration;
 		this.openeRestIntegration = openeRestIntegration;
 		this.partyClient = partyClient;
+		this.blackListRepository = blackListRepository;
 	}
 
 	public void getCasePdfByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final HttpServletResponse response) {
@@ -60,14 +71,17 @@ public class CaseService {
 
 	public List<CaseEnvelope> getCaseEnvelopeListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String partyId, final String status, final LocalDate fromDate, final LocalDate toDate) {
 
-		final var legalId = partyClient.getLegalId(municipalityId, PartyType.PRIVATE, partyId)
+		final var legalId = partyClient.getLegalId(municipalityId, PRIVATE, partyId)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, "Citizen identifier not found for partyId: %s".formatted(partyId)));
 
-		final var envelopeList = openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
-		envelopeList.forEach(caseEnvelope -> caseEnvelope.setDisplayName(getDisplayName(municipalityId, instanceType, caseEnvelope.getFamilyId())));
+		var blackListedFamilyIds = blackListRepository.findByMunicipalityIdAndInstanceType(municipalityId, instanceType).stream()
+			.map(BlackListEntity::getFamilyId)
+			.collect(toSet());
 
-		return envelopeList;
-
+		return openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate).stream()
+			.filter(not(envelope -> blackListedFamilyIds.contains(envelope.getFamilyId()))) // Blacklist filter
+			.map(envelope -> envelope.withDisplayName(getDisplayName(municipalityId, instanceType, envelope.getFamilyId())))
+			.toList();
 	}
 
 	public CaseStatus getCaseStatusByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
@@ -96,5 +110,4 @@ public class CaseService {
 				.map(MetadataFlow::displayName)
 				.orElse(null));
 	}
-
 }

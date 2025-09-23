@@ -1,0 +1,14 @@
+{
+	"name": "getInstancesByPartyId",
+	"request": {
+		"method": "GET",
+		"urlPath": "/external-oepMock/api/instanceapi/getinstances/owner/citizenidentifier/202206222396/"
+	},
+	"response": {
+		"bodyFileName": "test11_getCasesByPartyIdWithBlackListedFamilyIds/responses/getInstancesResponse.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		}
+	}
+}

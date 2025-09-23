@@ -167,4 +167,16 @@ class CaseIT extends AbstractAppTest {
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
+
+	@Test
+	void test11_getCasesByPartyIdWithBlackListedFamilyIds() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(format(PATH_GET_CASES_BY_PARTY_ID, MUNICIPALITY_ID, EXTERNAL, "e19981ad-34b2-4e14-88f5-133f61ca85aa"))
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
 }
