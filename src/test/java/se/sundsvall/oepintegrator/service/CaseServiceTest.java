@@ -1,6 +1,7 @@
 package se.sundsvall.oepintegrator.service;
 
 import static generated.se.sundsvall.party.PartyType.PRIVATE;
+import static java.util.Collections.emptyList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,6 +41,8 @@ import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
 import se.sundsvall.oepintegrator.api.model.cases.Principal;
+import se.sundsvall.oepintegrator.integration.db.BlackListRepository;
+import se.sundsvall.oepintegrator.integration.db.model.BlackListEntity;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataFlow;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
@@ -56,6 +59,9 @@ class CaseServiceTest {
 
 	@Mock
 	private OpeneRestIntegration openeRestIntegrationMock;
+
+	@Mock
+	private BlackListRepository blackListRepositoryMock;
 
 	@InjectMocks
 	private CaseService caseService;
@@ -232,7 +238,11 @@ class CaseServiceTest {
 		when(openeRestIntegrationMock.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate))
 			.thenReturn(List.of(new CaseEnvelope().withFamilyId(familyId)));
 
-		when(openeRestIntegrationMock.getRestrictedMetadata(municipalityId, instanceType)).thenReturn(List.of(new MetadataFlow(familyId, displayName)));
+		when(openeRestIntegrationMock.getRestrictedMetadata(municipalityId, instanceType))
+			.thenReturn(List.of(new MetadataFlow(familyId, displayName)));
+
+		when(blackListRepositoryMock.findByMunicipalityIdAndInstanceType(municipalityId, instanceType))
+			.thenReturn(emptyList());
 
 		// Act
 		final var result = caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate);
@@ -243,7 +253,44 @@ class CaseServiceTest {
 		verify(openeRestIntegrationMock).getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
 		verify(partyClientMock).getLegalId(municipalityId, partyType, partyId);
 		verify(openeRestIntegrationMock).getRestrictedMetadata(municipalityId, instanceType);
+		verify(blackListRepositoryMock).findByMunicipalityIdAndInstanceType(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestIntegrationMock, partyClientMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getCaseEnvelopeListByCitizenIdentifierWhenBlackListed() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var partyType = PRIVATE;
+		final var partyId = "partyId";
+		final var legalId = "legalId";
+		final var status = "status";
+		final var fromDate = LocalDate.of(2023, 1, 1);
+		final var toDate = LocalDate.of(2023, 12, 31);
+		final var familyId = "familyId";
+
+		when(partyClientMock.getLegalId(municipalityId, partyType, partyId))
+			.thenReturn(Optional.of(legalId));
+
+		when(openeRestIntegrationMock.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate))
+			.thenReturn(List.of(new CaseEnvelope().withFamilyId(familyId)));
+
+		when(blackListRepositoryMock.findByMunicipalityIdAndInstanceType(municipalityId, instanceType))
+			.thenReturn(List.of(BlackListEntity.create().withFamilyId(familyId).withInstanceType(instanceType).withMunicipalityId(municipalityId)));
+
+		// Act
+		final var result = caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate);
+
+		// Assert
+		assertThat(result).isEmpty();
+
+		verify(partyClientMock).getLegalId(municipalityId, partyType, partyId);
+		verify(openeRestIntegrationMock).getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
+		verify(blackListRepositoryMock).findByMunicipalityIdAndInstanceType(municipalityId, instanceType);
+		verifyNoMoreInteractions(blackListRepositoryMock, openeRestIntegrationMock, partyClientMock);
 		verifyNoInteractions(openeSoapIntegrationMock);
 	}
 

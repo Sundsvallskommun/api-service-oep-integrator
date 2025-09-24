@@ -18,4 +18,4 @@ VALUES ('123', '0a12ddc7-535a-41b1-91df-afe60d3ce041'),
 INSERT INTO black_list (id, family_id, municipality_id, instance_type) 
 VALUES ('4703f725-d62b-4347-ad9d-c3587a216fcf', '666', '2281', 'EXTERNAL'),
        ('87c6dffe-6ccb-41f7-bdc4-903cc0835f38', '777', '2281', 'EXTERNAL'),
-       ('683c5d6d-913b-4265-ae93-7272cf1b935c', '888', '2281', 'INTERNAL');
+       ('683c5d6d-913b-4265-ae93-7272cf1b935c', '888', '2281', 'EXTERNAL');
