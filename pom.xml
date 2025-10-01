@@ -146,6 +146,7 @@
 					<excludes>
 						<exclude>**/generated/se/sundsvall/**</exclude>
 						<exclude>**/callback/**</exclude>
+						<exclude>**/integration/opene/CircuitBreakerCapability.class</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

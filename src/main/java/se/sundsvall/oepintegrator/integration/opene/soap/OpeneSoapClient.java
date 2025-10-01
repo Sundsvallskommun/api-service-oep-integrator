@@ -7,7 +7,6 @@ import callback.AddMessageResponse;
 import callback.ConfirmDelivery;
 import callback.SetStatus;
 import callback.SetStatusResponse;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClient;
@@ -15,7 +14,6 @@ import se.sundsvall.oepintegrator.integration.opene.OpeneClient;
 /**
  * Interface for OpenE SOAP clients. This contains the methods for calling the Open-E SOAP API.
  */
-@CircuitBreaker(name = "open-e-soap")
 public interface OpeneSoapClient extends OpeneClient {
 
 	String TEXT_XML_UTF_8 = "text/xml; charset=UTF-8";

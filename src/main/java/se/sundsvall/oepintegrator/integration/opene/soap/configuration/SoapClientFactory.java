@@ -11,10 +11,12 @@ import feign.jaxb.JAXBContextFactory;
 import feign.soap.SOAPDecoder;
 import feign.soap.SOAPEncoder;
 import feign.soap.SOAPErrorDecoder;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import org.springframework.cloud.openfeign.FeignClientBuilder;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
+import se.sundsvall.oepintegrator.integration.opene.CircuitBreakerCapability;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClient;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapClient;
 import se.sundsvall.oepintegrator.util.EncryptionUtility;
@@ -35,15 +37,18 @@ public class SoapClientFactory {
 		.withJAXBContextFactory(JAXB_FACTORY);
 	private final EncryptionUtility encryptionUtility;
 	private final ApplicationContext applicationContext;
+	private final CircuitBreakerRegistry circuitBreakerRegistry;
 
-	public SoapClientFactory(final EncryptionUtility encryptionUtility, final ApplicationContext applicationContext) {
+	public SoapClientFactory(final EncryptionUtility encryptionUtility, final ApplicationContext applicationContext, final CircuitBreakerRegistry circuitBreakerRegistry) {
 		this.encryptionUtility = encryptionUtility;
 		this.applicationContext = applicationContext;
+		this.circuitBreakerRegistry = circuitBreakerRegistry;
 	}
 
 	public OpeneClient createSoapClient(final InstanceEntity instanceEntity) {
 
-		final var clientName = "oep-%s-%s".formatted(instanceEntity.getInstanceType().name().toLowerCase(), instanceEntity.getMunicipalityId());
+		final var clientName = "oep-%s-%s-%s".formatted(instanceEntity.getInstanceType().name().toLowerCase(), instanceEntity.getMunicipalityId(), instanceEntity.getIntegrationType().name().toLowerCase());
+		final var circuitBreaker = circuitBreakerRegistry.circuitBreaker(clientName);
 
 		return new FeignClientBuilder(applicationContext)
 			.forType(OpeneSoapClient.class, clientName)
@@ -52,6 +57,7 @@ public class SoapClientFactory {
 				.decoder(DECODER_BUILDER.build())
 				.errorDecoder(new SOAPErrorDecoder())
 				.logLevel(FULL)
+				.addCapability(new CircuitBreakerCapability(circuitBreaker))
 				.requestInterceptor(new BasicAuthRequestInterceptor(instanceEntity.getUsername(), encryptionUtility.decrypt(instanceEntity.getPassword())))
 				.options(new Request.Options(instanceEntity.getConnectTimeout(), SECONDS, instanceEntity.getReadTimeout(), SECONDS, true)))
 			.url(instanceEntity.getBaseUrl())
