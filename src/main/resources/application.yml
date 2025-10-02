@@ -23,6 +23,5 @@ logbook:
         
 resilience4j:
   circuitbreaker:
-    instances:
-      open-e-rest:
-        ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
+    default:
+      ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
