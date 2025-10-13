@@ -24,7 +24,7 @@ public class CaseStatus {
 	@Schema(description = "Whether restricted admin can delete")
 	private Boolean isRestrictedAdminDeletable;
 
-	@Schema(description = "The content type", example = "ARCHIVED")
+	@Schema(description = "The status", example = "ARCHIVED")
 	private String status;
 
 	public static CaseStatus create() {
