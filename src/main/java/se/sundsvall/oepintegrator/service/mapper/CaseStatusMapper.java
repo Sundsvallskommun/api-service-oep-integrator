@@ -40,8 +40,13 @@ public final class CaseStatusMapper {
 	public static CaseStatus toCaseStatus(final byte[] xml) {
 		final Document doc = parseXmlDocument(xml);
 		return CaseStatus.create()
-			.withId(Optional.ofNullable(evaluateXPath(doc, "/Status/statusID").text()).map(Integer::valueOf).orElse(null))
-			.withName(evaluateXPath(doc, "/Status/name").text());
+			.withId(Optional.of(evaluateXPath(doc, "/Status/statusID").text()).map(Integer::valueOf).orElse(null))
+			.withName(evaluateXPath(doc, "/Status/name").text())
+			.withNewExternalMessagesDisallowed(Optional.of(evaluateXPath(doc, "/Status/newExternalMessagesDisallowed").text()).map(Boolean::valueOf).orElse(null))
+			.withAddExternalMessage(Optional.of(evaluateXPath(doc, "/Status/addExternalMessage").text()).map(Boolean::valueOf).orElse(null))
+			.withAddInternalMessage(Optional.of(evaluateXPath(doc, "/Status/addInternalMessage").text()).map(Boolean::valueOf).orElse(null))
+			.withIsRestrictedAdminDeletable(Optional.of(evaluateXPath(doc, "/Status/isRestrictedAdminDeletable").text()).map(Boolean::valueOf).orElse(null))
+			.withStatus(evaluateXPath(doc, "/Status/contentType").text());
 	}
 
 	private static Principal toPrincipal(final se.sundsvall.oepintegrator.api.model.cases.Principal principal) {

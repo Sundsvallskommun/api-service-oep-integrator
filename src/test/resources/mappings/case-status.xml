@@ -2,9 +2,9 @@
 <Status>
 	<statusID>10361</statusID>
 	<name>Inskickat</name>
-	<newExternalMessagesDisallowed>false</newExternalMessagesDisallowed>
-	<addExternalMessage>false</addExternalMessage>
-	<addInternalMessage>false</addInternalMessage>
-	<isRestrictedAdminDeletable>false</isRestrictedAdminDeletable>
+	<newExternalMessagesDisallowed>true</newExternalMessagesDisallowed>
+	<addExternalMessage>true</addExternalMessage>
+	<addInternalMessage>true</addInternalMessage>
+	<isRestrictedAdminDeletable>true</isRestrictedAdminDeletable>
 	<contentType>SUBMITTED</contentType>
 </Status>
