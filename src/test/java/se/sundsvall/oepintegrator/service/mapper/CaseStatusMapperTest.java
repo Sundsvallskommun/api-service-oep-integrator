@@ -71,7 +71,13 @@ class CaseStatusMapperTest {
 		final var result = CaseStatusMapper.toCaseStatus(xml.getBytes());
 
 		// Assert
-		assertThat(result).isNotNull();
+		assertThat(result).isNotNull().hasNoNullFieldsOrProperties();
+		assertThat(result.getId()).isEqualTo(10361);
 		assertThat(result.getName()).isEqualTo("Inskickat");
+		assertThat(result.getNewExternalMessagesDisallowed()).isTrue();
+		assertThat(result.getAddExternalMessage()).isTrue();
+		assertThat(result.getAddInternalMessage()).isTrue();
+		assertThat(result.getIsRestrictedAdminDeletable()).isTrue();
+		assertThat(result.getStatus()).isEqualTo("SUBMITTED");
 	}
 }

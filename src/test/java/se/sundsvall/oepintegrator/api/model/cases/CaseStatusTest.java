@@ -29,16 +29,30 @@ class CaseStatusTest {
 		// Arrange
 		final var id = 123;
 		final var name = "name";
+		final var status = "SUBMITTED";
+		final var newExternalMessagesDisallowed = false;
+		final var addExternalMessage = false;
+		final var addInternalMessage = false;
 
 		// Act
 		final var bean = CaseStatus.create()
 			.withId(id)
-			.withName(name);
+			.withName(name)
+			.withNewExternalMessagesDisallowed(newExternalMessagesDisallowed)
+			.withAddExternalMessage(addExternalMessage)
+			.withAddInternalMessage(addInternalMessage)
+			.withIsRestrictedAdminDeletable(false)
+			.withStatus(status);
 
 		// Assert
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(bean.getId()).isEqualTo(id);
 		assertThat(bean.getName()).isEqualTo(name);
+		assertThat(bean.getNewExternalMessagesDisallowed()).isEqualTo(newExternalMessagesDisallowed);
+		assertThat(bean.getAddExternalMessage()).isEqualTo(addExternalMessage);
+		assertThat(bean.getAddInternalMessage()).isEqualTo(addInternalMessage);
+		assertThat(bean.getIsRestrictedAdminDeletable()).isFalse();
+		assertThat(bean.getStatus()).isEqualTo(status);
 	}
 
 	@Test
