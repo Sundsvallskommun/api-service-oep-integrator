@@ -43,7 +43,16 @@ public interface OpeneRestClient extends OpeneClient {
 		@PathVariable(name = "legalId") final String legalId,
 		@PathVariable(name = "status", required = false) final String status,
 		@RequestParam(name = "fromDate", required = false) final String fromDate,
-		@RequestParam(name = "toDate", required = false) final String toDate);
+		@RequestParam(name = "toDate", required = false) final String toDate,
+		@RequestParam(name = "showStatus", required = false) final Boolean showStatus);
+
+	@GetMapping(path = "/api/multisigninstanceapi/getwaitinginstances/citizenidentifier/{legalId}/{status}", produces = TEXT_XML_CHARSET_ISO_8859_1)
+	Optional<byte[]> getWaitingCaseListByCitizenIdentifier(
+		@PathVariable(name = "legalId") final String legalId,
+		@PathVariable(name = "status", required = false) final String status,
+		@RequestParam(name = "fromDate", required = false) final String fromDate,
+		@RequestParam(name = "toDate", required = false) final String toDate,
+		@RequestParam(name = "showStatus", required = false) final Boolean showStatus);
 
 	@GetMapping(path = "/api/instanceapi/getstatus/{flowInstanceId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	Optional<byte[]> getCaseStatusByFlowInstanceId(@PathVariable(name = "flowInstanceId") final String flowInstanceId);

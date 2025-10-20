@@ -28,6 +28,7 @@ public final class CaseMapper {
 			.map(element -> CaseEnvelope.create()
 				.withFlowInstanceId(evaluateXPath(element, "/flowInstanceID").text())
 				.withCreated(parseLocalDateTime(evaluateXPath(element, "/added").text()))
+				.withStatus(toCaseStatus(evaluateXPath(element, "/Status")))
 				.withStatusUpdated(parseLocalDateTime(evaluateXPath(element, "/lastStatusChange").text()))
 				.withFamilyId(evaluateXPath(element, "/flowFamilyID").text()))
 			.toList();
@@ -62,5 +63,39 @@ public final class CaseMapper {
 				.withName(evaluateXPath(doc, "/FlowInstance/Header/Status/Name").text()))
 			.withCreated(java.time.LocalDateTime.parse(evaluateXPath(doc, "/FlowInstance/Header/Posted").text()))
 			.withPayload(doc.toString());
+	}
+
+	private static CaseStatus toCaseStatus(final Elements elements) {
+		if (elements == null || elements.isEmpty()) {
+			return null;
+		}
+		final var element = elements.getFirst();
+
+		if (element == null) {
+			return null;
+		}
+		return CaseStatus.create()
+			.withId(Optional.of(evaluateXPath(element, "//statusID").text())
+				.filter(text -> !text.isEmpty())
+				.map(Integer::valueOf)
+				.orElse(null))
+			.withName(evaluateXPath(element, "//name").text())
+			.withNewExternalMessagesDisallowed(Optional.of(evaluateXPath(element, "//newExternalMessagesDisallowed").text())
+				.filter(text -> !text.isEmpty())
+				.map(Boolean::valueOf)
+				.orElse(null))
+			.withAddExternalMessage(Optional.of(evaluateXPath(element, "//addExternalMessage").text())
+				.filter(text -> !text.isEmpty())
+				.map(Boolean::valueOf)
+				.orElse(null))
+			.withAddInternalMessage(Optional.of(evaluateXPath(element, "//addInternalMessage").text())
+				.filter(text -> !text.isEmpty())
+				.map(Boolean::valueOf)
+				.orElse(null))
+			.withIsRestrictedAdminDeletable(Optional.of(evaluateXPath(element, "//isRestrictedAdminDeletable").text())
+				.filter(text -> !text.isEmpty())
+				.map(Boolean::valueOf)
+				.orElse(null))
+			.withStatus(evaluateXPath(element, "//contentType").text());
 	}
 }

@@ -22,6 +22,9 @@ public class CaseEnvelope {
 	@Schema(description = "The display name for the family the case belongs to", example = "Kompiskortet")
 	private String displayName;
 
+	@Schema(description = "The case status")
+	private CaseStatus status;
+
 	public static CaseEnvelope create() {
 		return new CaseEnvelope();
 	}
@@ -91,18 +94,31 @@ public class CaseEnvelope {
 		return this;
 	}
 
+	public CaseStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(final CaseStatus status) {
+		this.status = status;
+	}
+
+	public CaseEnvelope withStatus(final CaseStatus status) {
+		this.status = status;
+		return this;
+	}
+
 	@Override
 	public boolean equals(final Object o) {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		final CaseEnvelope that = (CaseEnvelope) o;
 		return Objects.equals(flowInstanceId, that.flowInstanceId) && Objects.equals(created, that.created) && Objects.equals(statusUpdated, that.statusUpdated) && Objects.equals(familyId, that.familyId)
-			&& Objects.equals(displayName, that.displayName);
+			&& Objects.equals(displayName, that.displayName) && Objects.equals(status, that.status);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(flowInstanceId, created, statusUpdated, familyId, displayName);
+		return Objects.hash(flowInstanceId, created, statusUpdated, familyId, displayName, status);
 	}
 
 	@Override
@@ -113,6 +129,7 @@ public class CaseEnvelope {
 			", statusUpdated=" + statusUpdated +
 			", familyId='" + familyId + '\'' +
 			", displayName='" + displayName + '\'' +
+			", status=" + status +
 			'}';
 	}
 }

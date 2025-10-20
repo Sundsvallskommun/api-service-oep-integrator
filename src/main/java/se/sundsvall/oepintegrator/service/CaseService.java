@@ -9,6 +9,7 @@ import static se.sundsvall.oepintegrator.util.StreamUtils.copyResponseEntityToHt
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.zalando.problem.Problem;
@@ -69,7 +70,8 @@ public class CaseService {
 		return openeRestIntegration.getCaseListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate);
 	}
 
-	public List<CaseEnvelope> getCaseEnvelopeListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String partyId, final String status, final LocalDate fromDate, final LocalDate toDate) {
+	public List<CaseEnvelope> getCaseEnvelopeListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String partyId, final String status, final LocalDate fromDate, final LocalDate toDate,
+		final Boolean includeStatus) {
 
 		final var legalId = partyClient.getLegalId(municipalityId, PRIVATE, partyId)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, "Citizen identifier not found for partyId: %s".formatted(partyId)));
@@ -78,10 +80,22 @@ public class CaseService {
 			.map(BlackListEntity::getFamilyId)
 			.collect(toSet());
 
-		return openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate).stream()
+		final var waiting = openeRestIntegration.getWaitingCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus).stream()
 			.filter(not(envelope -> blackListedFamilyIds.contains(envelope.getFamilyId()))) // Blacklist filter
 			.map(envelope -> envelope.withDisplayName(getDisplayName(municipalityId, instanceType, envelope.getFamilyId())))
 			.toList();
+
+		final var other = openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus).stream()
+			.filter(not(envelope -> blackListedFamilyIds.contains(envelope.getFamilyId()))) // Blacklist filter
+			.map(envelope -> envelope.withDisplayName(getDisplayName(municipalityId, instanceType, envelope.getFamilyId())))
+			.toList();
+
+		final var result = new ArrayList<CaseEnvelope>();
+
+		result.addAll(waiting);
+		result.addAll(other);
+
+		return result;
 	}
 
 	public CaseStatus getCaseStatusByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {

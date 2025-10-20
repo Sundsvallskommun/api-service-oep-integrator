@@ -83,9 +83,10 @@ class CaseResource {
 		@Parameter(name = "partyId", description = "The party ID", example = "5d68eb00-d8da-49a0-a6b5-8d395be34a5e") @ValidUuid @PathVariable final String partyId,
 		@Parameter(name = "fromDate", description = "Filter cases on fromDate", example = "2024-01-01") @RequestParam(value = "fromDate", required = false) final LocalDate fromDate,
 		@Parameter(name = "toDate", description = "Filter cases on toDate", example = "2024-01-31") @RequestParam(value = "toDate", required = false) final LocalDate toDate,
-		@Parameter(name = "status", description = "Filter by status", example = "Preliminär") @RequestParam(value = "status", required = false) final String status) {
+		@Parameter(name = "status", description = "Filter by status", example = "Preliminär") @RequestParam(value = "status", required = false) final String status,
+		@Parameter(name = "includeStatus", description = "Should response include status", example = "true") @RequestParam(value = "includeStatus", required = false) final Boolean includeStatus) {
 
-		return ok(caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate));
+		return ok(caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, includeStatus));
 	}
 
 	@PutMapping(value = "/{flowInstanceId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
