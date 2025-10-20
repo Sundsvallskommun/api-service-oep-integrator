@@ -337,12 +337,13 @@ class OpeneRestIntegrationTest {
 		final var status = "status";
 		final var fromDate = LocalDate.now();
 		final var toDate = LocalDate.now();
+		final var includeStatus = true;
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
-		when(openeRestClient.getCaseListByCitizenIdentifier(legalId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE))).thenReturn(Optional.of(xml.getBytes()));
+		when(openeRestClient.getCaseListByCitizenIdentifier(legalId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE), includeStatus)).thenReturn(Optional.of(xml.getBytes()));
 
 		// Act
-		final var result = openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
+		final var result = openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus);
 
 		// Assert
 		assertThat(result).isNotNull().hasSize(4);
@@ -355,7 +356,7 @@ class OpeneRestIntegrationTest {
 				tuple("4932", LocalDateTime.parse("2025-02-14T12:39"), LocalDateTime.parse("2025-02-18T20:10")));
 
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
-		verify(openeRestClient).getCaseListByCitizenIdentifier(legalId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE));
+		verify(openeRestClient).getCaseListByCitizenIdentifier(legalId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE), includeStatus);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
 	}
 
@@ -368,10 +369,10 @@ class OpeneRestIntegrationTest {
 		final var legalId = "legalId";
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
-		when(openeRestClient.getCaseListByCitizenIdentifier(legalId, null, null, null)).thenReturn(Optional.of(xml.getBytes()));
+		when(openeRestClient.getCaseListByCitizenIdentifier(legalId, null, null, null, null)).thenReturn(Optional.of(xml.getBytes()));
 
 		// Act
-		final var result = openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, null, null, null);
+		final var result = openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, null, null, null, null);
 
 		// Assert
 		assertThat(result).isNotNull().hasSize(4);
@@ -384,7 +385,7 @@ class OpeneRestIntegrationTest {
 				tuple("4932", LocalDateTime.parse("2025-02-14T12:39"), LocalDateTime.parse("2025-02-18T20:10")));
 
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
-		verify(openeRestClient).getCaseListByCitizenIdentifier(legalId, null, null, null);
+		verify(openeRestClient).getCaseListByCitizenIdentifier(legalId, null, null, null, null);
 		verifyNoMoreInteractions(openeRestClient, clientFactory);
 	}
 

@@ -191,8 +191,44 @@ class CaseResourceTest {
 		final var status = "status";
 		final var fromDate = now();
 		final var toDate = now();
+		final var includeStatus = true;
 
-		when(caseServiceMock.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate)).thenReturn(List.of(CaseEnvelope.create()));
+		when(caseServiceMock.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, includeStatus)).thenReturn(List.of(CaseEnvelope.create()));
+
+		// Act
+		final var result = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/parties/{partyId}")
+				.queryParam("fromDate", List.of(fromDate))
+				.queryParam("toDate", List.of(toDate))
+				.queryParam("status", List.of(status))
+				.queryParam("includeStatus", List.of(includeStatus))
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "partyId", partyId)))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBodyList(CaseEnvelope.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst()).isNotNull();
+
+		verify(caseServiceMock).getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, includeStatus);
+	}
+
+	@Test
+	void getCasesByCitizenIdentifierWithoutStatus() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var partyId = randomUUID().toString();
+		final var status = "status";
+		final var fromDate = now();
+		final var toDate = now();
+
+		when(caseServiceMock.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, null)).thenReturn(List.of(CaseEnvelope.create()));
 
 		// Act
 		final var result = webTestClient.get()
@@ -212,7 +248,7 @@ class CaseResourceTest {
 		assertThat(result).isNotNull().hasSize(1);
 		assertThat(result.getFirst()).isNotNull();
 
-		verify(caseServiceMock).getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate);
+		verify(caseServiceMock).getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, null);
 	}
 
 	@Test

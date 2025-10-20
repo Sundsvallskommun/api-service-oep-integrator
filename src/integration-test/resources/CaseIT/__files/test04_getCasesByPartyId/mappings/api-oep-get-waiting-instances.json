@@ -2,7 +2,7 @@
 	"name": "getInstancesByPartyId",
 	"request": {
 		"method": "GET",
-		"urlPath": "/external-oepMock/api/instanceapi/getinstances/owner/citizenidentifier/202206222396/TheStatus",
+		"urlPath": "/external-oepMock/api/multisigninstanceapi/getwaitinginstances/citizenidentifier/202206222396/TheStatus",
 		"queryParameters": {
 			"fromDate": {
 				"equalTo": "2020-01-01"
@@ -16,7 +16,7 @@
 		}
 	},
 	"response": {
-		"bodyFileName": "test04_getCasesByPartyId/responses/getInstancesResponse.xml",
+		"bodyFileName": "test04_getCasesByPartyId/responses/geWaitingtInstancesResponse.xml",
 		"status": 200,
 		"headers": {
 			"Content-Type": "text/xml;charset=ISO-8859-1"

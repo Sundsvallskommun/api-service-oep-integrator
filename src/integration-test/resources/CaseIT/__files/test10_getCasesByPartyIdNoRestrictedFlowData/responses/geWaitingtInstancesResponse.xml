@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<FlowInstances>
+	<FlowInstance>
+		<flowInstanceID>5355</flowInstanceID>
+		<added>2025-10-14 10:15</added>
+		<firstSubmitted>2025-10-14 10:15</firstSubmitted>
+		<fullyPopulated>true</fullyPopulated>
+		<stepID>5817</stepID>
+		<lastStatusChange>2025-10-14 10:15</lastStatusChange>
+		<lastEventAdded>2025-10-14 10:15</lastEventAdded>
+		<profileID>1</profileID>
+		<managerDescription>Söker som: Privatperson. 194307199069. Ansökan gäller: Arrendera/upplåta kommunal mark Jag vill arrendera kommunal mark</managerDescription>
+		<remote>false</remote>
+		<addedInMilliseconds>1760429712000</addedInMilliseconds>
+		<firstSubmittedInMilliseconds>1760429712000</firstSubmittedInMilliseconds>
+		<lastStatusChangeInMilliseconds>1760429712000</lastStatusChangeInMilliseconds>
+		<poster>
+			<user>
+				<userID>23622</userID>
+				<username>joedoe</username>
+				<firstname>Joe</firstname>
+				<lastname>Doe</lastname>
+				<email>joe.doe@sundsvall.se</email>
+				<admin>false</admin>
+				<enabled>true</enabled>
+				<lastLogin>2025-03-20 20:36</lastLogin>
+				<lastLoginInMilliseconds>1742499408000</lastLoginInMilliseconds>
+				<added>2020-01-16 01:00</added>
+				<isMutable>true</isMutable>
+				<hasFormProvider>true</hasFormProvider>
+			</user>
+		</poster>
+		<flowID>2036</flowID>
+		<flowFamilyID>104</flowFamilyID>
+	</FlowInstance>
+</FlowInstances>

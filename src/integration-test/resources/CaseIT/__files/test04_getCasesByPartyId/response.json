@@ -1,30 +1,46 @@
 [
 	{
-		"flowInstanceId": "4999",
+		"created": "2025-10-14T10:15:00",
+		"displayName": "Anmäl misstänkt matförgiftning",
+		"familyId": "104",
+		"flowInstanceId": "5355",
+		"status": {
+			"addExternalMessage": false,
+			"addInternalMessage": false,
+			"id": 12910,
+			"isRestrictedAdminDeletable": false,
+			"name": "Inskickat",
+			"newExternalMessagesDisallowed": false,
+			"status": "SUBMITTED"
+		},
+		"statusUpdated": "2025-10-14T10:15:00"
+	},
+	{
 		"created": "2025-02-27T11:16:00",
-		"statusUpdated": "2025-03-06T09:10:00",
+		"displayName": "Anmäl misstänkt matförgiftning",
 		"familyId": "104",
-		"displayName": "Anmäl misstänkt matförgiftning"
+		"flowInstanceId": "4999",
+		"statusUpdated": "2025-03-06T09:10:00"
 	},
 	{
-		"flowInstanceId": "4965",
 		"created": "2025-02-18T19:12:00",
-		"statusUpdated": "2025-02-18T19:45:00",
+		"displayName": "Anmäl misstänkt matförgiftning",
 		"familyId": "104",
-		"displayName": "Anmäl misstänkt matförgiftning"
+		"flowInstanceId": "4965",
+		"statusUpdated": "2025-02-18T19:45:00"
 	},
 	{
+		"created": "2025-02-14T12:39:00",
+		"displayName": "Anmäl misstänkt matförgiftning",
+		"familyId": "104",
 		"flowInstanceId": "4933",
-		"created": "2025-02-14T12:39:00",
-		"statusUpdated": "2025-02-14T12:40:00",
-		"familyId": "104",
-		"displayName": "Anmäl misstänkt matförgiftning"
+		"statusUpdated": "2025-02-14T12:40:00"
 	},
 	{
-		"flowInstanceId": "4932",
 		"created": "2025-02-14T12:39:00",
-		"statusUpdated": "2025-02-18T20:10:00",
+		"displayName": "Anmäl misstänkt matförgiftning",
 		"familyId": "104",
-		"displayName": "Anmäl misstänkt matförgiftning"
+		"flowInstanceId": "4932",
+		"statusUpdated": "2025-02-18T20:10:00"
 	}
 ]

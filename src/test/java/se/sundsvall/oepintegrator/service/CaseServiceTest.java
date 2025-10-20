@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -231,11 +232,15 @@ class CaseServiceTest {
 		final var familyId = "familyId";
 		final var displayName = "displayName";
 		final var expectedCaseEnvelope = new CaseEnvelope().withFamilyId(familyId).withDisplayName(displayName);
+		final var includeStatus = true;
 
 		when(partyClientMock.getLegalId(municipalityId, partyType, partyId))
 			.thenReturn(Optional.of(legalId));
 
-		when(openeRestIntegrationMock.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate))
+		when(openeRestIntegrationMock.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus))
+			.thenReturn(List.of(new CaseEnvelope().withFamilyId(familyId)));
+
+		when(openeRestIntegrationMock.getWaitingCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus))
 			.thenReturn(List.of(new CaseEnvelope().withFamilyId(familyId)));
 
 		when(openeRestIntegrationMock.getRestrictedMetadata(municipalityId, instanceType))
@@ -245,14 +250,15 @@ class CaseServiceTest {
 			.thenReturn(emptyList());
 
 		// Act
-		final var result = caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate);
+		final var result = caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, includeStatus);
 
 		// Assert
 		assertThat(result.getFirst()).isEqualTo(expectedCaseEnvelope);
 
-		verify(openeRestIntegrationMock).getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
+		verify(openeRestIntegrationMock).getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus);
+		verify(openeRestIntegrationMock).getWaitingCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus);
 		verify(partyClientMock).getLegalId(municipalityId, partyType, partyId);
-		verify(openeRestIntegrationMock).getRestrictedMetadata(municipalityId, instanceType);
+		verify(openeRestIntegrationMock, times(2)).getRestrictedMetadata(municipalityId, instanceType);
 		verify(blackListRepositoryMock).findByMunicipalityIdAndInstanceType(municipalityId, instanceType);
 		verifyNoMoreInteractions(openeRestIntegrationMock, partyClientMock);
 		verifyNoInteractions(openeSoapIntegrationMock);
@@ -271,24 +277,26 @@ class CaseServiceTest {
 		final var fromDate = LocalDate.of(2023, 1, 1);
 		final var toDate = LocalDate.of(2023, 12, 31);
 		final var familyId = "familyId";
+		final var includeStatus = true;
 
 		when(partyClientMock.getLegalId(municipalityId, partyType, partyId))
 			.thenReturn(Optional.of(legalId));
 
-		when(openeRestIntegrationMock.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate))
+		when(openeRestIntegrationMock.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus))
 			.thenReturn(List.of(new CaseEnvelope().withFamilyId(familyId)));
 
 		when(blackListRepositoryMock.findByMunicipalityIdAndInstanceType(municipalityId, instanceType))
 			.thenReturn(List.of(BlackListEntity.create().withFamilyId(familyId).withInstanceType(instanceType).withMunicipalityId(municipalityId)));
 
 		// Act
-		final var result = caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate);
+		final var result = caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, includeStatus);
 
 		// Assert
 		assertThat(result).isEmpty();
 
 		verify(partyClientMock).getLegalId(municipalityId, partyType, partyId);
-		verify(openeRestIntegrationMock).getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate);
+		verify(openeRestIntegrationMock).getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus);
+		verify(openeRestIntegrationMock).getWaitingCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus);
 		verify(blackListRepositoryMock).findByMunicipalityIdAndInstanceType(municipalityId, instanceType);
 		verifyNoMoreInteractions(blackListRepositoryMock, openeRestIntegrationMock, partyClientMock);
 		verifyNoInteractions(openeSoapIntegrationMock);
@@ -305,12 +313,13 @@ class CaseServiceTest {
 		final var status = "status";
 		final var fromDate = LocalDate.of(2023, 1, 1);
 		final var toDate = LocalDate.of(2023, 12, 31);
+		final var includeStatus = true;
 
 		when(partyClientMock.getLegalId(municipalityId, partyType, partyId))
 			.thenReturn(Optional.empty());
 
 		// Act & Assert
-		assertThatThrownBy(() -> caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate))
+		assertThatThrownBy(() -> caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, includeStatus))
 			.isInstanceOf(Problem.class)
 			.hasFieldOrPropertyWithValue("status", NOT_FOUND)
 			.hasMessage("Not Found: Citizen identifier not found for partyId: %s".formatted(partyId));

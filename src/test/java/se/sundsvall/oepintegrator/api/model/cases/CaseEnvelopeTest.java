@@ -42,6 +42,7 @@ class CaseEnvelopeTest {
 		final var statusUpdated = now();
 		final var familyId = "familyId";
 		final var displayName = "displayName";
+		final var status = new CaseStatus();
 
 		// Act
 		final var bean = CaseEnvelope.create()
@@ -49,7 +50,8 @@ class CaseEnvelopeTest {
 			.withCreated(created)
 			.withStatusUpdated(statusUpdated)
 			.withFamilyId(familyId)
-			.withDisplayName(displayName);
+			.withDisplayName(displayName)
+			.withStatus(status);
 
 		// Assert
 		assertThat(bean).isNotNull().hasNoNullFieldsOrProperties();
@@ -58,6 +60,7 @@ class CaseEnvelopeTest {
 		assertThat(bean.getStatusUpdated()).isEqualTo(statusUpdated);
 		assertThat(bean.getFamilyId()).isEqualTo(familyId);
 		assertThat(bean.getDisplayName()).isEqualTo(displayName);
+		assertThat(bean.getStatus()).isEqualTo(status);
 	}
 
 	@Test

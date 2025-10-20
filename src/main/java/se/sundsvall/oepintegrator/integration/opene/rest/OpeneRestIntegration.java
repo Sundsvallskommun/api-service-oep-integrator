@@ -75,9 +75,14 @@ public class OpeneRestIntegration {
 		return envelopeList;
 	}
 
-	public List<CaseEnvelope> getCaseListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String legalId, final String status, final LocalDate fromDate, final LocalDate toDate) {
+	public List<CaseEnvelope> getCaseListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String legalId, final String status, final LocalDate fromDate, final LocalDate toDate, final Boolean includeStatus) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
-		return toCaseEnvelopeList(client.getCaseListByCitizenIdentifier(legalId, status, formatLocalDate(fromDate), formatLocalDate(toDate)).orElse(EMPTY_BYTE_ARRAY));
+		return toCaseEnvelopeList(client.getCaseListByCitizenIdentifier(legalId, status, formatLocalDate(fromDate), formatLocalDate(toDate), includeStatus).orElse(EMPTY_BYTE_ARRAY));
+	}
+
+	public List<CaseEnvelope> getWaitingCaseListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String legalId, final String status, final LocalDate fromDate, final LocalDate toDate, final Boolean includeStatus) {
+		final var client = clientFactory.getRestClient(municipalityId, instanceType);
+		return toCaseEnvelopeList(client.getWaitingCaseListByCitizenIdentifier(legalId, status, formatLocalDate(fromDate), formatLocalDate(toDate), includeStatus).orElse(EMPTY_BYTE_ARRAY));
 	}
 
 	public CaseStatus getCaseStatusByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
