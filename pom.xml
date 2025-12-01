@@ -15,7 +15,7 @@
 	<properties>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 		<generated-sources-java-path>src/main/java</generated-sources-java-path>
-		<jaxb-plugins.version>4.0.11</jaxb-plugins.version>
+		<jaxb-plugins.version>4.0.12</jaxb-plugins.version>
 		<overviewproject.mimetypes.version>2.0.0</overviewproject.mimetypes.version>
 		<xsoup.version>0.3.7</xsoup.version>
 	</properties>
