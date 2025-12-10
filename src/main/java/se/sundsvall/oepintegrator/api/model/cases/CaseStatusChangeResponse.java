@@ -6,7 +6,7 @@ import java.util.Objects;
 @Schema(description = "SetStatus response model")
 public class CaseStatusChangeResponse {
 
-	@Schema(description = "Event id", example = "123")
+	@Schema(description = "Event id", examples = "123")
 	private Integer eventId;
 
 	public static CaseStatusChangeResponse create() {

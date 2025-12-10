@@ -8,17 +8,17 @@ import java.util.Objects;
 public class ConfirmDeliveryRequest {
 
 	@NotBlank
-	@Schema(description = "The case id in the system that delivered the case. From Open-E Platforms perspective this is the 'external case id", example = "caa230c6-abb4-4592-ad9a-34e263c2787d")
+	@Schema(description = "The case id in the system that delivered the case. From Open-E Platforms perspective this is the 'external case id", examples = "caa230c6-abb4-4592-ad9a-34e263c2787d")
 	private String caseId;
 
-	@Schema(description = "If the case was delivered", example = "true")
+	@Schema(description = "If the case was delivered", examples = "true")
 	private boolean delivered;
 
-	@Schema(description = "Any log message", example = "The case was delivered successfully")
+	@Schema(description = "Any log message", examples = "The case was delivered successfully")
 	private String logMessage;
 
 	@NotBlank
-	@Schema(description = "The system that delivered the case", example = "ByggR")
+	@Schema(description = "The system that delivered the case", examples = "ByggR")
 	private String system;
 
 	public static ConfirmDeliveryRequest create() {

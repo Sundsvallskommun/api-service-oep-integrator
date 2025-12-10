@@ -9,49 +9,49 @@ import java.util.Objects;
 @Schema(description = "Webmessage model")
 public class Webmessage {
 
-	@Schema(description = "The webMessageCollector Id for the message", example = "1")
+	@Schema(description = "The webMessageCollector Id for the message", examples = "1")
 	private Integer id;
 
-	@Schema(description = "If the message is inbound or outbound. Inbound means coming from open-E. Outbound means sent to open-E", example = "INBOUND")
+	@Schema(description = "If the message is inbound or outbound. Inbound means coming from open-E. Outbound means sent to open-E", examples = "INBOUND")
 	private Direction direction;
 
-	@Schema(description = "The municipality id", example = "2281")
+	@Schema(description = "The municipality id", examples = "2281")
 	private String municipalityId;
 
-	@Schema(description = "What E-service the message was found in", example = "501")
+	@Schema(description = "What E-service the message was found in", examples = "501")
 	private String familyId;
 
-	@Schema(description = "The external caseID ", example = "caa230c6-abb4-4592-ad9a-34e263c2787b")
+	@Schema(description = "The external caseID ", examples = "caa230c6-abb4-4592-ad9a-34e263c2787b")
 	private String externalCaseId;
 
-	@Schema(description = "The message ", example = "Hello World")
+	@Schema(description = "The message ", examples = "Hello World")
 	private String message;
 
-	@Schema(description = "The unique messageId from openE for the message", example = "12")
+	@Schema(description = "The unique messageId from openE for the message", examples = "12")
 	private String messageId;
 
-	@Schema(description = "Time and date the message was sent ", example = "2023-02-23T17:26:23")
+	@Schema(description = "Time and date the message was sent ", examples = "2023-02-23T17:26:23")
 	private LocalDateTime sent;
 
-	@Schema(description = "Username for the poster", example = "te01st")
+	@Schema(description = "Username for the poster", examples = "te01st")
 	private String username;
 
-	@Schema(description = "Firstname of the poster ", example = "Test")
+	@Schema(description = "Firstname of the poster ", examples = "Test")
 	private String firstName;
 
-	@Schema(description = "Lastname of the poster", example = "Testsson")
+	@Schema(description = "Lastname of the poster", examples = "Testsson")
 	private String lastName;
 
-	@Schema(description = "Email for the poster", example = "test@sundsvall.se")
+	@Schema(description = "Email for the poster", examples = "test@sundsvall.se")
 	private String email;
 
-	@Schema(description = "The userId for the poster", example = "123")
+	@Schema(description = "The userId for the poster", examples = "123")
 	private String userId;
 
-	@ArraySchema(schema = @Schema(description = "List of attachments for the message", example = "attachment1, attachment2"))
+	@ArraySchema(schema = @Schema(description = "List of attachments for the message", examples = "attachment1, attachment2"))
 	private List<WebmessageAttachment> attachments;
 
-	@Schema(description = "The instance of the message", example = "external")
+	@Schema(description = "The instance of the message", examples = "external")
 	private String instance;
 
 	public static Webmessage create() {

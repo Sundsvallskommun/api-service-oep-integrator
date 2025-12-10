@@ -6,16 +6,16 @@ import java.util.Objects;
 @Schema(description = "Webmessage attachment model")
 public class WebmessageAttachment {
 
-	@Schema(description = "The Id for the attachment", example = "1")
+	@Schema(description = "The Id for the attachment", examples = "1")
 	private Integer attachmentId;
 
-	@Schema(description = "The name of the file", example = "file.txt")
+	@Schema(description = "The name of the file", examples = "file.txt")
 	private String name;
 
-	@Schema(description = "The extension of the file", example = "txt")
+	@Schema(description = "The extension of the file", examples = "txt")
 	private String extension;
 
-	@Schema(description = "The mime type of the file", example = "text/plain")
+	@Schema(description = "The mime type of the file", examples = "text/plain")
 	private String mimeType;
 
 	public static WebmessageAttachment create() {

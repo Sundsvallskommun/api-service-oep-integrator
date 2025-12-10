@@ -12,31 +12,31 @@ import se.sundsvall.oepintegrator.util.enums.IntegrationType;
 @Schema(description = "Instance model")
 public class Instance {
 
-	@Schema(description = "InstanceType ID", accessMode = READ_ONLY, example = "123e4567-e89b-12d3-a456-426614174000")
+	@Schema(description = "InstanceType ID", accessMode = READ_ONLY, examples = "123e4567-e89b-12d3-a456-426614174000")
 	private String id;
 
-	@Schema(description = "Type of integration. SOAP/REST", example = "SOAP")
+	@Schema(description = "Type of integration. SOAP/REST", examples = "SOAP")
 	private IntegrationType integrationType;
 
-	@Schema(description = "InstanceType type. INTERNAL/EXTERNAL", example = "INTERNAL")
+	@Schema(description = "InstanceType type. INTERNAL/EXTERNAL", examples = "INTERNAL")
 	private InstanceType instanceType;
 
-	@Schema(description = "Base URL of the instanceType", example = "https://example.com")
+	@Schema(description = "Base URL of the instanceType", examples = "https://example.com")
 	private String baseUrl;
 
-	@Schema(description = "Username for the instanceType", accessMode = WRITE_ONLY, example = "user123")
+	@Schema(description = "Username for the instanceType", accessMode = WRITE_ONLY, examples = "user123")
 	private String username;
 
-	@Schema(description = "Password for the instanceType", accessMode = WRITE_ONLY, example = "pass123")
+	@Schema(description = "Password for the instanceType", accessMode = WRITE_ONLY, examples = "pass123")
 	private String password;
 
-	@Schema(description = "List with family IDs", example = "[\"family1\", \"family2\"]")
+	@Schema(description = "List with family IDs", examples = "[\"family1\", \"family2\"]")
 	private List<String> familyIds;
 
-	@Schema(description = "Connection timeout in seconds", example = "5")
+	@Schema(description = "Connection timeout in seconds", examples = "5")
 	private Integer connectTimeout;
 
-	@Schema(description = "Read timeout in seconds", example = "60")
+	@Schema(description = "Read timeout in seconds", examples = "60")
 	private Integer readTimeout;
 
 	public static Instance create() {

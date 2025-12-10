@@ -7,7 +7,7 @@ SOAP._
 
 ### Prerequisites
 
-- **Java 21 or higher**
+- **Java 25 or higher**
 - **Maven**
 - **MariaDB**
 - **Git**
@@ -113,7 +113,9 @@ Configuration is crucial for the application to run successfully. Ensure all nec
 
 ### Configure Open-e Instances
 
-The application is able to handle multiple Open-e instances. These are not configure in the application.yml file, but in the database. The best way to do this is to use the API to create the instances. Refer to the [API Documentation](#api-documentation) for more details.
+The application is able to handle multiple Open-e instances. These are not configure in the application.yml file, but in
+the database. The best way to do this is to use the API to create the instances. Refer to
+the [API Documentation](#api-documentation) for more details.
 
 ### Database Initialization
 

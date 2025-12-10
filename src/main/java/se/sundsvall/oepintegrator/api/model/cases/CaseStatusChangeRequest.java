@@ -7,10 +7,10 @@ import java.util.Objects;
 @Schema(description = "SetStatus request model")
 public class CaseStatusChangeRequest {
 
-	@Schema(description = "The status ID", example = "123")
+	@Schema(description = "The status ID", examples = "123")
 	private Integer id;
 
-	@Schema(description = "The status name", example = "Inskickat")
+	@Schema(description = "The status name", examples = "Inskickat")
 	private String name;
 
 	@Valid
