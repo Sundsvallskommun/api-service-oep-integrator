@@ -6,10 +6,10 @@ import java.util.Objects;
 @Schema(description = "ExternalReference model")
 public class ExternalReference {
 
-	@Schema(description = "The external reference key", example = "flowInstanceId")
+	@Schema(description = "The external reference key", examples = "flowInstanceId")
 	private String key;
 
-	@Schema(description = "The external reference value", example = "356746349")
+	@Schema(description = "The external reference value", examples = "356746349")
 	private String value;
 
 	public static ExternalReference create() {

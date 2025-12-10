@@ -9,14 +9,14 @@ import se.sundsvall.oepintegrator.api.validation.ValidSender;
 @Schema(description = "Sender model. The attributes in this object are mutually exclusive, meaning that only one of them can be set at a time.")
 public class Sender {
 
-	@Schema(description = "The user ID of the sender. I.e. employee ID", example = "joe01doe")
+	@Schema(description = "The user ID of the sender. I.e. employee ID", examples = "joe01doe")
 	private String userId;
 
-	@Schema(description = "The user ID of the case administrator. I.e. the employee ID of the administrative official.", example = "joe01doe")
+	@Schema(description = "The user ID of the case administrator. I.e. the employee ID of the administrative official.", examples = "joe01doe")
 	private String administratorId;
 
 	@ValidUuid(nullable = true)
-	@Schema(description = "The party ID of the sender.", example = "582462d3-ae94-476f-96de-f495a927dea8")
+	@Schema(description = "The party ID of the sender.", examples = "582462d3-ae94-476f-96de-f495a927dea8")
 	private String partyId;
 
 	public static Sender create() {

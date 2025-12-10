@@ -7,29 +7,29 @@ import java.util.Objects;
 @Schema(description = "Case model")
 public class Case {
 
-	@Schema(description = "The flowInstanceId (caseId)", example = "109581")
+	@Schema(description = "The flowInstanceId (caseId)", examples = "109581")
 	private String flowInstanceId;
 
-	@Schema(description = "The familyId", example = "832")
+	@Schema(description = "The familyId", examples = "832")
 	private String familyId;
 
-	@Schema(description = "Version of the case", example = "4")
+	@Schema(description = "Version of the case", examples = "4")
 	private Integer version;
 
-	@Schema(description = "The flowId", example = "2411")
+	@Schema(description = "The flowId", examples = "2411")
 	private String flowId;
 
-	@Schema(description = "The title of the case", example = "Anmälan om sjukfrånvaro")
+	@Schema(description = "The title of the case", examples = "Anmälan om sjukfrånvaro")
 	private String title;
 
 	@Schema(description = "The case status")
 	private CaseStatus status;
 
-	@Schema(description = "The case create date", example = "2023-11-15T11:55")
+	@Schema(description = "The case create date", examples = "2023-11-15T11:55")
 	private LocalDateTime created;
 
 	@Schema(description = "The payload of the case in xml",
-		example = "<Values><sickNotePercentRow2><QueryID>66909</QueryID><Name><![CDATA[Omfattning p* sjukfrånvaro enligt läkarintyg]]></Name><Value>50%</Value></sickNotePercentRow2><sickNotePeriodRow2><QueryID>66910</QueryID><Name><![CDATA[Sjukskrivningsperioden from tom]]></Name><Datum_fran><![CDATA[2024-12-09]]></Datum_fran><Datum_till><![CDATA[2024-12-20]]></Datum_till></sickNotePeriodRow2></Values>")
+		examples = "<Values><sickNotePercentRow2><QueryID>66909</QueryID><Name><![CDATA[Omfattning p* sjukfrånvaro enligt läkarintyg]]></Name><Value>50%</Value></sickNotePercentRow2><sickNotePeriodRow2><QueryID>66910</QueryID><Name><![CDATA[Sjukskrivningsperioden from tom]]></Name><Datum_fran><![CDATA[2024-12-09]]></Datum_fran><Datum_till><![CDATA[2024-12-20]]></Datum_till></sickNotePeriodRow2></Values>")
 	private String payload;
 
 	public static Case create() {

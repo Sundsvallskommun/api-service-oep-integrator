@@ -7,19 +7,19 @@ import java.util.Objects;
 @Schema(description = "Case envelope model")
 public class CaseEnvelope {
 
-	@Schema(description = "The flowInstanceId (caseId)", example = "109581")
+	@Schema(description = "The flowInstanceId (caseId)", examples = "109581")
 	private String flowInstanceId;
 
-	@Schema(description = "The case create date", example = "2023-11-15T11:55")
+	@Schema(description = "The case create date", examples = "2023-11-15T11:55")
 	private LocalDateTime created;
 
-	@Schema(description = "The case status change date", example = "2023-11-16T12:01")
+	@Schema(description = "The case status change date", examples = "2023-11-16T12:01")
 	private LocalDateTime statusUpdated;
 
-	@Schema(description = "The familyId", example = "832", hidden = true)
+	@Schema(description = "The familyId", examples = "832", hidden = true)
 	private String familyId;
 
-	@Schema(description = "The display name for the family the case belongs to", example = "Kompiskortet")
+	@Schema(description = "The display name for the family the case belongs to", examples = "Kompiskortet")
 	private String displayName;
 
 	@Schema(description = "The case status")

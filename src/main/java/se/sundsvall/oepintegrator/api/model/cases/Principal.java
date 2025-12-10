@@ -9,11 +9,11 @@ import java.util.Objects;
 @Schema(description = "Principal model")
 public class Principal {
 
-	@Schema(description = "The name", example = "John Doe")
+	@Schema(description = "The name", examples = "John Doe")
 	private String name;
 
 	@NotBlank
-	@Schema(description = "The user id", example = "joh12doe", requiredMode = REQUIRED)
+	@Schema(description = "The user id", examples = "joh12doe", requiredMode = REQUIRED)
 	private String userId;
 
 	public static Principal create() {

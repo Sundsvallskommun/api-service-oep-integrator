@@ -17,7 +17,7 @@ public class WebmessageRequest {
 	@Schema(description = "The sender")
 	private Sender sender;
 
-	@Schema(description = "The message", example = "This is a message", requiredMode = REQUIRED)
+	@Schema(description = "The message", examples = "This is a message", requiredMode = REQUIRED)
 	@NotBlank
 	private String message;
 
