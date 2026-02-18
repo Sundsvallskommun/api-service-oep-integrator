@@ -1,20 +1,5 @@
 package se.sundsvall.oepintegrator.integration.opene.rest;
 
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.tuple;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
-import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
-import static org.springframework.http.ResponseEntity.internalServerError;
-import static org.springframework.http.ResponseEntity.ok;
-import static se.sundsvall.oepintegrator.api.model.webmessage.Direction.INBOUND;
-import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
-import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
-
 import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,6 +20,21 @@ import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataFlow;
 import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataRoot;
+
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
+import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
+import static org.springframework.http.ResponseEntity.internalServerError;
+import static org.springframework.http.ResponseEntity.ok;
+import static se.sundsvall.oepintegrator.api.model.webmessage.Direction.INBOUND;
+import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 @ExtendWith({
 	MockitoExtension.class, ResourceLoaderExtension.class

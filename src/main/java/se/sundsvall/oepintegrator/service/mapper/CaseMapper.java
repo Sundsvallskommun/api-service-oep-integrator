@@ -1,10 +1,5 @@
 package se.sundsvall.oepintegrator.service.mapper;
 
-import static java.util.Optional.ofNullable;
-import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
-import static se.sundsvall.oepintegrator.util.XPathUtil.evaluateXPath;
-import static se.sundsvall.oepintegrator.util.XPathUtil.parseXmlDocument;
-
 import callback.ConfirmDelivery;
 import callback.ExternalID;
 import java.time.LocalDateTime;
@@ -16,6 +11,11 @@ import se.sundsvall.oepintegrator.api.model.cases.Case;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
+
+import static java.util.Optional.ofNullable;
+import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
+import static se.sundsvall.oepintegrator.util.XPathUtil.evaluateXPath;
+import static se.sundsvall.oepintegrator.util.XPathUtil.parseXmlDocument;
 
 public final class CaseMapper {
 

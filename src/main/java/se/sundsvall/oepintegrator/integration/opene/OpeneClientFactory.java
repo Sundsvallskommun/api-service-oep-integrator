@@ -1,8 +1,5 @@
 package se.sundsvall.oepintegrator.integration.opene;
 
-import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -15,6 +12,9 @@ import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapClient;
 import se.sundsvall.oepintegrator.integration.opene.soap.configuration.SoapClientFactory;
 import se.sundsvall.oepintegrator.util.enums.InstanceType;
 import se.sundsvall.oepintegrator.util.enums.IntegrationType;
+
+import static java.util.Optional.ofNullable;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 
 /**
  * Factory class for creating OpenE clients. This class is responsible for creating and managing OpenE clients.

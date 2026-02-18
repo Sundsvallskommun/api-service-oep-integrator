@@ -1,8 +1,5 @@
 package se.sundsvall.oepintegrator.integration.opene.rest.configuration;
 
-import static feign.Logger.Level.FULL;
-import static java.util.concurrent.TimeUnit.SECONDS;
-
 import feign.Request;
 import feign.auth.BasicAuthRequestInterceptor;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
@@ -15,6 +12,9 @@ import se.sundsvall.oepintegrator.integration.opene.CircuitBreakerCapability;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClient;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestClient;
 import se.sundsvall.oepintegrator.util.EncryptionUtility;
+
+import static feign.Logger.Level.FULL;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Component
 public class OpeneRestClientFactory {

@@ -1,13 +1,13 @@
 package se.sundsvall.oepintegrator.util;
 
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
 import static org.jsoup.Jsoup.parse;
 import static org.jsoup.parser.Parser.xmlParser;
 import static us.codecraft.xsoup.Xsoup.compile;
-
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 public final class XPathUtil {
 

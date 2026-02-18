@@ -1,9 +1,5 @@
 package se.sundsvall.oepintegrator.api.validation.impl;
 
-import static org.apache.commons.lang3.StringUtils.isNoneBlank;
-import static org.springframework.util.CollectionUtils.isEmpty;
-import static se.sundsvall.oepintegrator.util.Constants.REFERENCE_FLOW_INSTANCE_ID;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.List;
@@ -11,6 +7,10 @@ import java.util.function.Predicate;
 import org.apache.commons.lang3.StringUtils;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.validation.ValidExternalReferences;
+
+import static org.apache.commons.lang3.StringUtils.isNoneBlank;
+import static org.springframework.util.CollectionUtils.isEmpty;
+import static se.sundsvall.oepintegrator.util.Constants.REFERENCE_FLOW_INSTANCE_ID;
 
 public class ValidExternalReferencesConstraintValidator implements ConstraintValidator<ValidExternalReferences, List<ExternalReference>> {
 

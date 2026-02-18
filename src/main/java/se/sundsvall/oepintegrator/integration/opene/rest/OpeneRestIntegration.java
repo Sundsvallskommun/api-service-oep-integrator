@@ -1,15 +1,5 @@
 package se.sundsvall.oepintegrator.integration.opene.rest;
 
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
-import static java.util.Collections.emptyList;
-import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessages;
-import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCase;
-import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseEnvelopeList;
-import static se.sundsvall.oepintegrator.service.mapper.CaseStatusMapper.toCaseStatus;
-import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,6 +18,16 @@ import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataFlow;
 import se.sundsvall.oepintegrator.integration.opene.rest.model.MetadataRoot;
 import se.sundsvall.oepintegrator.util.enums.InstanceType;
+
+import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessages;
+import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCase;
+import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseEnvelopeList;
+import static se.sundsvall.oepintegrator.service.mapper.CaseStatusMapper.toCaseStatus;
+import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
 
 /**
  * Integration class for Open-E REST API. This will be used to call the Open-E REST API like this:

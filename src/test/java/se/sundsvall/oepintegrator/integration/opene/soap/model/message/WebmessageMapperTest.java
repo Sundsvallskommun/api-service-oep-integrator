@@ -1,9 +1,5 @@
 package se.sundsvall.oepintegrator.integration.opene.soap.model.message;
 
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.zalando.problem.Problem;
@@ -11,6 +7,10 @@ import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
 import se.sundsvall.oepintegrator.util.enums.InstanceType;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @ExtendWith(ResourceLoaderExtension.class)
 class WebmessageMapperTest {

@@ -1,15 +1,15 @@
 package se.sundsvall.oepintegrator.service.mapper;
 
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import se.sundsvall.oepintegrator.api.model.instance.Instance;
+import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.INTERNAL;
 import static se.sundsvall.oepintegrator.util.enums.IntegrationType.REST;
 import static se.sundsvall.oepintegrator.util.enums.IntegrationType.SOAP;
-
-import java.util.List;
-import org.junit.jupiter.api.Test;
-import se.sundsvall.oepintegrator.api.model.instance.Instance;
-import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 
 class InstanceMapperTest {
 

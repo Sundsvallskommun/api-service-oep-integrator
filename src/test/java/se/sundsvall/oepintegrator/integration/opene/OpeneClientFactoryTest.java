@@ -1,15 +1,5 @@
 package se.sundsvall.oepintegrator.integration.opene;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
-import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
-import static se.sundsvall.oepintegrator.util.enums.InstanceType.INTERNAL;
-import static se.sundsvall.oepintegrator.util.enums.IntegrationType.REST;
-import static se.sundsvall.oepintegrator.util.enums.IntegrationType.SOAP;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,6 +9,16 @@ import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 import se.sundsvall.oepintegrator.util.EncryptionUtility;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.MOCK;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.INTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.IntegrationType.REST;
+import static se.sundsvall.oepintegrator.util.enums.IntegrationType.SOAP;
 
 @SpringBootTest(classes = Application.class, webEnvironment = MOCK)
 @ActiveProfiles("junit")

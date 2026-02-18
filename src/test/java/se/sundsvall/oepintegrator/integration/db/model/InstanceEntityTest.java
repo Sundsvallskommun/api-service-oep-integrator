@@ -1,5 +1,9 @@
 package se.sundsvall.oepintegrator.integration.db.model;
 
+import java.util.List;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Test;
+
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCode;
@@ -9,10 +13,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 import static se.sundsvall.oepintegrator.util.enums.IntegrationType.REST;
-
-import java.util.List;
-import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Test;
 
 class InstanceEntityTest {
 

@@ -1,13 +1,13 @@
 package se.sundsvall.oepintegrator.api.model.instance;
 
-import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
-import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.WRITE_ONLY;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.List;
 import java.util.Objects;
 import se.sundsvall.oepintegrator.util.enums.InstanceType;
 import se.sundsvall.oepintegrator.util.enums.IntegrationType;
+
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY;
+import static io.swagger.v3.oas.annotations.media.Schema.AccessMode.WRITE_ONLY;
 
 @Schema(description = "Instance model")
 public class Instance {

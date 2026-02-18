@@ -1,8 +1,5 @@
 package se.sundsvall.oepintegrator.service.mapper;
 
-import static se.sundsvall.oepintegrator.util.XPathUtil.evaluateXPath;
-import static se.sundsvall.oepintegrator.util.XPathUtil.parseXmlDocument;
-
 import callback.ExternalID;
 import callback.Principal;
 import callback.SetStatus;
@@ -12,6 +9,9 @@ import javax.xml.namespace.QName;
 import org.jsoup.nodes.Document;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
+
+import static se.sundsvall.oepintegrator.util.XPathUtil.evaluateXPath;
+import static se.sundsvall.oepintegrator.util.XPathUtil.parseXmlDocument;
 
 public final class CaseStatusMapper {
 

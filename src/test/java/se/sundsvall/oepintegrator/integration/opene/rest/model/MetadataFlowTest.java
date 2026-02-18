@@ -1,8 +1,8 @@
 package se.sundsvall.oepintegrator.integration.opene.rest.model;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class MetadataFlowTest {
 

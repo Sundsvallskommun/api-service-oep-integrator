@@ -1,10 +1,5 @@
 package se.sundsvall.oepintegrator.integration.opene.soap.configuration;
 
-import static feign.Logger.Level.FULL;
-import static jakarta.xml.soap.SOAPConstants.SOAP_1_1_PROTOCOL;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.concurrent.TimeUnit.SECONDS;
-
 import feign.Request;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.jaxb.JAXBContextFactory;
@@ -20,6 +15,11 @@ import se.sundsvall.oepintegrator.integration.opene.CircuitBreakerCapability;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClient;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapClient;
 import se.sundsvall.oepintegrator.util.EncryptionUtility;
+
+import static feign.Logger.Level.FULL;
+import static jakarta.xml.soap.SOAPConstants.SOAP_1_1_PROTOCOL;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Component
 public class SoapClientFactory {

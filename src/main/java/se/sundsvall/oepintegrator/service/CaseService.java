@@ -1,12 +1,5 @@
 package se.sundsvall.oepintegrator.service;
 
-import static generated.se.sundsvall.party.PartyType.PRIVATE;
-import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toSet;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toConfirmDelivery;
-import static se.sundsvall.oepintegrator.util.StreamUtils.copyResponseEntityToHttpServletResponse;
-
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -28,6 +21,13 @@ import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 import se.sundsvall.oepintegrator.integration.party.PartyClient;
 import se.sundsvall.oepintegrator.service.mapper.CaseStatusMapper;
 import se.sundsvall.oepintegrator.util.enums.InstanceType;
+
+import static generated.se.sundsvall.party.PartyType.PRIVATE;
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.toSet;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toConfirmDelivery;
+import static se.sundsvall.oepintegrator.util.StreamUtils.copyResponseEntityToHttpServletResponse;
 
 @Service
 public class CaseService {
