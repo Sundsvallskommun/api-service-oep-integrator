@@ -1,14 +1,14 @@
 package se.sundsvall.oepintegrator.api.validation.impl;
 
-import static java.util.Arrays.asList;
-import static java.util.Objects.isNull;
-import static org.apache.commons.lang3.StringUtils.isAllBlank;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import java.util.Objects;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.validation.ValidSender;
+
+import static java.util.Arrays.asList;
+import static java.util.Objects.isNull;
+import static org.apache.commons.lang3.StringUtils.isAllBlank;
 
 public class ValidSenderConstraintValidator implements ConstraintValidator<ValidSender, Sender> {
 

@@ -1,10 +1,5 @@
 package se.sundsvall.oepintegrator.service.mapper;
 
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-
 import java.io.IOException;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
+
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 
 class MessageMapperTest {
 

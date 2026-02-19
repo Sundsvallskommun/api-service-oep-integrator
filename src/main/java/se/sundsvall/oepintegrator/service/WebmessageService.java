@@ -1,14 +1,5 @@
 package se.sundsvall.oepintegrator.service;
 
-import static generated.se.sundsvall.party.PartyType.PRIVATE;
-import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.BAD_REQUEST;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.oepintegrator.service.mapper.MessageMapper.toAddMessage;
-import static se.sundsvall.oepintegrator.service.mapper.MessageMapper.toAddMessageAsOwner;
-import static se.sundsvall.oepintegrator.util.Constants.REFERENCE_FLOW_INSTANCE_ID;
-import static se.sundsvall.oepintegrator.util.StreamUtils.copyResponseEntityToHttpServletResponse;
-
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,6 +13,15 @@ import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestIntegration;
 import se.sundsvall.oepintegrator.integration.opene.soap.OpeneSoapIntegration;
 import se.sundsvall.oepintegrator.integration.party.PartyClient;
 import se.sundsvall.oepintegrator.util.enums.InstanceType;
+
+import static generated.se.sundsvall.party.PartyType.PRIVATE;
+import static java.util.Optional.ofNullable;
+import static org.zalando.problem.Status.BAD_REQUEST;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.oepintegrator.service.mapper.MessageMapper.toAddMessage;
+import static se.sundsvall.oepintegrator.service.mapper.MessageMapper.toAddMessageAsOwner;
+import static se.sundsvall.oepintegrator.util.Constants.REFERENCE_FLOW_INSTANCE_ID;
+import static se.sundsvall.oepintegrator.util.StreamUtils.copyResponseEntityToHttpServletResponse;
 
 @Service
 public class WebmessageService {

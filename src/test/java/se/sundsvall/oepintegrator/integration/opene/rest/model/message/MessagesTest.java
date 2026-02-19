@@ -1,5 +1,11 @@
 package se.sundsvall.oepintegrator.integration.opene.rest.model.message;
 
+import java.util.List;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Test;
+import se.sundsvall.oepintegrator.integration.opene.soap.model.message.ExternalMessage;
+import se.sundsvall.oepintegrator.integration.opene.soap.model.message.Messages;
+
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCode;
@@ -7,12 +13,6 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
-
-import java.util.List;
-import org.hamcrest.MatcherAssert;
-import org.junit.jupiter.api.Test;
-import se.sundsvall.oepintegrator.integration.opene.soap.model.message.ExternalMessage;
-import se.sundsvall.oepintegrator.integration.opene.soap.model.message.Messages;
 
 class MessagesTest {
 

@@ -1,9 +1,5 @@
 package se.sundsvall.oepintegrator.service.mapper;
 
-import static java.util.Collections.emptyList;
-import static javax.xml.datatype.DatatypeFactory.newInstance;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-
 import callback.AddMessage;
 import callback.AddMessageAsOwner;
 import callback.Attachment;
@@ -19,6 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.zalando.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageRequest;
+
+import static java.util.Collections.emptyList;
+import static javax.xml.datatype.DatatypeFactory.newInstance;
+import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
 
 public final class MessageMapper {
 

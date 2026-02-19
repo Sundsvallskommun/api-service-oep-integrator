@@ -1,11 +1,11 @@
 package se.sundsvall.oepintegrator.integration.db.converter;
 
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.INTERNAL;
-
-import org.junit.jupiter.api.Test;
 
 class InstanceTypeConverterTest {
 

@@ -1,16 +1,5 @@
 package se.sundsvall.oepintegrator.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static se.sundsvall.oepintegrator.util.enums.InstanceType.INTERNAL;
-import static se.sundsvall.oepintegrator.util.enums.IntegrationType.REST;
-import static se.sundsvall.oepintegrator.util.enums.IntegrationType.SOAP;
-
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -26,6 +15,17 @@ import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 import se.sundsvall.oepintegrator.util.EncryptionUtility;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.INTERNAL;
+import static se.sundsvall.oepintegrator.util.enums.IntegrationType.REST;
+import static se.sundsvall.oepintegrator.util.enums.IntegrationType.SOAP;
 
 @ExtendWith(MockitoExtension.class)
 class InstanceServiceTest {

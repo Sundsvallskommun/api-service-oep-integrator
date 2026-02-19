@@ -1,11 +1,5 @@
 package se.sundsvall.oepintegrator.integration.opene.soap;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
-
 import callback.AddMessage;
 import callback.AddMessageAsOwner;
 import callback.AddMessageAsOwnerResponse;
@@ -20,6 +14,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 @ExtendWith({
 	MockitoExtension.class, ResourceLoaderExtension.class
