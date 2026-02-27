@@ -12,7 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.InputStreamResource;
-import org.zalando.problem.Problem;
+import org.springframework.core.io.Resource;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.dept44.test.annotation.resource.Load;
 import se.sundsvall.dept44.test.extension.ResourceLoaderExtension;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
@@ -122,7 +123,7 @@ class OpeneRestIntegrationTest {
 		// Act & Assert
 		assertThatThrownBy(() -> openeRestIntegration.getWebmessagesByFamilyId(municipalityId, instanceType, familyId, fromDateTime, toDateTime))
 			.isInstanceOf(Problem.class)
-			.hasMessageStartingWith("Internal Server Error: JsonParseException occurred when parsing open-e messages. Message is: Unexpected EOF in prolog");
+			.hasMessageStartingWith("Internal Server Error: StreamReadException occurred when parsing open-e messages. Message is: Unexpected EOF in prolog");
 
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verify(openeRestClient).getWebmessagesByFamilyId(familyId, formattedFromDateTime, formattedToDateTime);
@@ -201,7 +202,7 @@ class OpeneRestIntegrationTest {
 		// Act & Assert
 		assertThatThrownBy(() -> openeRestIntegration.getWebmessagesByFlowInstanceId(municipalityId, instanceType, flowInstanceId, fromDateTime, toDateTime))
 			.isInstanceOf(Problem.class)
-			.hasMessageStartingWith("Internal Server Error: JsonParseException occurred when parsing open-e messages. Message is: Unexpected EOF in prolog");
+			.hasMessageStartingWith("Internal Server Error: StreamReadException occurred when parsing open-e messages. Message is: Unexpected EOF in prolog");
 
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
 		verify(openeRestClient).getWebmessagesByFlowInstanceId(flowInstanceId, formattedFromDateTime, formattedToDateTime);
@@ -220,7 +221,7 @@ class OpeneRestIntegrationTest {
 			"Content-Disposition", List.of("attachment; filename=case.pdf"),
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = ok()
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
 			.body(inputStreamResource);
@@ -233,10 +234,10 @@ class OpeneRestIntegrationTest {
 
 		// Assert
 		assertThat(result).isNotNull();
-		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of(APPLICATION_PDF_VALUE));
-		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=case.pdf"));
-		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
-		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		assertThat(result.getHeaders().get("Content-Type")).isEqualTo(List.of(APPLICATION_PDF_VALUE));
+		assertThat(result.getHeaders().get("Content-Disposition")).isEqualTo(List.of("attachment; filename=case.pdf"));
+		assertThat(result.getHeaders().get("Content-Length")).isEqualTo(List.of("0"));
+		assertThat(result.getHeaders().get("Last-Modified")).isEqualTo(List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
 
 		verify(openeRestClient).getAttachmentById(attachmentId);
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
@@ -250,7 +251,7 @@ class OpeneRestIntegrationTest {
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var attachmentId = 123;
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = internalServerError().body(inputStreamResource);
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
@@ -401,7 +402,7 @@ class OpeneRestIntegrationTest {
 			"Content-Disposition", List.of("attachment; filename=case.pdf"),
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = ok()
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
 			.body(inputStreamResource);
@@ -414,10 +415,10 @@ class OpeneRestIntegrationTest {
 
 		// Assert
 		assertThat(result).isNotNull();
-		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of("application/pdf"));
-		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=case.pdf"));
-		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
-		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		assertThat(result.getHeaders().get("Content-Type")).isEqualTo(List.of("application/pdf"));
+		assertThat(result.getHeaders().get("Content-Disposition")).isEqualTo(List.of("attachment; filename=case.pdf"));
+		assertThat(result.getHeaders().get("Content-Length")).isEqualTo(List.of("0"));
+		assertThat(result.getHeaders().get("Last-Modified")).isEqualTo(List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
 
 		verify(openeRestClient).getCasePdfByFlowInstanceId(flowInstanceId);
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
@@ -431,7 +432,7 @@ class OpeneRestIntegrationTest {
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "flowInstanceId";
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = internalServerError().body(inputStreamResource);
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
@@ -505,7 +506,7 @@ class OpeneRestIntegrationTest {
 			"Content-Disposition", List.of("attachment; filename=case-attachment.png"),
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = ok()
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
 			.body(inputStreamResource);
@@ -518,10 +519,10 @@ class OpeneRestIntegrationTest {
 
 		// Assert
 		assertThat(result).isNotNull();
-		assertThat(result.getHeaders()).containsEntry("Content-Type", List.of(IMAGE_PNG_VALUE));
-		assertThat(result.getHeaders()).containsEntry("Content-Disposition", List.of("attachment; filename=case-attachment.png"));
-		assertThat(result.getHeaders()).containsEntry("Content-Length", List.of("0"));
-		assertThat(result.getHeaders()).containsEntry("Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
+		assertThat(result.getHeaders().get("Content-Type")).isEqualTo(List.of(IMAGE_PNG_VALUE));
+		assertThat(result.getHeaders().get("Content-Disposition")).isEqualTo(List.of("attachment; filename=case-attachment.png"));
+		assertThat(result.getHeaders().get("Content-Length")).isEqualTo(List.of("0"));
+		assertThat(result.getHeaders().get("Last-Modified")).isEqualTo(List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
 
 		verify(openeRestClient).getCaseAttachment(flowInstanceId, queryId, fileId);
 		verify(clientFactory).getRestClient(municipalityId, instanceType);
@@ -537,7 +538,7 @@ class OpeneRestIntegrationTest {
 		final var flowInstanceId = "flowInstanceId";
 		final var queryId = "queryId";
 		final var fileId = "fileId";
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = internalServerError().body(inputStreamResource);
 
 		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);

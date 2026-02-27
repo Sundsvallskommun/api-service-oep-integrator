@@ -1,7 +1,6 @@
 package se.sundsvall.oepintegrator.apptest;
 
 import static java.text.MessageFormat.format;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpHeaders.ACCEPT;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.LOCATION;
@@ -19,17 +18,15 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.sundsvall.dept44.test.AbstractAppTest;
+import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 
-@AutoConfigureWireMock(port = 9090, files = "classpath:/InstanceIT")
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = Application.class)
+@WireMockAppTestSuite(files = "classpath:/InstanceIT/", classes = Application.class)
 @ActiveProfiles("it")
 @Sql({
 	"/db/scripts/truncate.sql",

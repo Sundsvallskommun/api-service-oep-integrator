@@ -15,8 +15,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.zalando.problem.Problem;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.cases.Case;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
@@ -41,12 +42,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
 import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.ok;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 @ExtendWith(MockitoExtension.class)
@@ -145,7 +146,7 @@ class CaseServiceTest {
 			"Content-Disposition", List.of("attachment; filename=case.pdf"),
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = ok()
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
 			.body(inputStreamResource);
@@ -174,7 +175,7 @@ class CaseServiceTest {
 		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
 		final var mockHttpServletResponse = Mockito.mock(HttpServletResponse.class);
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
 		final var responseEntity = badRequest().body(inputStreamResource);
 
 		when(mockHttpServletResponse.getOutputStream()).thenThrow(new IOException());
@@ -370,7 +371,7 @@ class CaseServiceTest {
 			"Content-Disposition", List.of("attachment; filename=case-attachment.png"),
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = ok()
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
 			.body(inputStreamResource);
@@ -401,7 +402,7 @@ class CaseServiceTest {
 		final var queryId = "queryId";
 		final var fileId = "fileId";
 		final var mockHttpServletResponse = Mockito.mock(HttpServletResponse.class);
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = badRequest().body(inputStreamResource);
 
 		when(mockHttpServletResponse.getOutputStream()).thenThrow(new IOException());

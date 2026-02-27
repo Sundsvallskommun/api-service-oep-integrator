@@ -14,11 +14,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
-import org.zalando.problem.Problem;
-import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.oepintegrator.api.model.webmessage.ExternalReference;
 import se.sundsvall.oepintegrator.api.model.webmessage.Sender;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
@@ -40,9 +41,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.zalando.problem.Status.BAD_REQUEST;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 @ExtendWith(MockitoExtension.class)
@@ -245,7 +246,7 @@ class WebmessageServiceTest {
 			"Content-Disposition", List.of("attachment; filename=case.pdf"),
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
 		final var responseEntity = ResponseEntity.ok()
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
 			.body(inputStreamResource);
@@ -272,7 +273,7 @@ class WebmessageServiceTest {
 		final var instanceType = EXTERNAL;
 		final var attachmentId = 123;
 		final var mockHttpServletResponse = mock(HttpServletResponse.class);
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
+		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
 		final var responseEntity = ResponseEntity.badRequest().body(inputStreamResource);
 		when(mockHttpServletResponse.getOutputStream()).thenThrow(new IOException());
 

@@ -1,7 +1,7 @@
 package se.sundsvall.oepintegrator.integration.opene.rest;
 
 import java.util.Optional;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +29,7 @@ public interface OpeneRestClient extends OpeneClient {
 		@RequestParam(name = "toDate") final String toDate);
 
 	@GetMapping(path = "/api/messageapi/getattachment/{attachmentId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
-	ResponseEntity<InputStreamResource> getAttachmentById(@PathVariable(name = "attachmentId") final int attachmentId);
+	ResponseEntity<Resource> getAttachmentById(@PathVariable(name = "attachmentId") final int attachmentId);
 
 	@GetMapping(path = "/api/instanceapi/getinstances/family/{familyId}/{status}", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	Optional<byte[]> getCaseListByFamilyId(
@@ -58,10 +58,10 @@ public interface OpeneRestClient extends OpeneClient {
 	Optional<byte[]> getCaseStatusByFlowInstanceId(@PathVariable(name = "flowInstanceId") final String flowInstanceId);
 
 	@GetMapping(path = "/api/instanceapi/getinstance/{flowInstanceId}/pdf")
-	ResponseEntity<InputStreamResource> getCasePdfByFlowInstanceId(@PathVariable("flowInstanceId") String flowInstanceId);
+	ResponseEntity<Resource> getCasePdfByFlowInstanceId(@PathVariable("flowInstanceId") String flowInstanceId);
 
 	@GetMapping(path = "/api/fileuploadqueryapi/getfile/{flowInstanceId}/{queryId}/{fileId}")
-	ResponseEntity<InputStreamResource> getCaseAttachment(
+	ResponseEntity<Resource> getCaseAttachment(
 		@PathVariable(name = "flowInstanceId") String flowInstanceId,
 		@PathVariable(name = "queryId") String queryId,
 		@PathVariable(name = "fileId") String fileId);
