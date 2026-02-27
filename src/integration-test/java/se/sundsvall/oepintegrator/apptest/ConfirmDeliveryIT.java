@@ -1,7 +1,6 @@
 package se.sundsvall.oepintegrator.apptest;
 
 import static java.text.MessageFormat.format;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
@@ -9,17 +8,16 @@ import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.util.ReflectionTestUtils;
 import se.sundsvall.dept44.test.AbstractAppTest;
+import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.oepintegrator.Application;
+import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 
-@AutoConfigureWireMock(port = 9090, files = "classpath:/ConfirmDeliveryIT")
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = Application.class)
+@WireMockAppTestSuite(files = "classpath:/ConfirmDeliveryIT/", classes = Application.class)
 @ActiveProfiles("it")
 @Sql({
 	"/db/scripts/truncate.sql",
@@ -33,10 +31,17 @@ class ConfirmDeliveryIT extends AbstractAppTest {
 	private static final String FLOW_INSTANCE_ID = "123";
 
 	@Autowired
+	private InstanceRepository instanceRepository;
+
+	@Autowired
 	private OpeneClientFactory openeClientFactory;
 
 	@BeforeEach
 	void beforeEach() {
+		instanceRepository.findAll().forEach(instance -> {
+			instance.setBaseUrl(instance.getBaseUrl().replace("localhost:9090", "localhost:" + wiremock.port()));
+			instanceRepository.save(instance);
+		});
 		ReflectionTestUtils.invokeMethod(openeClientFactory, "init");
 	}
 

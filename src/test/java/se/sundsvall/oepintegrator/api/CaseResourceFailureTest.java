@@ -4,12 +4,13 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
-import org.zalando.problem.Problem;
-import org.zalando.problem.violations.ConstraintViolationProblem;
-import org.zalando.problem.violations.Violation;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
+import se.sundsvall.dept44.problem.violations.Violation;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest;
 import se.sundsvall.oepintegrator.api.model.cases.ConfirmDeliveryRequest;
@@ -26,12 +27,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.zalando.problem.Status.BAD_REQUEST;
-import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 import static se.sundsvall.oepintegrator.util.enums.InstanceType.INTERNAL;
 
+@AutoConfigureWebTestClient
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
 class CaseResourceFailureTest {
@@ -80,7 +82,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("setStatus.setStatusRequest", "must have a status or a statusId"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -113,7 +115,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("principal.userId", "must not be blank"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -139,9 +141,7 @@ class CaseResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getDetail()).isEqualTo("""
-			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeResponse> \
-			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.util.enums.InstanceType,java.lang.String,se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest)""");
+		assertThat(response.getDetail()).isEqualTo("Failed to read request");
 
 		verifyNoInteractions(caseServiceMock);
 	}
@@ -176,7 +176,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("setStatus.setStatusRequest", "must have a status or a statusId"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -211,7 +211,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("principal.userId", "must not be blank"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -239,10 +239,7 @@ class CaseResourceFailureTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getTitle()).isEqualTo("Bad Request");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getDetail()).isEqualTo("""
-			Required request body is missing: org.springframework.http.ResponseEntity<se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeResponse> \
-			se.sundsvall.oepintegrator.api.CaseResource.setStatus(java.lang.String,se.sundsvall.oepintegrator.util.enums.InstanceType,java.lang.String,java.lang.String,\
-			se.sundsvall.oepintegrator.api.model.cases.CaseStatusChangeRequest)""");
+		assertThat(response.getDetail()).isEqualTo("Failed to read request");
 
 		verifyNoInteractions(caseServiceMock);
 	}
@@ -263,7 +260,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getCasesByFamilyId.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -285,7 +282,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getCasesByPartyId.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -309,7 +306,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getCasesByPartyId.partyId", "not a valid UUID"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -333,7 +330,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("confirmDelivery.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -357,8 +354,8 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
-			.containsExactly(tuple("caseId", "must not be blank"),
+			.extracting(Violation::field, Violation::message)
+			.containsExactlyInAnyOrder(tuple("caseId", "must not be blank"),
 				tuple("system", "must not be blank"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -380,7 +377,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getCasePdfByFlowInstanceId.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -456,7 +453,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getCaseStatusByFlowInstanceId.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -478,7 +475,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getCaseAttachment.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(caseServiceMock);
@@ -500,7 +497,7 @@ class CaseResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getCaseByFlowInstanceId.municipalityId", "not a valid municipality ID"));
 		verifyNoInteractions(caseServiceMock);
 	}

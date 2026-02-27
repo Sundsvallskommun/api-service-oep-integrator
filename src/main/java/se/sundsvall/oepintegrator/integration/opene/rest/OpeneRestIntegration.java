@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.cases.Case;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
@@ -22,7 +22,7 @@ import se.sundsvall.oepintegrator.util.enums.InstanceType;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper.toWebmessages;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCase;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toCaseEnvelopeList;
@@ -63,7 +63,7 @@ public class OpeneRestIntegration {
 		return toWebmessages(municipalityId, messages, instanceType);
 	}
 
-	public ResponseEntity<InputStreamResource> getAttachmentById(final String municipalityId, final InstanceType instanceType, final Integer attachmentId) {
+	public ResponseEntity<Resource> getAttachmentById(final String municipalityId, final InstanceType instanceType, final Integer attachmentId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
 		return validateResponse(client.getAttachmentById(attachmentId), "Failed to get attachment by ID");
 	}
@@ -90,12 +90,12 @@ public class OpeneRestIntegration {
 		return toCaseStatus(client.getCaseStatusByFlowInstanceId(flowInstanceId).orElseThrow(() -> Problem.valueOf(NOT_FOUND, "No status found for flow instance ID: '%s'".formatted(flowInstanceId))));
 	}
 
-	public ResponseEntity<InputStreamResource> getCasePdfByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
+	public ResponseEntity<Resource> getCasePdfByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
 		return validateResponse(client.getCasePdfByFlowInstanceId(flowInstanceId), "Failed to get case PDF by flow instance ID");
 	}
 
-	public ResponseEntity<InputStreamResource> getCaseAttachment(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final String queryId, final String fileId) {
+	public ResponseEntity<Resource> getCaseAttachment(final String municipalityId, final InstanceType instanceType, final String flowInstanceId, final String queryId, final String fileId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
 		return validateResponse(client.getCaseAttachment(flowInstanceId, queryId, fileId), "Failed to get case attachment");
 	}
@@ -139,7 +139,7 @@ public class OpeneRestIntegration {
 
 	private <T> ResponseEntity<T> validateResponse(final ResponseEntity<T> response, final String errorMessage) {
 		if (!response.getStatusCode().is2xxSuccessful()) {
-			throw Problem.valueOf(Status.valueOf(response.getStatusCode().value()), errorMessage);
+			throw Problem.valueOf(HttpStatus.valueOf(response.getStatusCode().value()), errorMessage);
 		}
 
 		return response;
