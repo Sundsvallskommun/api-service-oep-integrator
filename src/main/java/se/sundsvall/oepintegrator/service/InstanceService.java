@@ -3,7 +3,7 @@ package se.sundsvall.oepintegrator.service;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.zalando.problem.Problem;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.instance.Instance;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
@@ -11,7 +11,7 @@ import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
 import se.sundsvall.oepintegrator.service.mapper.InstanceMapper;
 import se.sundsvall.oepintegrator.util.EncryptionUtility;
 
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class InstanceService {

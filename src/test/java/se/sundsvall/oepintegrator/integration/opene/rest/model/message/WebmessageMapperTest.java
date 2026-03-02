@@ -1,7 +1,7 @@
 package se.sundsvall.oepintegrator.integration.opene.rest.model.message;
 
 import org.junit.jupiter.api.Test;
-import org.zalando.problem.Problem;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
 import se.sundsvall.oepintegrator.integration.opene.soap.model.message.WebmessageMapper;
 import se.sundsvall.oepintegrator.util.enums.InstanceType;
@@ -105,7 +105,7 @@ class WebmessageMapperTest {
 		// Act & Assert
 		assertThatThrownBy(() -> WebmessageMapper.toWebmessages(MUNICIPALITY_ID, invalidXml.getBytes(ISO_8859_1), FAMILY_ID, INSTANCE_TYPE))
 			.isInstanceOf(Problem.class)
-			.hasMessageStartingWith("Internal Server Error: JsonParseException occurred when parsing open-e messages. Message is: Unexpected character 'I' (code 73) in prolog; expected '<'");
+			.hasMessageStartingWith("Internal Server Error: StreamReadException occurred when parsing open-e messages. Message is: Unexpected character 'I' (code 73) in prolog; expected '<'");
 	}
 
 	@Test

@@ -4,22 +4,22 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
-import org.zalando.problem.Problem;
+import se.sundsvall.dept44.problem.Problem;
 
 import static java.util.Collections.emptyList;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 public final class StreamUtils {
 
 	private StreamUtils() {}
 
-	public static void copyResponseEntityToHttpServletResponse(final ResponseEntity<InputStreamResource> responseEntity, final HttpServletResponse response, final String errorMessage) {
+	public static void copyResponseEntityToHttpServletResponse(final ResponseEntity<Resource> responseEntity, final HttpServletResponse response, final String errorMessage) {
 		try (final var inputStream = Objects.requireNonNull(responseEntity.getBody()).getInputStream();
 			final var outputStream = response.getOutputStream()) {
 

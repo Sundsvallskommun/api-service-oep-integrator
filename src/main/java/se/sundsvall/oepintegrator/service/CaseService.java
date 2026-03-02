@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.zalando.problem.Problem;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.cases.Case;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
 import se.sundsvall.oepintegrator.api.model.cases.CaseStatus;
@@ -25,7 +25,7 @@ import se.sundsvall.oepintegrator.util.enums.InstanceType;
 import static generated.se.sundsvall.party.PartyType.PRIVATE;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toSet;
-import static org.zalando.problem.Status.NOT_FOUND;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.oepintegrator.service.mapper.CaseMapper.toConfirmDelivery;
 import static se.sundsvall.oepintegrator.util.StreamUtils.copyResponseEntityToHttpServletResponse;
 

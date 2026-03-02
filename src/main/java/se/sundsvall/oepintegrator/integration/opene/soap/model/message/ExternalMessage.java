@@ -1,9 +1,9 @@
 package se.sundsvall.oepintegrator.integration.opene.soap.model.message;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import java.util.List;
 import java.util.Objects;
+import tools.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExternalMessage {

@@ -3,7 +3,7 @@
         municipality_id varchar(8),
         family_id varchar(255),
         id varchar(255) not null,
-        instance_type varchar(255),
+        instance_type varchar(255) check ((instance_type in ('EXTERNAL','INTERNAL'))),
         primary key (id)
     ) engine=InnoDB;
 
@@ -17,8 +17,8 @@
         read_timeout integer,
         base_url varchar(255),
         id varchar(255) not null,
-        instance_type varchar(255),
-        integration_type varchar(255),
+        instance_type varchar(255) check ((instance_type in ('EXTERNAL','INTERNAL'))),
+        integration_type varchar(255) check ((integration_type in ('REST','SOAP'))),
         municipality_id varchar(255),
         password varchar(255),
         username varchar(255),

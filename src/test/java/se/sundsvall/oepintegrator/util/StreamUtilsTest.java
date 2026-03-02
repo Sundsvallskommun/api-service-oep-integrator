@@ -7,9 +7,10 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.zalando.problem.Problem;
+import se.sundsvall.dept44.problem.Problem;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -27,10 +28,10 @@ class StreamUtilsTest {
 			"Content-Disposition", List.of("attachment; filename=case.pdf"),
 			"Content-Length", List.of("0"),
 			"Last-Modified", List.of("Wed, 21 Oct 2015 07:28:00 GMT"));
-		final var inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
+		final Resource resource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
 		final var responseEntity = ResponseEntity.ok()
 			.headers(httpHeaders -> httpHeaders.putAll(headers))
-			.body(inputStreamResource);
+			.body(resource);
 
 		// Act
 		StreamUtils.copyResponseEntityToHttpServletResponse(responseEntity, mockHttpServletResponse, "Unable to get case pdf");
@@ -46,7 +47,7 @@ class StreamUtilsTest {
 	void copyResponseEntityToHttpServletResponseWithException() throws IOException {
 		// Arrange
 		final var mockHttpServletResponse = mock(HttpServletResponse.class);
-		final var responseEntity = ResponseEntity.ok()
+		final ResponseEntity<Resource> responseEntity = ResponseEntity.ok()
 			.body(new InputStreamResource(new ByteArrayInputStream(new byte[10])));
 
 		when(mockHttpServletResponse.getOutputStream()).thenThrow(new IOException("Unable to write to output stream"));

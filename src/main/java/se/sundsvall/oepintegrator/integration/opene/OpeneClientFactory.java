@@ -3,7 +3,7 @@ package se.sundsvall.oepintegrator.integration.opene;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.stereotype.Component;
-import org.zalando.problem.Problem;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.db.model.InstanceEntity;
 import se.sundsvall.oepintegrator.integration.opene.rest.OpeneRestClient;
@@ -14,7 +14,7 @@ import se.sundsvall.oepintegrator.util.enums.InstanceType;
 import se.sundsvall.oepintegrator.util.enums.IntegrationType;
 
 import static java.util.Optional.ofNullable;
-import static org.zalando.problem.Status.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * Factory class for creating OpenE clients. This class is responsible for creating and managing OpenE clients.

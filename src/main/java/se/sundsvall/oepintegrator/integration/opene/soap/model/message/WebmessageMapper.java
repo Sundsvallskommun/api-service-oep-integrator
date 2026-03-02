@@ -1,6 +1,5 @@
 package se.sundsvall.oepintegrator.integration.opene.soap.model.message;
 
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,15 +9,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.webmessage.Direction;
 import se.sundsvall.oepintegrator.api.model.webmessage.Webmessage;
 import se.sundsvall.oepintegrator.api.model.webmessage.WebmessageAttachment;
 import se.sundsvall.oepintegrator.util.enums.InstanceType;
+import tools.jackson.dataformat.xml.XmlMapper;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static se.sundsvall.oepintegrator.util.Constants.OPEN_E_DATE_TIME_FORMAT;
 
 public final class WebmessageMapper {
@@ -45,7 +45,7 @@ public final class WebmessageMapper {
 				.map(externalMessage -> toWebmessage(familyId, externalMessage, instance, municipalityId))
 				.toList();
 		} catch (final Exception e) {
-			throw Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "%s occurred when parsing open-e messages. Message is: %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
+			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "%s occurred when parsing open-e messages. Message is: %s".formatted(e.getClass().getSimpleName(), e.getMessage()));
 		}
 	}
 
@@ -87,7 +87,7 @@ public final class WebmessageMapper {
 			final String encodedFile = URLEncoder.encode(file, StandardCharsets.ISO_8859_1);
 			return Files.probeContentType(Paths.get(new URI("file:///" + encodedFile)));
 		} catch (final IOException | URISyntaxException e) {
-			throw Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "Unable to determine mime type for file %s".formatted(file));
+			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "Unable to determine mime type for file %s".formatted(file));
 		}
 	}
 
