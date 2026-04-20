@@ -4,6 +4,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.dept44.problem.Problem;
@@ -32,6 +34,8 @@ import static se.sundsvall.oepintegrator.util.StreamUtils.copyResponseEntityToHt
 @Service
 public class CaseService {
 
+	private static final Logger LOG = LoggerFactory.getLogger(CaseService.class);
+
 	private final OpeneSoapIntegration openeSoapIntegration;
 	private final OpeneRestIntegration openeRestIntegration;
 	private final PartyClient partyClient;
@@ -59,7 +63,12 @@ public class CaseService {
 	}
 
 	public CaseStatusChangeResponse setStatusByFlowinstanceId(final String municipalityId, final InstanceType instanceType, final CaseStatusChangeRequest request, final String flowInstanceId) {
-		return new CaseStatusChangeResponse().withEventId(openeSoapIntegration.setStatus(municipalityId, instanceType, CaseStatusMapper.toSetStatus(request, flowInstanceId)).getEventID());
+		try {
+			return new CaseStatusChangeResponse().withEventId(openeSoapIntegration.setStatus(municipalityId, instanceType, CaseStatusMapper.toSetStatus(request, flowInstanceId)).getEventID());
+		} catch (final Exception e) {
+			LOG.info("Failed to set status for flow instance ID '{}', case may have been purged in Open-E. Error: {}", flowInstanceId, e.getMessage());
+			return new CaseStatusChangeResponse();
+		}
 	}
 
 	public CaseStatusChangeResponse setStatusByExternalId(final String municipalityId, final InstanceType instanceType, final CaseStatusChangeRequest request, final String externalId, final String system) {

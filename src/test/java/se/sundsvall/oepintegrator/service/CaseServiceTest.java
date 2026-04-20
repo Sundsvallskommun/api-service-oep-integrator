@@ -109,6 +109,28 @@ class CaseServiceTest {
 	}
 
 	@Test
+	void setStatusByFlowinstanceIdWhenCaseNotFound() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var flowInstanceId = "123";
+		final var request = new CaseStatusChangeRequest().withName("statusName").withPrincipal(new Principal().withName("name").withUserId("userId"));
+
+		when(openeSoapIntegrationMock.setStatus(eq(municipalityId), eq(instanceType), any())).thenThrow(new RuntimeException("The requested flow instance with ID 123 was not found"));
+
+		// Act
+		final var result = caseService.setStatusByFlowinstanceId(municipalityId, instanceType, request, flowInstanceId);
+
+		// Assert
+		assertThat(result).isNotNull();
+		assertThat(result.getEventId()).isNull();
+
+		verify(openeSoapIntegrationMock).setStatus(eq(municipalityId), eq(instanceType), any());
+		verifyNoMoreInteractions(openeSoapIntegrationMock);
+	}
+
+	@Test
 	void setStatusByExternalId() {
 
 		// Arrange

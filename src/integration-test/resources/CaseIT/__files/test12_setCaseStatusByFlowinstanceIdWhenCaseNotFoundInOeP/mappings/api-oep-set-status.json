@@ -1,0 +1,19 @@
+{
+	"request": {
+		"method": "POST",
+		"bodyPatterns": [
+			{
+				"equalToXml": "<?xml version=\"1.0\" encoding=\"UTF-8\" ?><SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"><SOAP-ENV:Header/><SOAP-ENV:Body><setStatus xmlns=\"http://www.oeplatform.org/version/1.0/schemas/integration/callback\"><flowInstanceID>5640</flowInstanceID><statusAlias>Inskickat</statusAlias><principal><name>John Doe</name><userID>joh12doe</userID></principal></setStatus></SOAP-ENV:Body></SOAP-ENV:Envelope>"
+			}
+		],
+		"urlPath": "/external-oepMock/api/callback"
+	},
+	"response": {
+		"status": 500,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		},
+		"body": "<?xml version='1.0' encoding='ISO-8859-1'?><S:Envelope xmlns:S=\"http://schemas.xmlsoap.org/soap/envelope/\"><S:Body><S:Fault><faultcode>S:Server</faultcode><faultstring>The requested flow instance with ID 5640 was not found</faultstring></S:Fault></S:Body></S:Envelope>"
+	},
+	"name": "api-oep-set-status-by-flowinstance-id-not-found"
+}
