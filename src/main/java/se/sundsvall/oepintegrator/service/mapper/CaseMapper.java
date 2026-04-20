@@ -62,7 +62,7 @@ public final class CaseMapper {
 				.withId(Integer.valueOf(evaluateXPath(doc, "/FlowInstance/Header/Status/ID").text()))
 				.withName(evaluateXPath(doc, "/FlowInstance/Header/Status/Name").text()))
 			.withCreated(java.time.LocalDateTime.parse(evaluateXPath(doc, "/FlowInstance/Header/Posted").text()))
-			.withPayload(doc.toString());
+			.withPayload(doc.toString().replace("\r\n", "\n"));
 	}
 
 	private static CaseStatus toCaseStatus(final Elements elements) {

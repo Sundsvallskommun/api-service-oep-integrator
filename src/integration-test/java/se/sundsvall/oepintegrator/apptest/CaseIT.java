@@ -174,6 +174,19 @@ class CaseIT extends AbstractAppTest {
 	}
 
 	@Test
+	void test12_setCaseStatusByFlowinstanceIdWhenCaseNotFoundInOeP() {
+		setupCall()
+			.withHttpMethod(PUT)
+			.withServicePath(format(PATH_SET_STATUS_BY_FLOW_INSTANCE_ID, MUNICIPALITY_ID, EXTERNAL, "5640"))
+			.withContentType(APPLICATION_JSON)
+			.withRequest(REQUEST_FILE)
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
 	void test11_getCasesByPartyIdWithBlackListedFamilyIds() {
 		setupCall()
 			.withHttpMethod(GET)
