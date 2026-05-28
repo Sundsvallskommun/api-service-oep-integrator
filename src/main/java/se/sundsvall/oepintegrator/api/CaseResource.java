@@ -59,9 +59,8 @@ class CaseResource {
 	}
 
 	@GetMapping(path = "/families/{familyId}", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get cases by family ID",
-		description = "Get a list of case envelopes by family ID",
-		responses = @ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true))
+	@Operation(summary = "Get cases by family ID", description = "Get a list of case envelopes by family ID")
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
 	ResponseEntity<List<CaseEnvelope>> getCasesByFamilyId(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
@@ -74,9 +73,8 @@ class CaseResource {
 	}
 
 	@GetMapping(path = "/parties/{partyId}", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Get cases by citizen identifier",
-		description = "Get a list of case envelopes by citizen identifier",
-		responses = @ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true))
+	@Operation(summary = "Get cases by citizen identifier", description = "Get a list of case envelopes by citizen identifier")
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
 	ResponseEntity<List<CaseEnvelope>> getCasesByPartyId(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
@@ -87,6 +85,36 @@ class CaseResource {
 		@Parameter(name = "includeStatus", description = "Should response include status", example = "true") @RequestParam(value = "includeStatus", required = false) final Boolean includeStatus) {
 
 		return ok(caseService.getCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, includeStatus));
+	}
+
+	@GetMapping(path = "/multisign/parties/{partyId}", produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get cases waiting for multi-sign by citizen identifier", description = "Get a list of case envelopes waiting for multi-sign signing for the given citizen identifier")
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
+	ResponseEntity<List<CaseEnvelope>> getMultisignCasesByPartyId(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "partyId", description = "The party ID", example = "5d68eb00-d8da-49a0-a6b5-8d395be34a5e") @ValidUuid @PathVariable final String partyId,
+		@Parameter(name = "fromDate", description = "Filter cases on fromDate", example = "2024-01-01") @RequestParam(value = "fromDate", required = false) final LocalDate fromDate,
+		@Parameter(name = "toDate", description = "Filter cases on toDate", example = "2024-01-31") @RequestParam(value = "toDate", required = false) final LocalDate toDate,
+		@Parameter(name = "status", description = "Filter by status", example = "Preliminär") @RequestParam(value = "status", required = false) final String status,
+		@Parameter(name = "includeStatus", description = "Should response include status", example = "true") @RequestParam(value = "includeStatus", required = false) final Boolean includeStatus) {
+
+		return ok(caseService.getMultisignCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, includeStatus));
+	}
+
+	@GetMapping(path = "/multisign/users/{userId}", produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get cases waiting for multi-sign by user ID", description = "Get a list of case envelopes waiting for multi-sign signing for the given AD user ID")
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
+	ResponseEntity<List<CaseEnvelope>> getMultisignCasesByUserId(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "userId", description = "The AD user ID", example = "joedoe") @PathVariable final String userId,
+		@Parameter(name = "fromDate", description = "Filter cases on fromDate", example = "2024-01-01") @RequestParam(value = "fromDate", required = false) final LocalDate fromDate,
+		@Parameter(name = "toDate", description = "Filter cases on toDate", example = "2024-01-31") @RequestParam(value = "toDate", required = false) final LocalDate toDate,
+		@Parameter(name = "status", description = "Filter by status", example = "Preliminär") @RequestParam(value = "status", required = false) final String status,
+		@Parameter(name = "includeStatus", description = "Should response include status", example = "true") @RequestParam(value = "includeStatus", required = false) final Boolean includeStatus) {
+
+		return ok(caseService.getMultisignCaseEnvelopeListByUserId(municipalityId, instanceType, userId, status, fromDate, toDate, includeStatus));
 	}
 
 	@PutMapping(value = "/{flowInstanceId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

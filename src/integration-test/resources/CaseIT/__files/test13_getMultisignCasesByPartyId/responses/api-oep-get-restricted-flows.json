@@ -1,0 +1,10 @@
+{
+	"Flows": [
+		{
+			"ID": 2066,
+			"FlowFamilyID": 582,
+			"Name": "Flerpartsignering",
+			"Enabled": true
+		}
+	]
+}

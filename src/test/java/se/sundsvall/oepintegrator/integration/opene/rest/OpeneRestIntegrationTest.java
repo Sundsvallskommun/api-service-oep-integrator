@@ -391,6 +391,86 @@ class OpeneRestIntegrationTest {
 	}
 
 	@Test
+	void getWaitingCaseListByCitizenIdentifier(@Load("/mappings/flow-instances.xml") final String xml) {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var legalId = "legalId";
+		final var status = "status";
+		final var fromDate = LocalDate.now();
+		final var toDate = LocalDate.now();
+		final var includeStatus = true;
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getWaitingCaseListByCitizenIdentifier(legalId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE), includeStatus)).thenReturn(Optional.of(xml.getBytes()));
+
+		// Act
+		final var result = openeRestIntegration.getWaitingCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(4);
+		assertThat(result)
+			.extracting(CaseEnvelope::getFlowInstanceId)
+			.containsExactlyInAnyOrder("4999", "4965", "4933", "4932");
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getWaitingCaseListByCitizenIdentifier(legalId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE), includeStatus);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getWaitingCaseListByUserId(@Load("/mappings/flow-instances.xml") final String xml) {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var userId = "joedoe";
+		final var status = "status";
+		final var fromDate = LocalDate.now();
+		final var toDate = LocalDate.now();
+		final var includeStatus = true;
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getWaitingCaseListByUserId(userId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE), includeStatus)).thenReturn(Optional.of(xml.getBytes()));
+
+		// Act
+		final var result = openeRestIntegration.getWaitingCaseListByUserId(municipalityId, instanceType, userId, status, fromDate, toDate, includeStatus);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(4);
+		assertThat(result)
+			.extracting(CaseEnvelope::getFlowInstanceId)
+			.containsExactlyInAnyOrder("4999", "4965", "4933", "4932");
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getWaitingCaseListByUserId(userId, status, fromDate.format(ISO_LOCAL_DATE), toDate.format(ISO_LOCAL_DATE), includeStatus);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getWaitingCaseListByUserIdWithoutOptionalParameters(@Load("/mappings/flow-instances.xml") final String xml) {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var userId = "joedoe";
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getWaitingCaseListByUserId(userId, null, null, null, null)).thenReturn(Optional.of(xml.getBytes()));
+
+		// Act
+		final var result = openeRestIntegration.getWaitingCaseListByUserId(municipalityId, instanceType, userId, null, null, null, null);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(4);
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getWaitingCaseListByUserId(userId, null, null, null, null);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
 	void getCasePdfByFlowInstanceId() {
 		// Arrange
 		final var municipalityId = "2281";

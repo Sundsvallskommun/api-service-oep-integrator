@@ -37,6 +37,8 @@ class CaseIT extends AbstractAppTest {
 	private static final String RESPONSE_FILE = "response.json";
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{0}/{1}/cases/families/{2}";
 	private static final String PATH_GET_CASES_BY_PARTY_ID = "/{0}/{1}/cases/parties/{2}";
+	private static final String PATH_GET_MULTISIGN_CASES_BY_PARTY_ID = "/{0}/{1}/cases/multisign/parties/{2}";
+	private static final String PATH_GET_MULTISIGN_CASES_BY_USER_ID = "/{0}/{1}/cases/multisign/users/{2}";
 	private static final String PATH_GET_CASE_ATTACHMENT = "/{0}/{1}/cases/{2}/queries/{3}/files/{4}";
 	private static final String PATH_SET_STATUS_BY_FLOW_INSTANCE_ID = "/{0}/{1}/cases/{2}/status";
 	private static final String PATH_SET_STATUS_BY_EXTERNAL_ID = "/{0}/{1}/cases/systems/{2}/{3}/status";
@@ -191,6 +193,28 @@ class CaseIT extends AbstractAppTest {
 		setupCall()
 			.withHttpMethod(GET)
 			.withServicePath(format(PATH_GET_CASES_BY_PARTY_ID, MUNICIPALITY_ID, EXTERNAL, "e19981ad-34b2-4e14-88f5-133f61ca85aa"))
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test13_getMultisignCasesByPartyId() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(format(PATH_GET_MULTISIGN_CASES_BY_PARTY_ID + "?status={3}&fromDate={4}&toDate={5}&includeStatus={6}", MUNICIPALITY_ID, EXTERNAL, "e19981ad-34b2-4e14-88f5-133f61ca85aa", STATUS, "2020-01-01", "2025-12-31", true))
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test14_getMultisignCasesByUserId() {
+		setupCall()
+			.withHttpMethod(GET)
+			.withServicePath(format(PATH_GET_MULTISIGN_CASES_BY_USER_ID, MUNICIPALITY_ID, EXTERNAL, "joedoe"))
 			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_JSON_VALUE))
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)

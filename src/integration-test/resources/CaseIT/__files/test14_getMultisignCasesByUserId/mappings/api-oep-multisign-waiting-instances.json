@@ -1,0 +1,14 @@
+{
+	"name": "getMultisignWaitingInstancesByUserId",
+	"request": {
+		"method": "GET",
+		"urlPath": "/external-oepMock/api/multisigninstanceapi/getwaitinginstances/userid/joedoe/"
+	},
+	"response": {
+		"bodyFileName": "test14_getMultisignCasesByUserId/responses/multisignWaitingInstancesResponse.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		}
+	}
+}
