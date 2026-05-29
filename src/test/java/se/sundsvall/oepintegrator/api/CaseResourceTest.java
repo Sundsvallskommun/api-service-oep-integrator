@@ -254,6 +254,78 @@ class CaseResourceTest {
 	}
 
 	@Test
+	void getMultisignCasesByPartyId() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var partyId = randomUUID().toString();
+		final var status = "status";
+		final var fromDate = now();
+		final var toDate = now();
+		final var includeStatus = true;
+
+		when(caseServiceMock.getMultisignCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, includeStatus)).thenReturn(List.of(CaseEnvelope.create()));
+
+		// Act
+		final var result = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/multisign/parties/{partyId}")
+				.queryParam("fromDate", List.of(fromDate))
+				.queryParam("toDate", List.of(toDate))
+				.queryParam("status", List.of(status))
+				.queryParam("includeStatus", List.of(includeStatus))
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "partyId", partyId)))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBodyList(CaseEnvelope.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst()).isNotNull();
+
+		verify(caseServiceMock).getMultisignCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, status, fromDate, toDate, includeStatus);
+	}
+
+	@Test
+	void getMultisignCasesByUserId() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var userId = "joedoe";
+		final var status = "status";
+		final var fromDate = now();
+		final var toDate = now();
+		final var includeStatus = true;
+
+		when(caseServiceMock.getMultisignCaseEnvelopeListByUserId(municipalityId, instanceType, userId, status, fromDate, toDate, includeStatus)).thenReturn(List.of(CaseEnvelope.create()));
+
+		// Act
+		final var result = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/multisign/users/{userId}")
+				.queryParam("fromDate", List.of(fromDate))
+				.queryParam("toDate", List.of(toDate))
+				.queryParam("status", List.of(status))
+				.queryParam("includeStatus", List.of(includeStatus))
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "userId", userId)))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBodyList(CaseEnvelope.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst()).isNotNull();
+
+		verify(caseServiceMock).getMultisignCaseEnvelopeListByUserId(municipalityId, instanceType, userId, status, fromDate, toDate, includeStatus);
+	}
+
+	@Test
 	void confirmDelivery() {
 
 		// Arrange

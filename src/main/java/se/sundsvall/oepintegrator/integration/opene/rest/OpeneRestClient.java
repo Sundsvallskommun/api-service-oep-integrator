@@ -18,56 +18,64 @@ public interface OpeneRestClient extends OpeneClient {
 
 	@GetMapping(path = "/api/messageapi/getmessages/family/{familyId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	byte[] getWebmessagesByFamilyId(
-		@PathVariable(name = "familyId") final String familyId,
+		@PathVariable final String familyId,
 		@RequestParam(name = "fromDate") final String fromDate,
 		@RequestParam(name = "toDate") final String toDate);
 
 	@GetMapping(path = "/api/messageapi/getmessages/flowinstance/{flowInstanceId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	byte[] getWebmessagesByFlowInstanceId(
-		@PathVariable(name = "flowInstanceId") final String flowInstanceId,
+		@PathVariable final String flowInstanceId,
 		@RequestParam(name = "fromDate") final String fromDate,
 		@RequestParam(name = "toDate") final String toDate);
 
 	@GetMapping(path = "/api/messageapi/getattachment/{attachmentId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
-	ResponseEntity<Resource> getAttachmentById(@PathVariable(name = "attachmentId") final int attachmentId);
+	ResponseEntity<Resource> getAttachmentById(@PathVariable final int attachmentId);
 
 	@GetMapping(path = "/api/instanceapi/getinstances/family/{familyId}/{status}", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	Optional<byte[]> getCaseListByFamilyId(
-		@PathVariable(name = "familyId") final String familyId,
-		@PathVariable(name = "status", required = false) final String status,
+		@PathVariable final String familyId,
+		@PathVariable(required = false) final String status,
 		@RequestParam(name = "fromDate", required = false) final String fromDate,
 		@RequestParam(name = "toDate", required = false) final String toDate);
 
 	@GetMapping(path = "/api/instanceapi/getinstances/owner/citizenidentifier/{legalId}/{status}", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	Optional<byte[]> getCaseListByCitizenIdentifier(
-		@PathVariable(name = "legalId") final String legalId,
-		@PathVariable(name = "status", required = false) final String status,
+		@PathVariable final String legalId,
+		@PathVariable(required = false) final String status,
 		@RequestParam(name = "fromDate", required = false) final String fromDate,
 		@RequestParam(name = "toDate", required = false) final String toDate,
 		@RequestParam(name = "showStatus", required = false) final Boolean showStatus);
 
 	@GetMapping(path = "/api/multisigninstanceapi/getwaitinginstances/citizenidentifier/{legalId}/{status}", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	Optional<byte[]> getWaitingCaseListByCitizenIdentifier(
-		@PathVariable(name = "legalId") final String legalId,
-		@PathVariable(name = "status", required = false) final String status,
+		@PathVariable final String legalId,
+		@PathVariable(required = false) final String status,
+		@RequestParam(name = "fromDate", required = false) final String fromDate,
+		@RequestParam(name = "toDate", required = false) final String toDate,
+		@RequestParam(name = "showStatus", required = false) final Boolean showStatus);
+
+	@GetMapping(path = "/api/multisigninstanceapi/getwaitinginstances/userid/{userId}/{status}", produces = TEXT_XML_CHARSET_ISO_8859_1)
+	Optional<byte[]> getWaitingCaseListByUserId(
+		@PathVariable final String userId,
+		@PathVariable(required = false) final String status,
 		@RequestParam(name = "fromDate", required = false) final String fromDate,
 		@RequestParam(name = "toDate", required = false) final String toDate,
 		@RequestParam(name = "showStatus", required = false) final Boolean showStatus);
 
 	@GetMapping(path = "/api/instanceapi/getstatus/{flowInstanceId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
-	Optional<byte[]> getCaseStatusByFlowInstanceId(@PathVariable(name = "flowInstanceId") final String flowInstanceId);
+	Optional<byte[]> getCaseStatusByFlowInstanceId(@PathVariable final String flowInstanceId);
 
 	@GetMapping(path = "/api/instanceapi/getinstance/{flowInstanceId}/pdf")
-	ResponseEntity<Resource> getCasePdfByFlowInstanceId(@PathVariable("flowInstanceId") String flowInstanceId);
+	ResponseEntity<Resource> getCasePdfByFlowInstanceId(@PathVariable final String flowInstanceId);
 
 	@GetMapping(path = "/api/fileuploadqueryapi/getfile/{flowInstanceId}/{queryId}/{fileId}")
 	ResponseEntity<Resource> getCaseAttachment(
-		@PathVariable(name = "flowInstanceId") String flowInstanceId,
-		@PathVariable(name = "queryId") String queryId,
-		@PathVariable(name = "fileId") String fileId);
+		@PathVariable final String flowInstanceId,
+		@PathVariable final String queryId,
+		@PathVariable final String fileId);
 
 	@GetMapping(path = "/api/instanceapi/getinstance/{flowInstanceId}/xml")
-	Optional<byte[]> getCaseXmlByFlowInstanceId(@PathVariable("flowInstanceId") String flowInstanceId);
+	Optional<byte[]> getCaseXmlByFlowInstanceId(@PathVariable final String flowInstanceId);
 
 	@GetMapping(path = "/api/v1/getflows/json", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	MetadataRoot getMetadata();

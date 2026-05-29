@@ -1,0 +1,25 @@
+{
+	"name": "getMultisignWaitingInstancesByCitizenIdentifier",
+	"request": {
+		"method": "GET",
+		"urlPath": "/external-oepMock/api/multisigninstanceapi/getwaitinginstances/citizenidentifier/202206222396/TheStatus",
+		"queryParameters": {
+			"fromDate": {
+				"equalTo": "2020-01-01"
+			},
+			"toDate": {
+				"equalTo": "2025-12-31"
+			},
+			"showStatus": {
+				"equalTo": "true"
+			}
+		}
+	},
+	"response": {
+		"bodyFileName": "test13_getMultisignCasesByPartyId/responses/multisignWaitingInstancesResponse.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		}
+	}
+}

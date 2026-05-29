@@ -2,12 +2,13 @@ package se.sundsvall.oepintegrator.service;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.oepintegrator.api.model.cases.Case;
 import se.sundsvall.oepintegrator.api.model.cases.CaseEnvelope;
@@ -79,32 +80,56 @@ public class CaseService {
 		return openeRestIntegration.getCaseListByFamilyId(municipalityId, instanceType, familyId, status, fromDate, toDate);
 	}
 
-	public List<CaseEnvelope> getCaseEnvelopeListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String partyId, final String status, final LocalDate fromDate, final LocalDate toDate,
+	public List<CaseEnvelope> getCaseEnvelopeListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String partyId, final String status, final LocalDate fromDate, final LocalDate toDate, final Boolean includeStatus) {
+
+		final var legalId = resolveLegalId(municipalityId, partyId);
+		final var blackListedFamilyIds = loadBlackListedFamilyIds(municipalityId, instanceType);
+
+		final var waiting = enrichAndFilter(municipalityId, instanceType,
+			openeRestIntegration.getWaitingCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus),
+			blackListedFamilyIds);
+
+		final var other = enrichAndFilter(municipalityId, instanceType,
+			openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus),
+			blackListedFamilyIds);
+
+		return Stream.concat(waiting.stream(), other.stream()).toList();
+	}
+
+	public List<CaseEnvelope> getMultisignCaseEnvelopeListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String partyId, final String status, final LocalDate fromDate, final LocalDate toDate,
 		final Boolean includeStatus) {
 
-		final var legalId = partyClient.getLegalId(municipalityId, PRIVATE, partyId)
-			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, "Citizen identifier not found for partyId: %s".formatted(partyId)));
+		final var legalId = resolveLegalId(municipalityId, partyId);
 
-		final var blackListedFamilyIds = blackListRepository.findByMunicipalityIdAndInstanceType(municipalityId, instanceType).stream()
+		return enrichAndFilter(municipalityId, instanceType,
+			openeRestIntegration.getWaitingCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus),
+			loadBlackListedFamilyIds(municipalityId, instanceType));
+	}
+
+	public List<CaseEnvelope> getMultisignCaseEnvelopeListByUserId(final String municipalityId, final InstanceType instanceType, final String userId, final String status, final LocalDate fromDate, final LocalDate toDate,
+		final Boolean includeStatus) {
+
+		return enrichAndFilter(municipalityId, instanceType,
+			openeRestIntegration.getWaitingCaseListByUserId(municipalityId, instanceType, userId, status, fromDate, toDate, includeStatus),
+			loadBlackListedFamilyIds(municipalityId, instanceType));
+	}
+
+	private String resolveLegalId(final String municipalityId, final String partyId) {
+		return partyClient.getLegalId(municipalityId, PRIVATE, partyId)
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, "Citizen identifier not found for partyId: %s".formatted(partyId)));
+	}
+
+	private Set<String> loadBlackListedFamilyIds(final String municipalityId, final InstanceType instanceType) {
+		return blackListRepository.findByMunicipalityIdAndInstanceType(municipalityId, instanceType).stream()
 			.map(BlackListEntity::getFamilyId)
 			.collect(toSet());
+	}
 
-		final var waiting = openeRestIntegration.getWaitingCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus).stream()
-			.filter(not(envelope -> blackListedFamilyIds.contains(envelope.getFamilyId()))) // Blacklist filter
+	private List<CaseEnvelope> enrichAndFilter(final String municipalityId, final InstanceType instanceType, final List<CaseEnvelope> source, final Set<String> blackListedFamilyIds) {
+		return source.stream()
+			.filter(not(envelope -> blackListedFamilyIds.contains(envelope.getFamilyId())))
 			.map(envelope -> envelope.withDisplayName(getDisplayName(municipalityId, instanceType, envelope.getFamilyId())))
 			.toList();
-
-		final var other = openeRestIntegration.getCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, status, fromDate, toDate, includeStatus).stream()
-			.filter(not(envelope -> blackListedFamilyIds.contains(envelope.getFamilyId()))) // Blacklist filter
-			.map(envelope -> envelope.withDisplayName(getDisplayName(municipalityId, instanceType, envelope.getFamilyId())))
-			.toList();
-
-		final var result = new ArrayList<CaseEnvelope>();
-
-		result.addAll(waiting);
-		result.addAll(other);
-
-		return result;
 	}
 
 	public CaseStatus getCaseStatusByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
@@ -116,21 +141,20 @@ public class CaseService {
 		copyResponseEntityToHttpServletResponse(responseEntity, response, "Unable to get case attachment");
 	}
 
-	public Case getCaseByFlowInstanceId(@ValidMunicipalityId final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
+	public Case getCaseByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
 		return openeRestIntegration.getCaseByFlowInstanceId(municipalityId, instanceType, flowInstanceId);
 	}
 
 	String getDisplayName(final String municipalityId, final InstanceType instanceType, final String flowFamilyId) {
-		return openeRestIntegration.getRestrictedMetadata(municipalityId, instanceType)
-			.stream()
+		return Optional.ofNullable(findDisplayName(openeRestIntegration.getRestrictedMetadata(municipalityId, instanceType), flowFamilyId))
+			.orElseGet(() -> findDisplayName(openeRestIntegration.getMetadata(municipalityId, instanceType), flowFamilyId));
+	}
+
+	private String findDisplayName(final List<MetadataFlow> flows, final String flowFamilyId) {
+		return flows.stream()
 			.filter(metadataFlow -> flowFamilyId.equalsIgnoreCase(metadataFlow.flowFamilyId()))
 			.findFirst()
 			.map(MetadataFlow::displayName)
-			.orElseGet(() -> openeRestIntegration.getMetadata(municipalityId, instanceType)
-				.stream()
-				.filter(metadataFlow -> flowFamilyId.equalsIgnoreCase(metadataFlow.flowFamilyId()))
-				.findFirst()
-				.map(MetadataFlow::displayName)
-				.orElse(null));
+			.orElse(null);
 	}
 }
