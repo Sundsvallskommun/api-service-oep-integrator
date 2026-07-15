@@ -114,6 +114,22 @@ public class CaseService {
 			loadBlackListedFamilyIds(municipalityId, instanceType));
 	}
 
+	public List<CaseEnvelope> getUnsubmittedCaseEnvelopeListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String partyId, final Boolean includeStatus) {
+
+		final var legalId = resolveLegalId(municipalityId, partyId);
+
+		return enrichAndFilter(municipalityId, instanceType,
+			openeRestIntegration.getUnsubmittedCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, includeStatus),
+			loadBlackListedFamilyIds(municipalityId, instanceType));
+	}
+
+	public List<CaseEnvelope> getUnsubmittedCaseEnvelopeListByUserId(final String municipalityId, final InstanceType instanceType, final String userId, final Boolean includeStatus) {
+
+		return enrichAndFilter(municipalityId, instanceType,
+			openeRestIntegration.getUnsubmittedCaseListByUserId(municipalityId, instanceType, userId, includeStatus),
+			loadBlackListedFamilyIds(municipalityId, instanceType));
+	}
+
 	private String resolveLegalId(final String municipalityId, final String partyId) {
 		return partyClient.getLegalId(municipalityId, PRIVATE, partyId)
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, "Citizen identifier not found for partyId: %s".formatted(partyId)));

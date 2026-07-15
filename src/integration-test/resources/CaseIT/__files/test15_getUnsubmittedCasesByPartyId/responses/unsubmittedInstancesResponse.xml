@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<FlowInstances>
+	<FlowInstance>
+		<flowInstanceID>5367</flowInstanceID>
+		<added>2025-10-24 11:35</added>
+		<fullyPopulated>true</fullyPopulated>
+		<stepID>5880</stepID>
+		<Status>
+			<statusID>13139</statusID>
+			<name>V&#228;ntar p&#229; flerpartsignering</name>
+			<newExternalMessagesDisallowed>false</newExternalMessagesDisallowed>
+			<addExternalMessage>false</addExternalMessage>
+			<addInternalMessage>false</addInternalMessage>
+			<isRestrictedAdminDeletable>false</isRestrictedAdminDeletable>
+			<contentType>WAITING_FOR_MULTISIGN</contentType>
+		</Status>
+		<lastStatusChange>2025-10-24 11:35</lastStatusChange>
+		<lastEventAdded>2025-10-24 11:35</lastEventAdded>
+		<profileID>1</profileID>
+		<remote>false</remote>
+		<addedInMilliseconds>1761298543000</addedInMilliseconds>
+		<lastStatusChangeInMilliseconds>1761298543000</lastStatusChangeInMilliseconds>
+		<flowID>2066</flowID>
+		<flowFamilyID>582</flowFamilyID>
+	</FlowInstance>
+</FlowInstances>

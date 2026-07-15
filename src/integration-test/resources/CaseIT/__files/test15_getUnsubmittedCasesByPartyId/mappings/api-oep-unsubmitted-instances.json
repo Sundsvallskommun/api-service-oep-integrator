@@ -1,0 +1,19 @@
+{
+	"name": "getUnsubmittedInstancesByCitizenIdentifier",
+	"request": {
+		"method": "GET",
+		"urlPath": "/external-oepMock/api/unsubmittedinstanceapi/citizenidentifier/202206222396",
+		"queryParameters": {
+			"showStatus": {
+				"equalTo": "true"
+			}
+		}
+	},
+	"response": {
+		"bodyFileName": "test15_getUnsubmittedCasesByPartyId/responses/unsubmittedInstancesResponse.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		}
+	}
+}

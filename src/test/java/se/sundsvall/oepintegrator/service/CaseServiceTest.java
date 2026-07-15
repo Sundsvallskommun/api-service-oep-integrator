@@ -484,6 +484,128 @@ class CaseServiceTest {
 	}
 
 	@Test
+	void getUnsubmittedCaseEnvelopeListByCitizenIdentifier() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var partyType = PRIVATE;
+		final var partyId = "partyId";
+		final var legalId = "legalId";
+		final var familyId = "familyId";
+		final var displayName = "displayName";
+		final var includeStatus = true;
+		final var expectedCaseEnvelope = new CaseEnvelope().withFamilyId(familyId).withDisplayName(displayName);
+
+		when(partyClientMock.getLegalId(municipalityId, partyType, partyId))
+			.thenReturn(Optional.of(legalId));
+		when(openeRestIntegrationMock.getUnsubmittedCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, includeStatus))
+			.thenReturn(List.of(new CaseEnvelope().withFamilyId(familyId)));
+		when(openeRestIntegrationMock.getRestrictedMetadata(municipalityId, instanceType))
+			.thenReturn(List.of(new MetadataFlow(familyId, displayName)));
+		when(blackListRepositoryMock.findByMunicipalityIdAndInstanceType(municipalityId, instanceType))
+			.thenReturn(emptyList());
+
+		// Act
+		final var result = caseService.getUnsubmittedCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, includeStatus);
+
+		// Assert
+		assertThat(result).hasSize(1);
+		assertThat(result.getFirst()).isEqualTo(expectedCaseEnvelope);
+
+		verify(partyClientMock).getLegalId(municipalityId, partyType, partyId);
+		verify(blackListRepositoryMock).findByMunicipalityIdAndInstanceType(municipalityId, instanceType);
+		verify(openeRestIntegrationMock).getUnsubmittedCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, includeStatus);
+		verify(openeRestIntegrationMock).getRestrictedMetadata(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeRestIntegrationMock, partyClientMock, blackListRepositoryMock);
+		verifyNoInteractions(openeSoapIntegrationMock);
+	}
+
+	@Test
+	void getUnsubmittedCaseEnvelopeListByCitizenIdentifierPartyNotFound() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var partyType = PRIVATE;
+		final var partyId = "partyId";
+		final var includeStatus = true;
+
+		when(partyClientMock.getLegalId(municipalityId, partyType, partyId))
+			.thenReturn(Optional.empty());
+
+		// Act & Assert
+		assertThatThrownBy(() -> caseService.getUnsubmittedCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, includeStatus))
+			.isInstanceOf(Problem.class)
+			.hasFieldOrPropertyWithValue("status", NOT_FOUND)
+			.hasMessage("Not Found: Citizen identifier not found for partyId: %s".formatted(partyId));
+
+		verify(partyClientMock).getLegalId(municipalityId, partyType, partyId);
+		verifyNoMoreInteractions(partyClientMock);
+		verifyNoInteractions(openeRestIntegrationMock, openeSoapIntegrationMock, blackListRepositoryMock);
+	}
+
+	@Test
+	void getUnsubmittedCaseEnvelopeListByUserId() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var userId = "joedoe";
+		final var familyId = "familyId";
+		final var displayName = "displayName";
+		final var includeStatus = true;
+		final var expectedCaseEnvelope = new CaseEnvelope().withFamilyId(familyId).withDisplayName(displayName);
+
+		when(openeRestIntegrationMock.getUnsubmittedCaseListByUserId(municipalityId, instanceType, userId, includeStatus))
+			.thenReturn(List.of(new CaseEnvelope().withFamilyId(familyId)));
+		when(openeRestIntegrationMock.getRestrictedMetadata(municipalityId, instanceType))
+			.thenReturn(List.of(new MetadataFlow(familyId, displayName)));
+		when(blackListRepositoryMock.findByMunicipalityIdAndInstanceType(municipalityId, instanceType))
+			.thenReturn(emptyList());
+
+		// Act
+		final var result = caseService.getUnsubmittedCaseEnvelopeListByUserId(municipalityId, instanceType, userId, includeStatus);
+
+		// Assert
+		assertThat(result).hasSize(1);
+		assertThat(result.getFirst()).isEqualTo(expectedCaseEnvelope);
+
+		verify(blackListRepositoryMock).findByMunicipalityIdAndInstanceType(municipalityId, instanceType);
+		verify(openeRestIntegrationMock).getUnsubmittedCaseListByUserId(municipalityId, instanceType, userId, includeStatus);
+		verify(openeRestIntegrationMock).getRestrictedMetadata(municipalityId, instanceType);
+		verifyNoMoreInteractions(openeRestIntegrationMock, blackListRepositoryMock);
+		verifyNoInteractions(openeSoapIntegrationMock, partyClientMock);
+	}
+
+	@Test
+	void getUnsubmittedCaseEnvelopeListByUserIdWhenBlackListed() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var userId = "joedoe";
+		final var familyId = "familyId";
+		final var includeStatus = true;
+
+		when(openeRestIntegrationMock.getUnsubmittedCaseListByUserId(municipalityId, instanceType, userId, includeStatus))
+			.thenReturn(List.of(new CaseEnvelope().withFamilyId(familyId)));
+		when(blackListRepositoryMock.findByMunicipalityIdAndInstanceType(municipalityId, instanceType))
+			.thenReturn(List.of(BlackListEntity.create().withFamilyId(familyId).withInstanceType(instanceType).withMunicipalityId(municipalityId)));
+
+		// Act
+		final var result = caseService.getUnsubmittedCaseEnvelopeListByUserId(municipalityId, instanceType, userId, includeStatus);
+
+		// Assert
+		assertThat(result).isEmpty();
+
+		verify(blackListRepositoryMock).findByMunicipalityIdAndInstanceType(municipalityId, instanceType);
+		verify(openeRestIntegrationMock).getUnsubmittedCaseListByUserId(municipalityId, instanceType, userId, includeStatus);
+		verifyNoMoreInteractions(openeRestIntegrationMock, blackListRepositoryMock);
+		verifyNoInteractions(openeSoapIntegrationMock, partyClientMock);
+	}
+
+	@Test
 	void getCaseStatusByFlowInstanceId() {
 
 		// Arrange

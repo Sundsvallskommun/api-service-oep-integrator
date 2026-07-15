@@ -117,6 +117,30 @@ class CaseResource {
 		return ok(caseService.getMultisignCaseEnvelopeListByUserId(municipalityId, instanceType, userId, status, fromDate, toDate, includeStatus));
 	}
 
+	@GetMapping(path = "/unsubmitted/parties/{partyId}", produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get unsubmitted cases by citizen identifier", description = "Get a list of case envelopes that are saved but not yet submitted for the given citizen identifier")
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
+	ResponseEntity<List<CaseEnvelope>> getUnsubmittedCasesByPartyId(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "partyId", description = "The party ID", example = "5d68eb00-d8da-49a0-a6b5-8d395be34a5e") @ValidUuid @PathVariable final String partyId,
+		@Parameter(name = "includeStatus", description = "Should response include status", example = "true") @RequestParam(value = "includeStatus", required = false) final Boolean includeStatus) {
+
+		return ok(caseService.getUnsubmittedCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, includeStatus));
+	}
+
+	@GetMapping(path = "/unsubmitted/users/{userId}", produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get unsubmitted cases by user ID", description = "Get a list of case envelopes that are saved but not yet submitted for the given AD user ID")
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
+	ResponseEntity<List<CaseEnvelope>> getUnsubmittedCasesByUserId(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "userId", description = "The AD user ID", example = "joedoe") @PathVariable final String userId,
+		@Parameter(name = "includeStatus", description = "Should response include status", example = "true") @RequestParam(value = "includeStatus", required = false) final Boolean includeStatus) {
+
+		return ok(caseService.getUnsubmittedCaseEnvelopeListByUserId(municipalityId, instanceType, userId, includeStatus));
+	}
+
 	@PutMapping(value = "/{flowInstanceId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Set case status", description = "Set case status by flowInstanceId", responses = {
 		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
