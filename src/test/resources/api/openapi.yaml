@@ -1679,7 +1679,7 @@ components:
           type: boolean
           description: If the case was delivered
           examples:
-          - "true"
+          - true
         logMessage:
           type: string
           description: Any log message
