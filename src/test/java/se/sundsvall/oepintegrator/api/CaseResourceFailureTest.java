@@ -43,6 +43,7 @@ class CaseResourceFailureTest {
 	private static final String PATH_GET_CASES_BY_FAMILY_ID = "/{municipalityId}/{instanceType}/cases/families/{familyId}";
 	private static final String PATH_GET_CASES_BY_PARTY_ID = "/{municipalityId}/{instanceType}/cases/parties/{partyId}";
 	private static final String PATH_GET_MULTISIGN_CASES_BY_PARTY_ID = "/{municipalityId}/{instanceType}/cases/multisign/parties/{partyId}";
+	private static final String PATH_GET_UNSUBMITTED_CASES_BY_PARTY_ID = "/{municipalityId}/{instanceType}/cases/unsubmitted/parties/{partyId}";
 	private static final String PATH_CONFIRM_DELIVERY = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/delivery";
 	private static final String PATH_GET_CASE_PDF_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/pdf";
 	private static final String PATH_GET_CASE_STATUS_BY_FLOW_INSTANCE_ID = "/{municipalityId}/{instanceType}/cases/{flowInstanceId}/status";
@@ -355,6 +356,52 @@ class CaseResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getMultisignCasesByPartyId.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(caseServiceMock);
+	}
+
+	@Test
+	void getUnsubmittedCasesByPartyIdWithInvalidPartyId() {
+		// Arrange
+		final var municipalityId = "2281";
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(PATH_GET_UNSUBMITTED_CASES_BY_PARTY_ID, municipalityId, INTERNAL, 123)
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field, Violation::message)
+			.containsExactly(tuple("getUnsubmittedCasesByPartyId.partyId", "not a valid UUID"));
+
+		verifyNoInteractions(caseServiceMock);
+	}
+
+	@Test
+	void getUnsubmittedCasesByPartyIdWithInvalidMunicipalityId() {
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(PATH_GET_UNSUBMITTED_CASES_BY_PARTY_ID, "invalidId", INTERNAL, randomUUID().toString())
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult().getResponseBody();
+
+		// Assert
+		assertThat(response).isNotNull();
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field, Violation::message)
+			.containsExactly(tuple("getUnsubmittedCasesByPartyId.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(caseServiceMock);
 	}

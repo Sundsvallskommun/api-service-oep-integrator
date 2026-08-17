@@ -90,6 +90,16 @@ public class OpeneRestIntegration {
 		return toCaseEnvelopeList(client.getWaitingCaseListByUserId(userId, status, formatLocalDate(fromDate), formatLocalDate(toDate), includeStatus).orElse(EMPTY_BYTE_ARRAY));
 	}
 
+	public List<CaseEnvelope> getUnsubmittedCaseListByCitizenIdentifier(final String municipalityId, final InstanceType instanceType, final String legalId, final Boolean includeStatus) {
+		final var client = clientFactory.getRestClient(municipalityId, instanceType);
+		return toCaseEnvelopeList(client.getUnsubmittedCaseListByCitizenIdentifier(legalId, includeStatus).orElse(EMPTY_BYTE_ARRAY));
+	}
+
+	public List<CaseEnvelope> getUnsubmittedCaseListByUserId(final String municipalityId, final InstanceType instanceType, final String userId, final Boolean includeStatus) {
+		final var client = clientFactory.getRestClient(municipalityId, instanceType);
+		return toCaseEnvelopeList(client.getUnsubmittedCaseListByUserId(userId, includeStatus).orElse(EMPTY_BYTE_ARRAY));
+	}
+
 	public CaseStatus getCaseStatusByFlowInstanceId(final String municipalityId, final InstanceType instanceType, final String flowInstanceId) {
 		final var client = clientFactory.getRestClient(municipalityId, instanceType);
 		return toCaseStatus(client.getCaseStatusByFlowInstanceId(flowInstanceId).orElseThrow(() -> Problem.valueOf(NOT_FOUND, "No status found for flow instance ID: '%s'".formatted(flowInstanceId))));

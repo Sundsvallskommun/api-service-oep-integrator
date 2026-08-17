@@ -471,6 +471,102 @@ class OpeneRestIntegrationTest {
 	}
 
 	@Test
+	void getUnsubmittedCaseListByCitizenIdentifier(@Load("/mappings/flow-instances.xml") final String xml) {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var legalId = "legalId";
+		final var includeStatus = true;
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getUnsubmittedCaseListByCitizenIdentifier(legalId, includeStatus)).thenReturn(Optional.of(xml.getBytes()));
+
+		// Act
+		final var result = openeRestIntegration.getUnsubmittedCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, includeStatus);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(4);
+		assertThat(result)
+			.extracting(CaseEnvelope::getFlowInstanceId)
+			.containsExactlyInAnyOrder("4999", "4965", "4933", "4932");
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getUnsubmittedCaseListByCitizenIdentifier(legalId, includeStatus);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getUnsubmittedCaseListByCitizenIdentifierWithoutOptionalParameters(@Load("/mappings/flow-instances.xml") final String xml) {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var legalId = "legalId";
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getUnsubmittedCaseListByCitizenIdentifier(legalId, null)).thenReturn(Optional.of(xml.getBytes()));
+
+		// Act
+		final var result = openeRestIntegration.getUnsubmittedCaseListByCitizenIdentifier(municipalityId, instanceType, legalId, null);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(4);
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getUnsubmittedCaseListByCitizenIdentifier(legalId, null);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getUnsubmittedCaseListByUserId(@Load("/mappings/flow-instances.xml") final String xml) {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var userId = "joedoe";
+		final var includeStatus = true;
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getUnsubmittedCaseListByUserId(userId, includeStatus)).thenReturn(Optional.of(xml.getBytes()));
+
+		// Act
+		final var result = openeRestIntegration.getUnsubmittedCaseListByUserId(municipalityId, instanceType, userId, includeStatus);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(4);
+		assertThat(result)
+			.extracting(CaseEnvelope::getFlowInstanceId)
+			.containsExactlyInAnyOrder("4999", "4965", "4933", "4932");
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getUnsubmittedCaseListByUserId(userId, includeStatus);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
+	void getUnsubmittedCaseListByUserIdWithoutOptionalParameters(@Load("/mappings/flow-instances.xml") final String xml) {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var userId = "joedoe";
+
+		when(clientFactory.getRestClient(municipalityId, instanceType)).thenReturn(openeRestClient);
+		when(openeRestClient.getUnsubmittedCaseListByUserId(userId, null)).thenReturn(Optional.of(xml.getBytes()));
+
+		// Act
+		final var result = openeRestIntegration.getUnsubmittedCaseListByUserId(municipalityId, instanceType, userId, null);
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(4);
+
+		verify(clientFactory).getRestClient(municipalityId, instanceType);
+		verify(openeRestClient).getUnsubmittedCaseListByUserId(userId, null);
+		verifyNoMoreInteractions(openeRestClient, clientFactory);
+	}
+
+	@Test
 	void getCasePdfByFlowInstanceId() {
 		// Arrange
 		final var municipalityId = "2281";

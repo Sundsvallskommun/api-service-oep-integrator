@@ -326,6 +326,66 @@ class CaseResourceTest {
 	}
 
 	@Test
+	void getUnsubmittedCasesByPartyId() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var partyId = randomUUID().toString();
+		final var includeStatus = true;
+
+		when(caseServiceMock.getUnsubmittedCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, includeStatus)).thenReturn(List.of(CaseEnvelope.create()));
+
+		// Act
+		final var result = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/unsubmitted/parties/{partyId}")
+				.queryParam("includeStatus", List.of(includeStatus))
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "partyId", partyId)))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBodyList(CaseEnvelope.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst()).isNotNull();
+
+		verify(caseServiceMock).getUnsubmittedCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, includeStatus);
+	}
+
+	@Test
+	void getUnsubmittedCasesByUserId() {
+
+		// Arrange
+		final var municipalityId = "2281";
+		final var instanceType = EXTERNAL;
+		final var userId = "joedoe";
+		final var includeStatus = true;
+
+		when(caseServiceMock.getUnsubmittedCaseEnvelopeListByUserId(municipalityId, instanceType, userId, includeStatus)).thenReturn(List.of(CaseEnvelope.create()));
+
+		// Act
+		final var result = webTestClient.get()
+			.uri(builder -> builder.path(PATH + "/unsubmitted/users/{userId}")
+				.queryParam("includeStatus", List.of(includeStatus))
+				.build(Map.of("municipalityId", municipalityId, "instanceType", instanceType, "userId", userId)))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBodyList(CaseEnvelope.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(result).isNotNull().hasSize(1);
+		assertThat(result.getFirst()).isNotNull();
+
+		verify(caseServiceMock).getUnsubmittedCaseEnvelopeListByUserId(municipalityId, instanceType, userId, includeStatus);
+	}
+
+	@Test
 	void confirmDelivery() {
 
 		// Arrange

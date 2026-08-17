@@ -1,0 +1,14 @@
+{
+	"name": "getUnsubmittedInstancesByUserId",
+	"request": {
+		"method": "GET",
+		"urlPath": "/external-oepMock/api/unsubmittedinstanceapi/userid/joedoe"
+	},
+	"response": {
+		"bodyFileName": "test16_getUnsubmittedCasesByUserId/responses/unsubmittedInstancesResponse.xml",
+		"status": 200,
+		"headers": {
+			"Content-Type": "text/xml;charset=ISO-8859-1"
+		}
+	}
+}

@@ -62,6 +62,16 @@ public interface OpeneRestClient extends OpeneClient {
 		@RequestParam(name = "toDate", required = false) final String toDate,
 		@RequestParam(name = "showStatus", required = false) final Boolean showStatus);
 
+	@GetMapping(path = "/api/unsubmittedinstanceapi/citizenidentifier/{legalId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
+	Optional<byte[]> getUnsubmittedCaseListByCitizenIdentifier(
+		@PathVariable final String legalId,
+		@RequestParam(name = "showStatus", required = false) final Boolean showStatus);
+
+	@GetMapping(path = "/api/unsubmittedinstanceapi/userid/{userId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
+	Optional<byte[]> getUnsubmittedCaseListByUserId(
+		@PathVariable final String userId,
+		@RequestParam(name = "showStatus", required = false) final Boolean showStatus);
+
 	@GetMapping(path = "/api/instanceapi/getstatus/{flowInstanceId}", produces = TEXT_XML_CHARSET_ISO_8859_1)
 	Optional<byte[]> getCaseStatusByFlowInstanceId(@PathVariable final String flowInstanceId);
 

@@ -47,6 +47,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
 	Problem.class, ConstraintViolationProblem.class
 })))
+@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 @ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 @ApiResponse(responseCode = "502", description = "Bad gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 @Tag(name = "Cases", description = "Operations on case")
@@ -117,10 +118,33 @@ class CaseResource {
 		return ok(caseService.getMultisignCaseEnvelopeListByUserId(municipalityId, instanceType, userId, status, fromDate, toDate, includeStatus));
 	}
 
+	@GetMapping(path = "/unsubmitted/parties/{partyId}", produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get unsubmitted cases by citizen identifier", description = "Get a list of case envelopes that are saved but not yet submitted for the given citizen identifier")
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
+	ResponseEntity<List<CaseEnvelope>> getUnsubmittedCasesByPartyId(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "partyId", description = "The party ID", example = "5d68eb00-d8da-49a0-a6b5-8d395be34a5e") @ValidUuid @PathVariable final String partyId,
+		@Parameter(name = "includeStatus", description = "Should response include status", example = "true") @RequestParam(value = "includeStatus", required = false) final Boolean includeStatus) {
+
+		return ok(caseService.getUnsubmittedCaseEnvelopeListByCitizenIdentifier(municipalityId, instanceType, partyId, includeStatus));
+	}
+
+	@GetMapping(path = "/unsubmitted/users/{userId}", produces = APPLICATION_JSON_VALUE)
+	@Operation(summary = "Get unsubmitted cases by user ID", description = "Get a list of case envelopes that are saved but not yet submitted for the given AD user ID")
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
+	ResponseEntity<List<CaseEnvelope>> getUnsubmittedCasesByUserId(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "instanceType", description = "The instanceType where case belongs", example = "INTERNAL") @PathVariable final InstanceType instanceType,
+		@Parameter(name = "userId", description = "The AD user ID", example = "joedoe") @PathVariable final String userId,
+		@Parameter(name = "includeStatus", description = "Should response include status", example = "true") @RequestParam(value = "includeStatus", required = false) final Boolean includeStatus) {
+
+		return ok(caseService.getUnsubmittedCaseEnvelopeListByUserId(municipalityId, instanceType, userId, includeStatus));
+	}
+
 	@PutMapping(value = "/{flowInstanceId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Set case status", description = "Set case status by flowInstanceId", responses = {
-		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
-		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true)
 	})
 	ResponseEntity<CaseStatusChangeResponse> setStatus(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -133,8 +157,7 @@ class CaseResource {
 
 	@PutMapping(value = "/systems/{system}/{externalId}/status", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Set case status", description = "Set case status by externalId", responses = {
-		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
-		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true)
 	})
 	ResponseEntity<CaseStatusChangeResponse> setStatus(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -148,8 +171,7 @@ class CaseResource {
 
 	@PostMapping(value = "/{flowInstanceId}/delivery", consumes = APPLICATION_JSON_VALUE, produces = ALL_VALUE)
 	@Operation(summary = "Confirm delivery", description = "Confirms delivery of a case", responses = {
-		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true),
-		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+		@ApiResponse(responseCode = "204", description = "Successful operation", useReturnTypeSchema = true)
 	})
 	ResponseEntity<Void> confirmDelivery(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -162,8 +184,7 @@ class CaseResource {
 
 	@GetMapping(value = "/{flowInstanceId}/pdf", produces = ALL_VALUE)
 	@Operation(summary = "Get case PDF", description = "Get case PDF by flow instance ID", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true),
-		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
 	})
 	void getCasePdfByFlowInstanceId(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -175,8 +196,7 @@ class CaseResource {
 
 	@GetMapping(path = "/{flowInstanceId}/status", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get case status", description = "Get case status by flow instance ID", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true),
-		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
 	})
 	ResponseEntity<CaseStatus> getCaseStatusByFlowInstanceId(
 		@Parameter(name = "municipalityId", description = "Municipality id", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -187,8 +207,7 @@ class CaseResource {
 
 	@GetMapping(value = "/{flowInstanceId}/queries/{queryId}/files/{fileId}", produces = ALL_VALUE)
 	@Operation(summary = "Get case attachment", description = "Get case attachment by flowInstanceId, queryId and fileId", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true),
-		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
 	})
 	void getCaseAttachment(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -202,8 +221,7 @@ class CaseResource {
 
 	@GetMapping(value = "/{flowInstanceId}", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Get case", description = "Get case by flow instance ID", responses = {
-		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true),
-		@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+		@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true)
 	})
 	ResponseEntity<Case> getCaseByFlowInstanceId(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
