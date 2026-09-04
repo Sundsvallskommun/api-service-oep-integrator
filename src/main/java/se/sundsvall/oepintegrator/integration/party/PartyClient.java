@@ -31,6 +31,6 @@ public interface PartyClient {
 	 *                                                      type and party id.
 	 * @throws se.sundsvall.dept44.problem.ThrowableProblem on errors
 	 */
-	@GetMapping(path = "/{municipalityId}/{type}/{partyId}/legalId", produces = TEXT_PLAIN_VALUE)
-	Optional<String> getLegalId(@PathVariable String municipalityId, @PathVariable("type") PartyType partyType, @PathVariable String partyId);
+	@GetMapping(path = "/{municipalityId}/{partyType}/{partyId}/legalId", produces = TEXT_PLAIN_VALUE)
+	Optional<String> getLegalId(@PathVariable String municipalityId, @PathVariable PartyType partyType, @PathVariable String partyId);
 }

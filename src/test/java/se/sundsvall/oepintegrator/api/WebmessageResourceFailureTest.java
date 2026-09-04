@@ -1,7 +1,11 @@
 package se.sundsvall.oepintegrator.api;
 
 import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
@@ -338,11 +342,12 @@ class WebmessageResourceFailureTest {
 		verifyNoInteractions(webmessageService);
 	}
 
-	@Test
-	void getWebmessagesByFamilyIdWithInvalidMunicipalityId() {
+	@ParameterizedTest
+	@MethodSource("invalidMunicipalityIdArguments")
+	void getWithInvalidMunicipalityId(final String path, final String expectedField) {
 
 		final var response = webTestClient.get()
-			.uri(PATH + ("/families/{familyId}}"), "invalidId", INTERNAL, 123)
+			.uri(PATH + path, "invalidId", INTERNAL, 123)
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectBody(ConstraintViolationProblem.class)
@@ -353,47 +358,16 @@ class WebmessageResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
 			.extracting(Violation::field, Violation::message)
-			.containsExactly(tuple("getWebmessagesByFamilyId.municipalityId", "not a valid municipality ID"));
+			.containsExactly(tuple(expectedField, "not a valid municipality ID"));
 
 		verifyNoInteractions(webmessageService);
 	}
 
-	@Test
-	void getWebmessagesByFlowInstanceIdWithInvalidMunicipalityId() {
-
-		final var response = webTestClient.get()
-			.uri(PATH + ("/cases/{flowInstanceId}"), "invalidId", INTERNAL, 123)
-			.exchange()
-			.expectStatus().isBadRequest()
-			.expectBody(ConstraintViolationProblem.class)
-			.returnResult().getResponseBody();
-
-		assertThat(response).isNotNull();
-		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
-		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations())
-			.extracting(Violation::field, Violation::message)
-			.containsExactly(tuple("getWebmessagesByFlowInstanceId.municipalityId", "not a valid municipality ID"));
-
-		verifyNoInteractions(webmessageService);
+	private static Stream<Arguments> invalidMunicipalityIdArguments() {
+		return Stream.of(
+			Arguments.of("/families/{familyId}", "getWebmessagesByFamilyId.municipalityId"),
+			Arguments.of("/cases/{flowInstanceId}", "getWebmessagesByFlowInstanceId.municipalityId"),
+			Arguments.of("/attachments/{attachmentId}", "getAttachmentById.municipalityId"));
 	}
 
-	@Test
-	void getAttachmentByIdWithInvalidMunicipalityId() {
-		final var response = webTestClient.get()
-			.uri(PATH + ("/attachments/{attachmentId}"), "invalidId", INTERNAL, 123)
-			.exchange()
-			.expectStatus().isBadRequest()
-			.expectBody(ConstraintViolationProblem.class)
-			.returnResult().getResponseBody();
-
-		assertThat(response).isNotNull();
-		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
-		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getViolations())
-			.extracting(Violation::field, Violation::message)
-			.containsExactly(tuple("getAttachmentById.municipalityId", "not a valid municipality ID"));
-
-		verifyNoInteractions(webmessageService);
-	}
 }

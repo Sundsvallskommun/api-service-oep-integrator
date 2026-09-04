@@ -2,7 +2,7 @@
 	"name": "getUnsubmittedInstancesByUserId",
 	"request": {
 		"method": "GET",
-		"urlPath": "/external-oepMock/api/unsubmittedinstanceapi/userid/joedoe"
+		"urlPath": "/external-oepMock/api/unsubmittedinstanceapi/getinstances/owner/userid/joedoe"
 	},
 	"response": {
 		"bodyFileName": "test16_getUnsubmittedCasesByUserId/responses/unsubmittedInstancesResponse.xml",

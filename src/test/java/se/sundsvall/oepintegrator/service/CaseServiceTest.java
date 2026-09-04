@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -37,6 +36,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -196,7 +196,7 @@ class CaseServiceTest {
 		final var municipalityId = "2281";
 		final var instanceType = EXTERNAL;
 		final var flowInstanceId = "123";
-		final var mockHttpServletResponse = Mockito.mock(HttpServletResponse.class);
+		final var mockHttpServletResponse = mock(HttpServletResponse.class);
 		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[10]));
 		final var responseEntity = badRequest().body(inputStreamResource);
 
@@ -676,7 +676,7 @@ class CaseServiceTest {
 		final var flowInstanceId = "123";
 		final var queryId = "queryId";
 		final var fileId = "fileId";
-		final var mockHttpServletResponse = Mockito.mock(HttpServletResponse.class);
+		final var mockHttpServletResponse = mock(HttpServletResponse.class);
 		final Resource inputStreamResource = new InputStreamResource(new ByteArrayInputStream(new byte[0]));
 		final var responseEntity = badRequest().body(inputStreamResource);
 

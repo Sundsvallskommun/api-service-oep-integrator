@@ -56,7 +56,9 @@ public final class CaseStatusMapper {
 	}
 
 	private static JAXBElement<String> toJAXBElement(final String value) {
-		return value != null ? new JAXBElement<>(new QName(CALLBACK_NAMESPACE, CALLBACK_LOCAL_PART), String.class, value) : null;
+		return Optional.ofNullable(value)
+			.map(v -> new JAXBElement<>(new QName(CALLBACK_NAMESPACE, CALLBACK_LOCAL_PART), String.class, v))
+			.orElse(null);
 	}
 
 	private static ExternalID toExternalID(final String externalId, final String system) {

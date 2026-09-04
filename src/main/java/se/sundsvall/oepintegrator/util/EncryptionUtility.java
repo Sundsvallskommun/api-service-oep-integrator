@@ -14,6 +14,7 @@ import se.sundsvall.oepintegrator.configuration.CredentialsProperties;
 @Component
 public class EncryptionUtility {
 
+	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 	private static final Encoder BASE64_ENCODER = Base64.getEncoder();
 	private static final Decoder BASE64_DECODER = Base64.getDecoder();
 
@@ -34,9 +35,8 @@ public class EncryptionUtility {
 
 		final var key = getSecretKeySpec();
 
-		final var random = new SecureRandom();
 		final var nonce = new byte[NONCE_LEN];
-		random.nextBytes(nonce);
+		SECURE_RANDOM.nextBytes(nonce);
 
 		final var ivParameterSpec = new IvParameterSpec(nonce);
 		final byte[] messageCipher;
