@@ -54,7 +54,7 @@ public final class WebmessageMapper {
 		final var webmessage = Webmessage.create()
 			.withFamilyId(familyId)
 			.withInstance(instance.name())
-			.withDirection(externalMessage.isPostedByManager() ? Direction.OUTBOUND : Direction.INBOUND)
+			.withDirection(toDirection(externalMessage.isPostedByManager()))
 			.withMessageId(String.valueOf(externalMessage.getMessageID()))
 			.withExternalCaseId(String.valueOf(externalMessage.getFlowInstanceID()))
 			.withMessage(externalMessage.getMessage())
@@ -91,8 +91,18 @@ public final class WebmessageMapper {
 		}
 	}
 
+	private static Direction toDirection(final boolean postedByManager) {
+		if (postedByManager) {
+			return Direction.OUTBOUND;
+		}
+		return Direction.INBOUND;
+	}
+
 	private static String getFileExtension(final String file) {
 		final int dotIndex = file.lastIndexOf('.');
-		return (dotIndex == -1) ? "" : file.substring(dotIndex + 1);
+		if (dotIndex == -1) {
+			return "";
+		}
+		return file.substring(dotIndex + 1);
 	}
 }
