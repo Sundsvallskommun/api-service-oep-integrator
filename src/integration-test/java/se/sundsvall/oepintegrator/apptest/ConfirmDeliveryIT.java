@@ -1,10 +1,5 @@
 package se.sundsvall.oepintegrator.apptest;
 
-import static java.text.MessageFormat.format;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +11,11 @@ import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.oepintegrator.Application;
 import se.sundsvall.oepintegrator.integration.db.InstanceRepository;
 import se.sundsvall.oepintegrator.integration.opene.OpeneClientFactory;
+
+import static java.text.MessageFormat.format;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static se.sundsvall.oepintegrator.util.enums.InstanceType.EXTERNAL;
 
 @WireMockAppTestSuite(files = "classpath:/ConfirmDeliveryIT/", classes = Application.class)
 @ActiveProfiles("it")
