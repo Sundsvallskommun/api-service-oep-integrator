@@ -16,7 +16,7 @@ public class CaseEnvelope {
 	@Schema(description = "The case status change date", examples = "2023-11-16T12:01")
 	private LocalDateTime statusUpdated;
 
-	@Schema(description = "The familyId", examples = "832", hidden = true)
+	@Schema(description = "The familyId", examples = "832")
 	private String familyId;
 
 	@Schema(description = "The display name for the family the case belongs to", examples = "Kompiskortet")
